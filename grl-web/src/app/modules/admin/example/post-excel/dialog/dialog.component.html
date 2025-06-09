@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{data.isEdit ? 'Edit' : 'Add'}} Record</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="flex flex-col gap-4">
+    <ng-container *ngFor="let field of fields">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{field | titlecase}}</mat-label>
+        <input matInput [formControlName]="field" [placeholder]="'Enter ' + field">
+        <mat-error *ngIf="form.get(field)?.invalid && form.get(field)?.touched">
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="form.invalid || loading">
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    {{data.isEdit ? 'Update' : 'Add'}}
+  </button>
+</mat-dialog-actions>

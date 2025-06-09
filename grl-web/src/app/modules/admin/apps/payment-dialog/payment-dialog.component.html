@@ -1,0 +1,107 @@
+<div class="p-6 max-w-2xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Thanh toán</h2>
+        <button mat-icon-button (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <form [formGroup]="paymentForm" (ngSubmit)="submitPayment()" class="space-y-6">
+        <!-- Payment Method Selection -->
+        <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-700">Chọn phương thức thanh toán</h3>
+            <div class="grid grid-cols-3 gap-4">
+                <button type="button" 
+                        [class.bg-blue-500]="selectedMethod === 'zalopay'"
+                        [class.text-white]="selectedMethod === 'zalopay'"
+                        class="p-4 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors"
+                        (click)="onMethodChange('zalopay')">
+                    <img src="assets/images/zalopay-logo.png" alt="ZaloPay" class="h-8 mx-auto mb-2">
+                    <span class="block text-center">ZaloPay</span>
+                </button>
+                <button type="button"
+                        [class.bg-pink-500]="selectedMethod === 'momo'"
+                        [class.text-white]="selectedMethod === 'momo'"
+                        class="p-4 rounded-lg border border-gray-300 hover:border-pink-500 transition-colors"
+                        (click)="onMethodChange('momo')">
+                    <img src="assets/images/momo-logo.png" alt="MoMo" class="h-8 mx-auto mb-2">
+                    <span class="block text-center">MoMo</span>
+                </button>
+                <button type="button"
+                        [class.bg-green-500]="selectedMethod === 'bank'"
+                        [class.text-white]="selectedMethod === 'bank'"
+                        class="p-4 rounded-lg border border-gray-300 hover:border-green-500 transition-colors"
+                        (click)="onMethodChange('bank')">
+                    <mat-icon class="h-8 w-8 mx-auto mb-2">account_balance</mat-icon>
+                    <span class="block text-center">Chuyển khoản</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-700">Thông tin thanh toán</h3>
+            
+            <mat-form-field class="w-full">
+                <mat-label>Số tiền</mat-label>
+                <input matInput formControlName="amount" type="number" readonly>
+                <mat-icon matSuffix>attach_money</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Nội dung chuyển khoản</mat-label>
+                <input matInput formControlName="description">
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email">
+                <mat-error *ngIf="paymentForm.get('email')?.hasError('required')">Email là bắt buộc</mat-error>
+                <mat-error *ngIf="paymentForm.get('email')?.hasError('email')">Email không hợp lệ</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Số điện thoại</mat-label>
+                <input matInput formControlName="phone" type="tel">
+                <mat-error *ngIf="paymentForm.get('phone')?.hasError('required')">Số điện thoại là bắt buộc</mat-error>
+                <mat-error *ngIf="paymentForm.get('phone')?.hasError('pattern')">Số điện thoại không hợp lệ</mat-error>
+            </mat-form-field>
+        </div>
+
+        <!-- QR Code or Bank Account Info -->
+        <div class="space-y-4">
+            <ng-container *ngIf="selectedMethod !== 'bank'">
+                <h3 class="text-lg font-semibold text-gray-700">Quét mã QR để thanh toán</h3>
+                <div class="flex justify-center">
+                    <img [src]="qrCodeUrl" alt="QR Code" class="w-48 h-48">
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="selectedMethod === 'bank'">
+                <h3 class="text-lg font-semibold text-gray-700">Thông tin tài khoản ngân hàng</h3>
+                <div class="space-y-4">
+                    <div *ngFor="let account of bankAccounts" class="p-4 border border-gray-300 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold">{{account.bank}}</span>
+                            <button mat-icon-button (click)="copyToClipboard(account.accountNumber)">
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                        </div>
+                        <div class="space-y-1 text-sm">
+                            <p><span class="font-medium">Số tài khoản:</span> {{account.accountNumber}}</p>
+                            <p><span class="font-medium">Tên tài khoản:</span> {{account.accountName}}</p>
+                            <p><span class="font-medium">Chi nhánh:</span> {{account.branch}}</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!paymentForm.valid">
+                Xác nhận thanh toán
+            </button>
+        </div>
+    </form>
+</div> 

@@ -1,0 +1,18 @@
+.car {
+    font-size: 50px;
+    position: absolute;
+    bottom: 0;
+    right: -100px; /* Bắt đầu từ ngoài màn hình bên trái */
+animation: moveCar 5s linear infinite !important;
+  }
+  
+  /* Animation cho xe chạy từ trái sang phải */
+  @keyframes moveCar {
+    0% {
+      right: -100px; /* Vị trí bắt đầu */
+    }
+    100% {
+      right: 100vw; /* Chạy hết chiều rộng màn hình */
+    }
+  }
+  

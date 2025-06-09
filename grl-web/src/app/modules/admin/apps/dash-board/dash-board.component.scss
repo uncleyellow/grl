@@ -1,0 +1,42 @@
+.wave-divider {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23FFFFFF" d="M0,160C120,240,240,280,360,240C480,200,600,80,720,96C840,112,960,240,1080,256C1200,272,1320,192,1440,160L1440,320L0,320Z"></path></svg>');
+    background-size: cover;
+    height: 50px;
+  }
+  video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* Zalo Bubble Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-ping {
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Add floating animation to the main bubble */
+.group:hover .relative {
+    animation: float 3s ease-in-out infinite;
+}

@@ -1,0 +1,104 @@
+<div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- Success Message -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                <mat-icon class="text-4xl text-green-500">check_circle</mat-icon>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Cảm ơn bạn đã thanh toán!</h1>
+            <p class="text-lg text-gray-600">Giao dịch của bạn đã được xử lý thành công.</p>
+        </div>
+
+        <!-- Invoice -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none">
+            <!-- Invoice Header -->
+            <div class="p-8 border-b border-gray-200">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Hóa đơn</h2>
+                        <p class="text-gray-600">Số hóa đơn: {{invoiceNumber}}</p>
+                        <p class="text-gray-600">Ngày: {{formatDate(paymentData.createdAt)}}</p>
+                    </div>
+                    <div class="text-right">
+                        <img src="assets/images/logo.png" alt="Company Logo" class="h-12">
+                        <p class="mt-2 text-gray-600">CÔNG TY TNHH GREENLINE</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Details -->
+            <div class="p-8">
+                <div class="grid grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Thông tin thanh toán</h3>
+                        <p class="text-gray-600">Email: {{paymentData.email}}</p>
+                        <p class="text-gray-600">Số điện thoại: {{paymentData.phone}}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Phương thức thanh toán</h3>
+                        <p class="text-gray-600">
+                            <ng-container [ngSwitch]="paymentData.paymentMethod">
+                                <span *ngSwitchCase="'zalopay'">ZaloPay</span>
+                                <span *ngSwitchCase="'momo'">MoMo</span>
+                                <span *ngSwitchCase="'bank'">Chuyển khoản ngân hàng</span>
+                            </ng-container>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Payment Summary -->
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Chi tiết thanh toán</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Số tiền:</span>
+                            <span class="font-semibold">{{formatCurrency(paymentData.amount)}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Nội dung:</span>
+                            <span class="font-semibold">{{paymentData.description}}</span>
+                        </div>
+                        <div class="flex justify-between border-t border-gray-200 pt-4">
+                            <span class="text-lg font-bold text-gray-900">Tổng cộng:</span>
+                            <span class="text-lg font-bold text-gray-900">{{formatCurrency(paymentData.amount)}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Footer -->
+            <div class="p-8 bg-gray-50 border-t border-gray-200">
+                <div class="text-center text-gray-600">
+                    <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
+                    <p class="mt-2">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua:</p>
+                    <p class="mt-1">Email: support@greenline.com</p>
+                    <p>Hotline: 1900 1234</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-center space-x-4 print:hidden">
+            <button mat-raised-button color="primary" (click)="window.print()">
+                <mat-icon class="mr-2">print</mat-icon>
+                In hóa đơn
+            </button>
+            <button mat-stroked-button color="primary" routerLink="/">
+                <mat-icon class="mr-2">home</mat-icon>
+                Về trang chủ
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Print Styles -->
+<style>
+    @media print {
+        .print\:hidden {
+            display: none;
+        }
+        .print\:shadow-none {
+            box-shadow: none;
+        }
+    }
+</style> 

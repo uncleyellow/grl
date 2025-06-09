@@ -1,0 +1,182 @@
+<div class="flex flex-col min-h-screen w-full">
+    <!-- Phần Video -->
+    <div class="relative flex justify-center items-center w-full">
+        <!-- Background Image -->
+        <div class="relative top-0 left-0 w-screen h-screen overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop"
+                alt="Background"
+                class="absolute top-0 left-0 min-w-full min-h-full w-auto h-auto object-cover"
+            />
+            
+            <!-- Overlay with GREEN-LINE text -->
+            <div class="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
+            
+            <!-- Modern Text Overlay -->
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center transform hover:scale-105 transition-transform duration-500">
+                    <h1 class="text-6xl md:text-8xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-600 drop-shadow-2xl">
+                        GREEN-LINE
+                    </h1>
+                    <div class="mt-4 text-xl md:text-2xl text-white/90 font-light tracking-wide">
+                        Container Solutions & Services
+                    </div>
+                    <!-- Decorative Line -->
+                    <div class="mt-6 mx-auto w-24 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Floating Elements -->
+            <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-green-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        
+        
+        
+    
+
+        <!-- Lớp phủ làm mờ video -->
+        <!-- <div class="absolute inset-0 bg-black opacity-50"></div> -->
+    
+
+    </div>
+    
+    
+    
+
+    <div class="flex flex-col w-full">
+        <app-introduce class="bg-green-300 w-full relative"></app-introduce>
+        
+        <!-- Ad Banner 1 -->
+        <!-- <app-ad-banner></app-ad-banner> -->
+        
+        <!-- Sóng xanh lá -->
+        <div class="w-full overflow-hidden leading-[0] bg-green-300">
+            <svg class="relative block w-full h-[100px] text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="white"></path>
+            </svg>
+        </div>
+        
+        <app-services class="bg-white w-full relative"></app-services>
+        
+        <!-- Ad Banner 2 -->
+        <!-- <app-ad-banner></app-ad-banner> -->
+        
+        <!-- Sóng trắng -->
+        <div class="w-full overflow-hidden leading-[0] bg-white">
+            <svg class="relative block w-full h-[100px] text-green-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="currentColor"></path>
+            </svg>
+        </div>
+        
+        <app-solutions class="bg-green-300 w-full relative"></app-solutions>
+        
+        <!-- Sóng trắng -->
+        <div class="w-full overflow-hidden leading-[0] bg-green-300">
+            <svg class="relative block w-full h-[100px] text-green-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="currentColor"></path>
+            </svg>
+        </div>
+
+        <app-pricing class="bg-green-300 w-full relative"></app-pricing>
+
+        <!-- Sóng xanh lá -->
+        <div class="w-full overflow-hidden leading-[0] bg-green-300">
+            <svg class="relative block w-full h-[100px] text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="white"></path>
+            </svg>
+        </div>
+        
+        <app-news class="bg-white w-full relative"></app-news>
+        
+        <!-- Ad Banner 3 -->
+        <!-- <app-ad-banner></app-ad-banner> -->
+        
+        <!-- Sóng trắng -->
+        <div class="w-full overflow-hidden leading-[0] bg-white">
+            <svg class="relative block w-full h-[100px] text-green-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="currentColor"></path>
+            </svg>
+        </div>
+        
+        <app-hire class="bg-green-300 w-full relative"></app-hire>
+        
+        <!-- Sóng xanh lá -->
+        <div class="w-full overflow-hidden leading-[0] bg-green-300">
+            <svg class="relative block w-full h-[100px] text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 V120 H0 Z" fill="white"></path>
+            </svg>
+        </div>
+        
+        <app-contact class="bg-white w-full"></app-contact>
+        <app-totals></app-totals>
+    </div>
+</div>
+
+<!-- Floating Action Buttons -->
+<div class="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+    <!-- Phone Button -->
+    <a href="tel:+84987654321" 
+       class="group">
+        <div class="relative">
+            <!-- Animated bubble background -->
+            <div class="absolute inset-0 bg-green-500 rounded-full opacity-20 animate-ping"></div>
+            <!-- Main bubble -->
+            <div class="relative bg-green-500 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <!-- Email Button -->
+    <a href="mailto:contact@greenline.com" 
+       class="group">
+        <div class="relative">
+            <!-- Animated bubble background -->
+            <div class="absolute inset-0 bg-red-500 rounded-full opacity-20 animate-ping"></div>
+            <!-- Main bubble -->
+            <div class="relative bg-red-500 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <!-- Zalo Button -->
+    <a href="https://zalo.me/your-zalo-number" target="_blank" 
+       class="group">
+        <div class="relative">
+            <!-- Animated bubble background -->
+            <div class="absolute inset-0 bg-blue-500 rounded-full opacity-20 animate-ping"></div>
+            <!-- Main bubble -->
+            <div class="relative bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo" class="w-10 h-10">
+            </div>
+        </div>
+    </a>
+</div>
+
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+}
+
+.animate-fade-in-delay {
+    animation: fade-in 1s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+.animate-fade-in-delay-2 {
+    animation: fade-in 1s ease-out 0.6s forwards;
+    opacity: 0;
+}
+</style>
+

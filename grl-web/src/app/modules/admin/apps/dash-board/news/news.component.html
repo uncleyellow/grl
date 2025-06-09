@@ -1,0 +1,227 @@
+<div class="container mx-auto p-4">
+    <h2 class="text-green-600 text-xl font-semibold text-center">✨ {{'partner'|transloco}}</h2>
+    <h1 class="text-4xl font-bold text-center mt-2">{{'our-clients'|transloco}}</h1>
+    
+    <!-- Container chính -->
+    <div class="relative flex items-center justify-center w-full py-6 border border-gray-300 rounded-lg shadow-lg bg-gradient-to-r from-white to-gray-100"
+         (mouseenter)="onPartnersHover()"
+         (mouseleave)="onPartnersLeave()">
+
+        <!-- Danh sách đối tác -->
+        <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
+            <div class="flex gap-8 animate-scroll">
+                <div *ngFor="let partner of partners" 
+                    class="flex justify-center items-center h-28 w-48 transform hover:scale-110 transition-all">
+                    <img [src]="partner.image" [alt]="partner.name" 
+                        class="bg-white object-contain h-full w-full rounded-lg shadow-lg border border-gray-200"
+                        loading="lazy">
+                </div>
+            </div>
+            <!-- Clone danh sách đối tác để tạo hiệu ứng loop liên tục -->
+            <div class="flex gap-8 animate-scroll">
+                <div *ngFor="let partner of partners" 
+                    class="flex justify-center items-center h-28 w-48 transform hover:scale-110 transition-all">
+                    <img [src]="partner.image" [alt]="partner.name" 
+                        class="bg-white object-contain h-full w-full rounded-lg shadow-lg border border-gray-200"
+                        loading="lazy">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-scroll {
+        animation: scroll 30s linear infinite;
+    }
+
+    .animate-scroll:hover {
+        animation-play-state: paused;
+    }
+    </style>
+    
+    <h2 class="text-green-600 text-xl font-semibold text-center">💬 {{'feed-back'| transloco}}</h2>
+    <h1 class="text-3xl font-bold mt-2 text-center"> {{'feed-back-title'| transloco}}</h1>
+
+    <!-- Feedback Carousel -->
+    <div class="relative flex items-center justify-center mt-8 overflow-hidden">
+        <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
+            <div class="flex gap-8 animate-scroll-feedback">
+                <mat-card *ngFor="let feedback of feedbacks" 
+                    class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                    <p class="italic text-gray-700">"{{ feedback.text }}"</p>
+                    <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
+                    <p class="text-sm text-gray-500">{{ feedback.company }}</p>
+                </mat-card>
+            </div>
+            <!-- Clone danh sách feedback để tạo hiệu ứng loop liên tục -->
+            <div class="flex gap-8 animate-scroll-feedback">
+                <mat-card *ngFor="let feedback of feedbacks" 
+                    class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                    <p class="italic text-gray-700">"{{ feedback.text }}"</p>
+                    <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
+                    <p class="text-sm text-gray-500">{{ feedback.company }}</p>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes scrollFeedback {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-scroll {
+        animation: scroll 30s linear infinite;
+    }
+
+    .animate-scroll-feedback {
+        animation: scrollFeedback 40s linear infinite;
+    }
+
+    .animate-scroll:hover,
+    .animate-scroll-feedback:hover {
+        animation-play-state: paused;
+    }
+    </style>
+
+<!-- Tiêu đề -->
+<h2 class="text-green-600 text-xl font-semibold text-center mt-8">📰 {{'latest-news'| transloco}}</h2>
+<h1 class="text-3xl font-bold mt-2 text-center">{{'latest-news-title'| transloco}}</h1>
+
+<!-- Danh sách tin tức -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4">
+    <div *ngFor="let news of newsList; let i = index"
+         class="relative bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out cursor-pointer hover:shadow-lg">
+        
+        <!-- Ảnh -->
+        <img class="object-cover w-full h-52" [src]="news.imageUrl" [alt]="news.title">
+
+        <!-- Nội dung -->
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900">{{ news.title }}</h3>
+            <p class="mt-2 text-gray-700 line-clamp-3">
+                {{ news.shortContent }}
+            </p>
+
+            <!-- Ngày tạo -->
+            <p class="mt-2 text-sm text-gray-500">📅 {{ news.createdAt }}</p>
+
+            <!-- Button -->
+            <div class="mt-3 flex justify-end">
+                <button (click)="openNewsDialog(news)" class="px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 transition">
+                    Read More
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- News Dialog -->
+<ng-template #newsDialog>
+    <div class="bg-white rounded-lg overflow-hidden">
+        <!-- Header với ảnh nền -->
+        <div class="relative h-64 md:h-96">
+            <img [src]="selectedNews?.imageUrl" [alt]="selectedNews?.title" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">{{ selectedNews?.title }}</h2>
+                <div class="flex items-center text-sm">
+                    <mat-icon class="mr-2">calendar_today</mat-icon>
+                    <span>{{ selectedNews?.createdAt }}</span>
+                </div>
+            </div>
+            <button mat-icon-button (click)="closeNewsDialog()" 
+                    class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white rounded-full backdrop-blur-sm">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <!-- Nội dung -->
+        <div class="p-6 md:p-8 max-w-4xl mx-auto">
+            <!-- Breadcrumb -->
+            <!-- <div class="flex items-center text-sm text-gray-500 mb-6">
+                <a href="#" class="hover:text-green-600">Home</a>
+                <mat-icon class="mx-2 text-sm">chevron_right</mat-icon>
+                <a href="#" class="hover:text-green-600">News</a>
+                <mat-icon class="mx-2 text-sm">chevron_right</mat-icon>
+                <span class="text-gray-700">{{ selectedNews?.title }}</span>
+            </div> -->
+
+            <!-- Nội dung chính -->
+            <div class="prose max-w-none">
+                <p class="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+                    {{ selectedNews?.fullContent }}
+                </p>
+            </div>
+
+            <!-- Tags -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">News</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">Updates</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">Company</span>
+                </div>
+            </div>
+
+            <!-- Share buttons -->
+            <div class="mt-6 flex items-center gap-4">
+                <span class="text-gray-600">Share:</span>
+                <button mat-icon-button class="text-blue-600 hover:bg-blue-50">
+                    <mat-icon>facebook</mat-icon>
+                </button>
+                <button mat-icon-button class="text-blue-400 hover:bg-blue-50">
+                    <mat-icon>twitter</mat-icon>
+                </button>
+                <button mat-icon-button class="text-green-600 hover:bg-green-50">
+                    <mat-icon>whatsapp</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<style>
+.news-dialog .mat-mdc-dialog-container {
+    padding: 0;
+}
+
+.news-dialog .mat-mdc-dialog-surface {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.prose p {
+    margin-bottom: 1.5em;
+    line-height: 1.8;
+}
+
+.prose p:last-child {
+    margin-bottom: 0;
+}
+</style>
+
+</div>

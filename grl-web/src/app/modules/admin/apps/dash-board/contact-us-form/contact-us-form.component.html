@@ -1,0 +1,37 @@
+<h2 mat-dialog-title class="text-green-600 font-bold flex items-center gap-2">
+    <mat-icon color="primary">contact_mail</mat-icon> {{'contact-us' | transloco}}
+</h2>
+
+<mat-dialog-content class="space-y-4">
+    <form [formGroup]="contactForm">
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>{{'name' | transloco}}</mat-label>
+            <input matInput formControlName="fullName" placeholder="Nhập họ tên của bạn">
+            <mat-error *ngIf="contactForm.get('fullName')?.invalid && contactForm.get('fullName')?.touched">
+                {{'name-erorr' | transloco}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>{{'email' | transloco}}</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="Nhập email của bạn">
+            <mat-error *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+                {{'email-erorr' | transloco}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>{{'note' | transloco}}</mat-label>
+            <textarea matInput formControlName="message" rows="4" placeholder="Nhập nội dung tin nhắn"></textarea>
+            <mat-error *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+                {{'note-errorr' | transloco}}
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">{{'cancel'|transloco}}</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()">{{'send'|transloco}}</button>
+</mat-dialog-actions>

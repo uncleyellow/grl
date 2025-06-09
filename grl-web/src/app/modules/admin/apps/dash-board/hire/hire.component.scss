@@ -1,0 +1,29 @@
+button {
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.apply-btn {
+    background-color: #16a34a; // green-600
+    color: white;
+    border: none;
+  
+    &:hover {
+        background-color: #15803d; // green-700
+    }
+}
+
+.contact-btn {
+    background-color: white;
+    color: #16a34a; // green-600
+    border: 2px solid #16a34a;
+  
+    &:hover {
+        background-color: #f0fdf4; // light green
+    }
+}

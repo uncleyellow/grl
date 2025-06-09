@@ -1,0 +1,7 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Nền trắng -->
+    <rect width="300" height="200" fill="white" />
+    
+    <!-- Hình tròn đỏ -->
+    <circle cx="150" cy="100" r="50" fill="#BC002D" />
+</svg>
