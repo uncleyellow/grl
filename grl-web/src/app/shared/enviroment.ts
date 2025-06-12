@@ -14,6 +14,6 @@
 export const environment = {
     production: true,
     api: {
-      url: 'http://beexcelgreenline.onrender.com/api' 
+      url: 'https://beexcelgreenline.onrender.com/api' 
     }
   };
