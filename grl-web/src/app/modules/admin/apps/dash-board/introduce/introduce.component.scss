@@ -5,3 +5,12 @@
     background-repeat: no-repeat; /* Ngăn ảnh lặp lại */
     filter: blur(5px); /* Áp dụng hiệu ứng làm mờ */
 }
+
+/* Removed gradient from statistics-section as it conflicts with individual item gradients */
+/* .statistics-section {
+    background: linear-gradient(to right, #4CAF50, #FFFFFF);
+} */
+
+.stat-item-gradient {
+    background: linear-gradient(to right, #6EE7B7, #FFFFFF); /* Adjust colors as needed */
+}
