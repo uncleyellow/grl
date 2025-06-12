@@ -1,0 +1,18 @@
+<div class="fuse-navigation" fuseScrollSpy [navigationItems]="navigation">
+    <div class="fuse-navigation-content">
+        <ul class="fuse-navigation-list">
+            <ng-container *ngFor="let item of navigation">
+                <li class="fuse-navigation-item" [ngClass]="{'active': item.active}">
+                    <a class="fuse-navigation-link" (click)="item.function()">
+                        <span class="fuse-navigation-icon" [ngClass]="item.classes?.icon">
+                            <i [class]="item.icon"></i>
+                        </span>
+                        <span class="fuse-navigation-title" [ngClass]="item.classes?.title">
+                            {{item.title}}
+                        </span>
+                    </a>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</div> 

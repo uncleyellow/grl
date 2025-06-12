@@ -119,6 +119,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:user-group',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
@@ -133,6 +138,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:cog',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
@@ -147,6 +157,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('solutions-section');
             if (section) {
@@ -161,6 +176,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
@@ -175,6 +195,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
@@ -189,6 +214,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:chat',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('contact-section');
             if (section) {
@@ -221,6 +251,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:user-group',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
@@ -235,6 +270,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:cog',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
@@ -249,6 +289,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('solutions-section');
             if (section) {
@@ -263,6 +308,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
@@ -277,6 +327,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
@@ -291,6 +346,11 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:chat',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('contact-section');
             if (section) {
@@ -325,6 +385,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:user-group',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
@@ -339,6 +404,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:cog',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
@@ -353,6 +423,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('solutions-section');
             if (section) {
@@ -367,6 +442,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
@@ -381,6 +461,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
@@ -395,6 +480,11 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:chat',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('contact-section');
             if (section) {
@@ -427,6 +517,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:user-group',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
@@ -441,6 +536,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:cog',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
@@ -455,6 +555,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('solutions-section');
             if (section) {
@@ -469,6 +574,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
@@ -483,6 +593,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
@@ -497,6 +612,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:chat',
         link: '/apps/dash-board',
+        active: false,
+        classes: {
+            title: 'text-gray-700 dark:text-gray-200',
+            icon: 'text-gray-700 dark:text-gray-200'
+        },
         function: () => {
             const section = document.getElementById('contact-section');
             if (section) {

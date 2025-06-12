@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { take } from 'rxjs';
 import { AvailableLangs, TranslocoService } from '@ngneat/transloco';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
+import { ScrollService } from 'app/core/services/scroll.service';
 
 @Component({
     selector       : 'languages',
@@ -22,7 +23,8 @@ export class LanguagesComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseNavigationService: FuseNavigationService,
-        private _translocoService: TranslocoService
+        private _translocoService: TranslocoService,
+        private _scrollService: ScrollService
     )
     {
     }
@@ -36,14 +38,12 @@ export class LanguagesComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        
         // Get the available languages from transloco
-        // this.availableLangs = this._translocoService.getAvailableLangs();
         this.availableLangs =[
             {id: 'en', label: 'English'},
             {id: 'tr', label: 'Việt Nam'},
-            // {id: 'jb', label: 'Japan'},
         ]
+
         // Subscribe to language changes
         this._translocoService.langChanges$.subscribe((activeLang) => {
             // Get the active lang
@@ -59,9 +59,13 @@ export class LanguagesComponent implements OnInit, OnDestroy
         // Set the country iso codes for languages for flags
         this.flagCodes = {
             'en': 'us',
-            'tr': 'tr',
-            'jb': 'jb'
+            'tr': 'tr'
         };
+
+        // Subscribe to scroll service for active section updates
+        this._scrollService.activeSection$.subscribe(section => {
+            this._updateActiveSection(section);
+        });
     }
 
     /**
@@ -142,6 +146,39 @@ export class LanguagesComponent implements OnInit, OnDestroy
         });
 
         // Refresh the navigation component
+        navComponent.refresh();
+    }
+
+    /**
+     * Update the active section in navigation
+     *
+     * @param section
+     * @private
+     */
+    private _updateActiveSection(section: string): void
+    {
+        const navComponent = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>('mainNavigation');
+        if (!navComponent) {
+            return;
+        }
+
+        const navigation = navComponent.navigation;
+        const itemsToUpdate = [
+            'welcome',
+            'services',
+            'solutions',
+            'news',
+            'hire',
+            'contact'
+        ];
+
+        itemsToUpdate.forEach(itemId => {
+            const navItem = this._fuseNavigationService.getItem(itemId, navigation);
+            if (navItem) {
+                navItem.active = itemId === section;
+            }
+        });
+
         navComponent.refresh();
     }
 }
