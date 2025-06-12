@@ -7,7 +7,8 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class DashBoardService {
   private apiUrl = `${environment.api.url}`; // URL từ environment
- 
+  private header = `${environment.api.headers}`; // URL từ environment
+
   constructor(
     private http: HttpClient,
 
@@ -16,10 +17,8 @@ export class DashBoardService {
   }
   
   getSheetData(id): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
+    const headers = new HttpHeaders(environment.api.headers);
+
     
     return this.http.get<any>(`${this.apiUrl}/${id}`,{ headers });
   }
