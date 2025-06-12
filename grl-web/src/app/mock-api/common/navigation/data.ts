@@ -114,11 +114,17 @@ export const defaultNavigation: FuseNavigationItem[] = [
     // },
     {
         id: 'welcome',
-        title: 'welcome', // Để nguyên key, dịch sau
+        title: 'welcome',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/apps/dash-board'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('welcome-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'services',
@@ -126,7 +132,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:cog',
-        link: '/apps/dash-board/services'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('services-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'solutions',
@@ -134,7 +146,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
-        link: '/apps/dash-board/solutions'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('solutions-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'news',
@@ -142,7 +160,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
-        link: '/apps/dash-board/news'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('news-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'hire',
@@ -150,7 +174,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
-        link: '/apps/dash-board/hire'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('hire-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'contact',
@@ -158,7 +188,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board/contact'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('contact-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     // {
     //     id: 'admin',
@@ -180,11 +216,17 @@ export const compactNavigation: FuseNavigationItem[] = [
     // },
     {
         id: 'welcome',
-        title: 'welcome', // Để nguyên key, dịch sau
+        title: 'welcome',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/apps/dash-board'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('welcome-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'services',
@@ -192,7 +234,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:cog',
-        link: '/apps/dash-board/services'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('services-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'solutions',
@@ -200,7 +248,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
-        link: '/apps/dash-board/solutions'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('solutions-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'news',
@@ -208,7 +262,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
-        link: '/apps/dash-board/news'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('news-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'hire',
@@ -216,7 +276,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
-        link: '/apps/dash-board/hire'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('hire-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'contact',
@@ -224,7 +290,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board/contact'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('contact-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     // {
     //     id: 'admin',
@@ -248,11 +320,17 @@ export const futuristicNavigation: FuseNavigationItem[] = [
     // },
     {
         id: 'welcome',
-        title: 'welcome', // Để nguyên key, dịch sau
+        title: 'welcome',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/apps/dash-board'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('welcome-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'services',
@@ -260,7 +338,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:cog',
-        link: '/apps/dash-board/services'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('services-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'solutions',
@@ -268,7 +352,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
-        link: '/apps/dash-board/solutions'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('solutions-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'news',
@@ -276,7 +366,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
-        link: '/apps/dash-board/news'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('news-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'hire',
@@ -284,7 +380,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
-        link: '/apps/dash-board/hire'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('hire-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'contact',
@@ -292,7 +394,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board/contact'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('contact-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     // {
     //     id: 'admin',
@@ -314,11 +422,17 @@ export const horizontalNavigation: FuseNavigationItem[] = [
     // },
     {
         id: 'welcome',
-        title: 'welcome', // Để nguyên key, dịch sau
+        title: 'welcome',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/apps/dash-board'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('welcome-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'services',
@@ -326,7 +440,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:cog',
-        link: '/apps/dash-board/services'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('services-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'solutions',
@@ -334,7 +454,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
-        link: '/apps/dash-board/solutions'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('solutions-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'news',
@@ -342,7 +468,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
-        link: '/apps/dash-board/news'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('news-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'hire',
@@ -350,7 +482,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:briefcase',
-        link: '/apps/dash-board/hire'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('hire-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     {
         id: 'contact',
@@ -358,7 +496,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board/contact'
+        link: '/apps/dash-board',
+        function: () => {
+            const section = document.getElementById('contact-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     },
     // {
     //     id: 'admin',
