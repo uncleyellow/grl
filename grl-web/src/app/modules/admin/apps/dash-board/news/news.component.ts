@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'environments/environment.prod'; // Nếu file cách xa
@@ -116,7 +116,9 @@ stopAutoScroll() {
 }
 
 getNews() {
-  this.http.get<News[]>(`${environment.apiUrl}/news`).subscribe(
+  const headers = new HttpHeaders(environment.api.headers);
+
+  this.http.get<News[]>(`${environment.api.url}/news`, { headers }).subscribe(
     (data) => {
       // Chỉnh sửa imageUrl để hiển thị ảnh hợp lệ nếu dữ liệu không phải URL
       this.newsList = data.map(news => ({

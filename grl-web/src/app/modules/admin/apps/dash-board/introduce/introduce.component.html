@@ -1,6 +1,10 @@
-<div class="container mx-auto px-6 py-12">
+<div class="container mx-auto px-6 py-12 relative overflow-hidden">
+    <!-- Background Image with Blur -->
+    <div class="introduce-background absolute inset-0 z-0"></div>
+
+    <!-- Content sections -->
     <!-- Thống kê -->
-    <section class="bg-white shadow-lg rounded-2xl p-6" aria-label="Company Statistics">
+    <section class="bg-white shadow-lg rounded-2xl p-6 relative z-10" aria-label="Company Statistics">
         <div class="grid md:grid-cols-5 sm:grid-cols-3 grid-cols-2 gap-8 justify-center items-center text-center pb-6">
           
           <!-- Item 1: Containers -->
@@ -55,79 +59,49 @@
 
     
 
-<!-- Who We Are -->
-<!-- Who We Are Section -->
-<section class="px-6 py-12 md:py-16 bg-green-300" aria-label="Who We Are">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-      
-      <!-- Left Content: Image (Bỏ khỏi Card nhưng vẫn giữ hover) -->
-      <div class="relative w-full overflow-hidden rounded-lg group">
-        <img src="assets/green-line/Overview/Cont.png" 
-             alt="Container for Transport and Logistics" 
-             class="rounded-lg w-full group-hover:scale-105 transition-transform duration-300 shadow-lg">
-      </div>
-  
-      <!-- Right Content: Text (Bọc trong Card) -->
-      <mat-card class="shadow-lg rounded-lg p-6 bg-white right-20">
-        <mat-card-content class="text-center md:text-left">
-          <h1 class="text-4xl font-extrabold text-red-600 flex items-center gap-3">
-            <mat-icon class="text-red-600">groups</mat-icon>
-            <span>{{ data[1].shortContent | transloco }}</span>
-          </h1>
-  
-          <p class="text-gray-700 text-lg leading-relaxed mt-4">
-            {{ data[1].title | transloco }}
-          </p>
-        </mat-card-content>
-      </mat-card>
-  
-    </div>
-  </section>
-  
-  
+<!-- Who We Are & Our Mission Combined Section -->
+<section class="relative py-16 px-6 lg:px-12 z-10 -mt-20 top-10">
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 ">
+        <!-- Card 1: WHO WE ARE -->
+        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg p-8 transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
+            <div class="relative z-20">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">{{ 'who-we-are' | transloco }}</h2>
+                <p class="text-lg text-gray-700 leading-relaxed mb-8 text-center">
+                  {{ 'description-who-we-are' | transloco }}  
+                </p>
+                <div class="flex justify-center mb-8">
+                    <button class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        READ MORE
+                    </button>
+                </div>
+            </div>
+            <div class="relative w-full h-64 rounded-xl overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105">
+                <img src="../../../../../../assets/green-line/ContainerService/daukeo.bmp" 
+                     alt="Warehouse with shelves" 
+                     class="w-full h-full object-cover rounded-xl"/>
+            </div>
+        </mat-card>
 
-<!-- Our Mission -->
-<!-- Our Mission Section -->
-<section class="px-6 py-10 md:py-16 bg-green-300" aria-labelledby="our-mission-title">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-      
-      <!-- Left Content (Text) -->
-      <mat-card class="shadow-lg rounded-lg p-6 bg-green-200 left-30 z-40">
-        <mat-card-content class="text-center md:text-left">
-          <h1 id="our-mission-title" class="text-4xl font-extrabold flex items-center gap-3">
-            <mat-icon class="text-orange-500 animate-wiggle">flag</mat-icon>
-            <span class="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-              <span>{{ data[2].shortContent | transloco }}</span>
-            </span>
-          </h1>
-    
-          <p class="text-gray-700 text-lg leading-relaxed mt-4">
-            {{ data[1].title | transloco }}
-          </p>
-        </mat-card-content>
-      </mat-card>
-  
-      <!-- Right Content (Image) -->
-      <div class="flex justify-center items-center w-full h-full">
-        <div class="relative w-full max-w-6xl h-140 overflow-hidden rounded-xl group shadow-lg bg-white flex items-center mx-auto">
-          <img src="assets/green-line/Overview/VietnamRailWayRoute.svg" 
-               alt="Vietnam Railway Route Overview" 
-               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-      
-          <!-- Eco Friendly Icon -->
-          <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" 
-               alt="Eco Friendly Symbol" 
-               class="absolute top-4 right-4 w-16 opacity-90">
-        </div>
-      </div>
-      
-      
-      
-      
-  
+        <!-- Card 2: OUR MISSION -->
+        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg p-8 transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
+            <div class="relative z-20">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">{{ 'our-mission' | transloco }}</h2>
+                <p class="text-lg text-gray-700 leading-relaxed mb-8 text-center">
+                  {{ 'description-our-mission' | transloco }}
+                </p>
+                <div class="flex justify-center mb-8">
+                    <button class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        READ MORE
+                    </button>
+                </div>
+            </div>
+            <div class="relative w-full h-64 rounded-xl overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105">
+                <img src="../../../../../../assets/green-line/Overview/VietnamRailWayRoute.svg" 
+                     alt="Woman working in warehouse" 
+                     class="w-full h-full object-cover rounded-xl"/>
+            </div>
+        </mat-card>
     </div>
-  </section>
-  
-  
+</section>
 
 </div>

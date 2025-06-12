@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
 import Swal from 'sweetalert2';
 
@@ -38,8 +38,11 @@ export class DialogComponent implements OnInit {
     const formData = this.form.value;
 
     if (this.data.isEdit) {
+
+      const headers = new HttpHeaders(environment.api.headers);
+
       // Update existing record
-      this.http.put(`${environment.apiUrl}/${endpoint}/${this.data.id}`, formData)
+      this.http.put(`${environment.api.url}/${endpoint}/${this.data.id}`,{headers} ,formData)
         .subscribe({
           next: () => {
             Swal.fire('Success!', 'Record updated successfully.', 'success');
@@ -53,7 +56,9 @@ export class DialogComponent implements OnInit {
         });
     } else {
       // Add new record
-      this.http.post(`${environment.apiUrl}/${endpoint}`, formData)
+      const headers = new HttpHeaders(environment.api.headers);
+
+      this.http.post(`${environment.api.url}/${endpoint}`,{headers}, formData)
         .subscribe({
           next: () => {
             Swal.fire('Success!', 'Record added successfully.', 'success');

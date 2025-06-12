@@ -83,7 +83,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
+            {path: 'admin', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
         {
             path: 'apps', children:[
                 {path: 'dash-board', loadChildren: () => import('app/modules/admin/apps/dash-board/dash-board.module').then(m => m.DashBoardModule)},

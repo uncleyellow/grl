@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment} from '../enviroment';
 import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
@@ -16,7 +16,12 @@ export class DashBoardService {
   }
   
   getSheetData(id): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+    
+    return this.http.get<any>(`${this.apiUrl}/${id}`,{ headers });
   }
 
 }

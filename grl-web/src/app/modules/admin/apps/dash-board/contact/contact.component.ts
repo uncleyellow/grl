@@ -104,7 +104,7 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
       ...this.contactForm.value
     };
     debugger
-    this.http.post(`${environment.apiUrl}/contact_customer`, formData).subscribe({
+    this.http.post(`${environment.api.url}/contact_customer`, formData).subscribe({
       next: (res) => {
         Swal.fire({
           position: "top-end",

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2'
@@ -90,11 +90,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     // This function will be called whenever the language changes
     console.log('Language changed to:', newLang);
     // Add your language change logic here
-    if(newLang = 'tr'){
-
+    if(newLang === 'tr'){
+      // Turkish language logic
     }
     else{
-      
+      // Default language logic
     }
   }
 
@@ -106,24 +106,43 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
     try {
       // Khởi tạo map
-      this.map = L.map(this.mapContainer.nativeElement).setView([21.0285, 105.8542], 6);
+      this.map = L.map(this.mapContainer.nativeElement).setView([21.0285, 105.8542], 10);
       
       // Thêm tile layer (OpenStreetMap)
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© Green Line Map'
+        attribution: '© OpenStreetMap contributors'
       }).addTo(this.map);
 
+      // Custom icon cho các marker
+      const hanoiIcon = L.divIcon({
+        html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+
+      const pickupIcon = L.divIcon({
+        html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+
+      const deliveryIcon = L.divIcon({
+        html: '<div style="background-color: #ef4444; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+
       // Thêm marker cho Ga Hà Nội
-      this.hanoiStationMarker = L.marker(this.hanoiStation)
+      this.hanoiStationMarker = L.marker(this.hanoiStation, { icon: hanoiIcon })
         .bindPopup('Ga Hà Nội')
         .addTo(this.map);
 
       // Xử lý sự kiện click trên map
       this.map.on('click', (e: L.LeafletMouseEvent) => {
         // Kiểm tra xem đang chọn điểm lấy hay trả hàng
-        const isPickup = !this.pickupPoint; // Nếu chưa có điểm lấy hàng thì click là chọn điểm lấy
+        const isPickup = !this.pickupPoint || (this.pickupPoint && !this.deliveryPoint); 
 
-        if (isPickup) {
+        if (isPickup && !this.pickupPoint) {
           // Xử lý chọn điểm lấy hàng
           if (this.pickupMarker) {
             this.map.removeLayer(this.pickupMarker);
@@ -133,12 +152,12 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
 
           this.pickupPoint = e.latlng;
-          this.pickupMarker = L.marker(e.latlng)
+          this.pickupMarker = L.marker(e.latlng, { icon: pickupIcon })
             .bindPopup('Điểm lấy hàng')
             .addTo(this.map);
 
           this.calculatePickupDistance(e.latlng);
-        } else {
+        } else if (this.pickupPoint && !this.deliveryPoint) {
           // Xử lý chọn điểm trả hàng
           if (this.deliveryMarker) {
             this.map.removeLayer(this.deliveryMarker);
@@ -148,7 +167,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
 
           this.deliveryPoint = e.latlng;
-          this.deliveryMarker = L.marker(e.latlng)
+          this.deliveryMarker = L.marker(e.latlng, { icon: deliveryIcon })
             .bindPopup('Điểm trả hàng')
             .addTo(this.map);
 
@@ -173,10 +192,15 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             this.map.removeLayer(this.routeLine);
           }
           
-          this.routeLine = L.polyline(data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), {
-            color: 'blue',
-            weight: 3
-          }).addTo(this.map);
+          // Tạo polyline với style giống ảnh (màu xanh đậm)
+          this.routeLine = L.polyline(
+            data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), 
+            {
+              color: '#1e40af',
+              weight: 4,
+              opacity: 0.8
+            }
+          ).addTo(this.map);
           
           this.calculateTotal();
         }
@@ -201,10 +225,15 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             this.map.removeLayer(this.deliveryRouteLine);
           }
           
-          this.deliveryRouteLine = L.polyline(data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), {
-            color: 'red',
-            weight: 3
-          }).addTo(this.map);
+          // Tạo polyline cho delivery route
+          this.deliveryRouteLine = L.polyline(
+            data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), 
+            {
+              color: '#dc2626',
+              weight: 4,
+              opacity: 0.8
+            }
+          ).addTo(this.map);
           
           this.calculateTotal();
         }
@@ -221,7 +250,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     if (!address) return;
 
     // Sử dụng Nominatim API để tìm tọa độ
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=vn&limit=1`)
       .then(response => response.json())
       .then(data => {
         if (data && data.length > 0) {
@@ -238,12 +267,22 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             this.map.removeLayer(this.routeLine);
           }
 
-          this.pickupMarker = L.marker(latlng)
+          const pickupIcon = L.divIcon({
+            html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [16, 16],
+            className: 'custom-marker'
+          });
+
+          this.pickupPoint = latlng;
+          this.pickupMarker = L.marker(latlng, { icon: pickupIcon })
             .bindPopup('Điểm lấy hàng')
             .addTo(this.map);
 
           this.calculatePickupDistance(latlng);
         }
+      })
+      .catch(error => {
+        console.error('Error searching pickup address:', error);
       });
   }
 
@@ -251,7 +290,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const address = this.totalsForm.get('deliveryAddress')?.value;
     if (!address) return;
 
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=vn&limit=1`)
       .then(response => response.json())
       .then(data => {
         if (data && data.length > 0) {
@@ -268,19 +307,30 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             this.map.removeLayer(this.deliveryRouteLine);
           }
 
+          const deliveryIcon = L.divIcon({
+            html: '<div style="background-color: #ef4444; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [16, 16],
+            className: 'custom-marker'
+          });
+
           this.deliveryPoint = latlng;
-          this.deliveryMarker = L.marker(latlng)
+          this.deliveryMarker = L.marker(latlng, { icon: deliveryIcon })
             .bindPopup('Điểm trả hàng')
             .addTo(this.map);
 
           this.calculateDeliveryDistance(latlng);
         }
+      })
+      .catch(error => {
+        console.error('Error searching delivery address:', error);
       });
   }
 
   fetchTotals() {
     this.loading = true;
-    this.http.get<any[]>(`${environment.apiUrl}/totals`).subscribe({
+    const headers = new HttpHeaders(environment.api.headers);
+
+    this.http.get<any[]>(`${environment.api.url}/totals`,{headers}).subscribe({
       next: (data) => {
         this.totalsData = data;
         this.loading = false;
@@ -303,7 +353,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
 
   calculateTotal() {
-    if (!this.selectedRoute) return;
+    if (!this.selectedRoute) {
+      this.totalPrice = 0;
+      return;
+    }
 
     const transportType = this.totalsForm.get('transportType')?.value;
     const roadPricePerKm = Number(this.selectedRoute.duongBo) || 0;
@@ -322,7 +375,31 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             // Chỉ đường tàu
             this.totalPrice = railPrice;
             break;
+        default:
+            this.totalPrice = 0;
     }
+  }
+
+  // Reset map để chọn lại điểm
+  resetMap() {
+    if (this.pickupMarker) {
+      this.map.removeLayer(this.pickupMarker);
+    }
+    if (this.deliveryMarker) {
+      this.map.removeLayer(this.deliveryMarker);
+    }
+    if (this.routeLine) {
+      this.map.removeLayer(this.routeLine);
+    }
+    if (this.deliveryRouteLine) {
+      this.map.removeLayer(this.deliveryRouteLine);
+    }
+    
+    this.pickupPoint = null;
+    this.deliveryPoint = null;
+    this.pickupDistance = 0;
+    this.deliveryDistance = 0;
+    this.calculateTotal();
   }
 
   onSubmit() {
@@ -330,10 +407,14 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   
     this.loading = true;
     const formData = {
-      ...this.totalsForm.value
+      ...this.totalsForm.value,
+      pickupDistance: this.pickupDistance,
+      deliveryDistance: this.deliveryDistance,
+      totalPrice: this.totalPrice
     };
-  
-    this.http.post(`${environment.apiUrl}/contact_customer`, formData).subscribe({
+    const headers = new HttpHeaders(environment.api.headers);
+
+    this.http.post(`${environment.api.url}/contact_customer`,{headers} ,formData).subscribe({
       next: (res) => {
         Swal.fire({
           position: "top-end",
@@ -343,6 +424,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           timer: 1500
         });
         this.totalsForm.reset();
+        this.resetMap();
         this.loading = false;
       },
       error: (err) => {

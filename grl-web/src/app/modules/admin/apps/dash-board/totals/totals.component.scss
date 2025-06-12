@@ -1,0 +1,101 @@
+// Custom styles for totals component
+.custom-marker {
+    background: transparent !important;
+    border: none !important;
+  }
+  
+  // Dropdown arrow styling
+  select {
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  // Form input focus states
+  input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  }
+  
+  // Custom scrollbar for dropdowns
+  select::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  select::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  select::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 4px;
+  }
+  
+  select::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .grid-cols-1.lg\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+    
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+    
+    .px-6 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  
+  // Loading spinner
+  .mat-spinner {
+    margin: 0 auto;
+  }
+  
+  // Map container
+  .leaflet-container {
+    font-family: inherit;
+  }
+  
+  // Popup styling
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  // Button hover effects
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transition: all 0.2s ease;
+  }
+  
+  // Input focus styling
+  .focus\\:ring-green-500:focus {
+    --ring-color: rgba(16, 185, 129, 0.5);
+  }
+  
+  // Total section styling
+  .bg-green-600 {
+    background: linear-gradient(135deg, #10b981, #059669);
+  }
+  
+  // Card hover effect
+  .bg-white.rounded-3xl {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .bg-white.rounded-3xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0,0)
+}

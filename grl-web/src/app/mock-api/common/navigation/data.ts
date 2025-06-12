@@ -105,13 +105,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
     //     ]
     // },
 
-    {
-        id: 'phone',
-        title: '012345678910',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:phone',
-    },
+    // {
+    //     id: 'phone',
+    //     title: '012345678910',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:phone',
+    // },
     {
         id: 'welcome',
         title: 'welcome', // Để nguyên key, dịch sau
@@ -171,13 +171,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
     
 ];
 export const compactNavigation: FuseNavigationItem[] = [
-    {
-        id: 'phone',
-        title: '012345678910',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:phone',
-    },
+    // {
+    //     id: 'phone',
+    //     title: '012345678910',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:phone',
+    // },
     {
         id: 'welcome',
         title: 'welcome', // Để nguyên key, dịch sau
@@ -239,13 +239,13 @@ export const compactNavigation: FuseNavigationItem[] = [
     
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
-    {
-        id: 'phone',
-        title: '012345678910',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:phone',
-    },
+    // {
+    //     id: 'phone',
+    //     title: '012345678910',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:phone',
+    // },
     {
         id: 'welcome',
         title: 'welcome', // Để nguyên key, dịch sau
@@ -305,13 +305,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
     
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
-    {
-        id: 'phone',
-        title: '012345678910',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:phone',
-    },
+    // {
+    //     id: 'phone',
+    //     title: '012345678910',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:phone',
+    // },
     {
         id: 'welcome',
         title: 'welcome', // Để nguyên key, dịch sau

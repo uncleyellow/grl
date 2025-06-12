@@ -1,9 +1,9 @@
-<div class="container mx-auto p-4">
+<div class="mx-auto h-full">
     <h2 class="text-green-600 text-xl font-semibold text-center">✨ {{'partner'|transloco}}</h2>
     <h1 class="text-4xl font-bold text-center mt-2">{{'our-clients'|transloco}}</h1>
     
-    <!-- Container chính -->
-    <div class="relative flex items-center justify-center w-full py-6 border border-gray-300 rounded-lg shadow-lg bg-gradient-to-r from-white to-gray-100"
+    <!-- Container chính - Đối tác với bg-white -->
+    <div class="relative flex items-center justify-center w-2/3 left-60 py-6 border border-gray-300 rounded-lg shadow-lg bg-white"
          (mouseenter)="onPartnersHover()"
          (mouseleave)="onPartnersLeave()">
 
@@ -29,47 +29,31 @@
         </div>
     </div>
     
-    <style>
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    .animate-scroll {
-        animation: scroll 30s linear infinite;
-    }
-
-    .animate-scroll:hover {
-        animation-play-state: paused;
-    }
-    </style>
+    <!-- Phần Feedback với bg-green-300 -->
+    <div class="mt-12 py-8 px-4 bg-green-300 rounded-lg">
+        <h2 class="text-green-800 text-xl font-semibold text-center">💬 {{'feed-back'| transloco}}</h2>
+        <h1 class="text-3xl font-bold mt-2 text-center text-green-900"> {{'feed-back-title'| transloco}}</h1>
     
-    <h2 class="text-green-600 text-xl font-semibold text-center">💬 {{'feed-back'| transloco}}</h2>
-    <h1 class="text-3xl font-bold mt-2 text-center"> {{'feed-back-title'| transloco}}</h1>
-
-    <!-- Feedback Carousel -->
-    <div class="relative flex items-center justify-center mt-8 overflow-hidden">
-        <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
-            <div class="flex gap-8 animate-scroll-feedback">
-                <mat-card *ngFor="let feedback of feedbacks" 
-                    class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
-                    <p class="italic text-gray-700">"{{ feedback.text }}"</p>
-                    <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
-                    <p class="text-sm text-gray-500">{{ feedback.company }}</p>
-                </mat-card>
-            </div>
-            <!-- Clone danh sách feedback để tạo hiệu ứng loop liên tục -->
-            <div class="flex gap-8 animate-scroll-feedback">
-                <mat-card *ngFor="let feedback of feedbacks" 
-                    class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
-                    <p class="italic text-gray-700">"{{ feedback.text }}"</p>
-                    <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
-                    <p class="text-sm text-gray-500">{{ feedback.company }}</p>
-                </mat-card>
+        <!-- Feedback Carousel -->
+        <div class="relative flex items-center justify-center mt-8 overflow-hidden w-2/3 left-60">
+            <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
+                <div class="flex gap-8 animate-scroll-feedback">
+                    <mat-card *ngFor="let feedback of feedbacks" 
+                        class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                        <p class="italic text-gray-700">"{{ feedback.text }}"</p>
+                        <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
+                        <p class="text-sm text-gray-500">{{ feedback.company }}</p>
+                    </mat-card>
+                </div>
+                <!-- Clone danh sách feedback để tạo hiệu ứng loop liên tục -->
+                <div class="flex gap-8 animate-scroll-feedback">
+                    <mat-card *ngFor="let feedback of feedbacks" 
+                        class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                        <p class="italic text-gray-700">"{{ feedback.text }}"</p>
+                        <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
+                        <p class="text-sm text-gray-500">{{ feedback.company }}</p>
+                    </mat-card>
+                </div>
             </div>
         </div>
     </div>
@@ -162,15 +146,6 @@
 
         <!-- Nội dung -->
         <div class="p-6 md:p-8 max-w-4xl mx-auto">
-            <!-- Breadcrumb -->
-            <!-- <div class="flex items-center text-sm text-gray-500 mb-6">
-                <a href="#" class="hover:text-green-600">Home</a>
-                <mat-icon class="mx-2 text-sm">chevron_right</mat-icon>
-                <a href="#" class="hover:text-green-600">News</a>
-                <mat-icon class="mx-2 text-sm">chevron_right</mat-icon>
-                <span class="text-gray-700">{{ selectedNews?.title }}</span>
-            </div> -->
-
             <!-- Nội dung chính -->
             <div class="prose max-w-none">
                 <p class="text-gray-700 text-lg leading-relaxed whitespace-pre-line">

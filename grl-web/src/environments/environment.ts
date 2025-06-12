@@ -1,5 +1,11 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://beexcelgreenline.onrender.com/api',
-  };
+    api: {
+        url: 'http://localhost:4200/api', // Sử dụng proxy trong development
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+};
   

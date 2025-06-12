@@ -40,7 +40,7 @@ onSubmit() {
     ...this.contactForm.value,
     createdAt: new Date().toISOString(),
   };
-  this.http.post(`${environment.apiUrl}/contact`, formData).subscribe({
+  this.http.post(`${environment.api.url}/contact`, formData).subscribe({
     next: (res) => {
       Swal.fire({
         position: "top-end",

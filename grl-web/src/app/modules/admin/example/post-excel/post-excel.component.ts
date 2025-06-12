@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,8 +57,9 @@ export class PostExcelComponent implements OnInit {
     this.loading = true;
     this.displayedColumns = [];
     const endpoint = this.selectedSheet;
+    const headers = new HttpHeaders(environment.api.headers);
 
-    this.http.get(`${environment.apiUrl}/${endpoint}`).subscribe({
+    this.http.get(`${environment.api.url}/${endpoint}`, {headers}).subscribe({
       next: (data: any) => {
         if (data && data.length > 0) {
           this.displayedColumns = Object.keys(data[0]).filter(key => key !== 'id');
@@ -159,8 +160,9 @@ export class PostExcelComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const endpoint = this.selectedSheet;
+        const headers = new HttpHeaders(environment.api.headers);
 
-        this.http.delete(`${environment.apiUrl}/${endpoint}/${id}`).subscribe({
+        this.http.delete(`${environment.api.url}/${endpoint}/${id}`, {headers}).subscribe({
           next: () => {
             Swal.fire('Deleted!', 'Record has been deleted.', 'success');
             this.loadData();

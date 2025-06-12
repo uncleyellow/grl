@@ -1,5 +1,11 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://beexcelgreenline.onrender.com/api',
-  };
+    api: {
+        url: 'https://beexcelgreenline.onrender.com/api',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+};
   
