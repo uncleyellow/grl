@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, Output, EventEmitter, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2'
 import { environment } from 'environments/environment.prod';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-contact',
@@ -40,22 +41,29 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private fb: FormBuilder, 
-    private http: HttpClient
+    private http: HttpClient,
+    @Inject(MAT_DIALOG_DATA) public dialogData: any,
+    private dialogRef: MatDialogRef<ContactComponent>
   ) {}
 
   ngOnInit() {
-    if(this.selectedService){
+    if(this.selectedService || this.dialogData?.isDialog){
       this.isDialog = true
     }
     this.contactForm = this.fb.group({
       fullName: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,11}$')]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', Validators.email],
+      companyName: [''],
       services: [this.selectedService, Validators.required],
       kind: [this.selectedContainer, Validators.required],
       number: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      message: ['', Validators.required],
+      message: [''],
     });
+
+    if (this.dialogData?.isDialog) {
+      this.isDialog = true;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -74,7 +82,6 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
 
   updateFormValues() {
     if (this.contactForm) {
-      // this.isDialog = true
       this.contactForm.patchValue({
         services: this.selectedService,
         kind: this.selectedContainer
@@ -85,9 +92,7 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy() {}
 
   onLanguageChange(newLang: string) {
-    // This function will be called whenever the language changes
     console.log('Language changed to:', newLang);
-    // Add your language change logic here
     if(newLang = 'tr'){
       
     }
@@ -116,6 +121,9 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
         this.contactForm.reset();
         this.loading = false;
         this.onSubmit.emit(formData);
+        if (this.isDialog) {
+          this.dialogRef.close();
+        }
       },
       error: (err) => {
         Swal.fire({
@@ -132,6 +140,10 @@ export class ContactComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   handleCancel() {
-    this.onCancel.emit();
+    if (this.isDialog) {
+      this.dialogRef.close();
+    } else {
+      this.onCancel.emit();
+    }
   }
 }

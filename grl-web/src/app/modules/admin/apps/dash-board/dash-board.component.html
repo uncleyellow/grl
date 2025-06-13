@@ -1,19 +1,27 @@
 <div class="flex flex-col min-h-screen w-full">
     <!-- Phần Video -->
-    <div class="relative flex flex-col lg:flex-row items-center w-full min-h-[600px] bg-white">
+    <div class="relative flex flex-col lg:flex-row items-center w-full min-h-[600px] bg-white top-10">
         <!-- Left Section: Text Content -->
         <div class="lg:w-1/2 p-8 lg:p-16 text-center lg:text-left z-10">
             <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight animate-fade-in">
                 GREENLINES LOGISTICS
             </h1>
             <p class="mt-6 text-lg text-gray-700 leading-relaxed animate-fade-in-delay">
-                Công ty TNHH NR Greenlines Logistics là công ty chuyên cung cấp dịch vụ vận tải hàng hóa, hàng hóa chuyên dụng, hàng container bằng đường sắt 2 chiều Bắc - Nam. Được thành lập từ tháng 1 năm 2008, hiện công ty đã có được sự tín nhiệm của những khách hàng lớn như: Toyota, Honda, Yamaha, Toro, Mitsubishi, Toshiba, Isuzu...Ngoài trụ sở chính đặt tại Hà nội, công ty hiện có các trạm CN nhánh tại Vĩnh Phúc, Đà Nẵng, Bình Dương...
+                Công ty TNHH NR Greenlines Logistics là công ty chuyên cung cấp dịch vụ vận tải hàng hóa, hàng hóa chuyên dụng, hàng container bằng đường sắt 2 chiều Bắc - Nam.
+                <ng-container *ngIf="!showFullDescription">...</ng-container>
             </p>
+            <div *ngIf="showFullDescription" class="mt-4 text-lg text-gray-700 leading-relaxed animate-fade-in-delay">
+                Được thành lập từ tháng 1 năm 2008, hiện công ty đã có được sự tín nhiệm của những khách hàng lớn như: Toyota, Honda, Yamaha, Toro, Mitsubishi, Toshiba, Isuzu...Ngoài trụ sở chính đặt tại Hà nội, công ty hiện có các trạm CN nhánh tại Vĩnh Phúc, Đà Nẵng, Bình Dương...
+            </div>
             <div class="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4 animate-fade-in-delay-2">
-                <button class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
-                    TÌM HIỂU THÊM
+                <button 
+                    (click)="showFullDescription = !showFullDescription"
+                    class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                    {{ showFullDescription ? 'THU GỌN' : 'TÌM HIỂU THÊM' }}
                 </button>
-                <button class="px-8 py-3 border border-green-600 text-green-600 font-semibold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105">
+                <button 
+                    (click)="openContactDialog()"
+                    class="px-8 py-3 border border-green-600 text-green-600 font-semibold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105">
                     LIÊN HỆ
                 </button>
             </div>
@@ -67,7 +75,7 @@
             </svg>
         </div> -->
         
-        <app-solutions id="solutions-section" class="bg-white w-full relative"></app-solutions>
+        <!-- <app-solutions id="solutions-section" class="bg-white w-full relative"></app-solutions> -->
         
         <!-- Sóng trắng -->
         <!-- <div class="w-full overflow-hidden leading-[0] bg-green-300">
@@ -106,7 +114,7 @@
             </svg>
         </div> -->
         
-        <app-contact id="contact-section" class="bg-white w-full"></app-contact>
+        <!-- <app-contact id="contact-section" class="bg-white w-full"></app-contact> -->
     </div>
 </div>
 

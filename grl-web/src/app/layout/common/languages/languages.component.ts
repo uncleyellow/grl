@@ -40,8 +40,9 @@ export class LanguagesComponent implements OnInit, OnDestroy
     {
         // Get the available languages from transloco
         this.availableLangs =[
-            {id: 'en', label: 'English'},
             {id: 'tr', label: 'Việt Nam'},
+            {id: 'en', label: 'English'},
+            // {id: 'tr', label: 'Việt Nam'},
         ]
 
         // Subscribe to language changes
@@ -58,9 +59,15 @@ export class LanguagesComponent implements OnInit, OnDestroy
 
         // Set the country iso codes for languages for flags
         this.flagCodes = {
+            'tr': 'tr',
             'en': 'us',
-            'tr': 'tr'
         };
+
+        // Set initial language based on localStorage or default to 'tr'
+        const storedLang = localStorage.getItem('activeLang');
+        if (!storedLang || storedLang !== 'tr') { 
+            this.setActiveLang('tr'); // Set to 'tr' (Vietnamese)
+        }
 
         // Subscribe to scroll service for active section updates
         this._scrollService.activeSection$.subscribe(section => {

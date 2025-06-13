@@ -284,7 +284,7 @@ export const compactNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'solutions',
-        title: 'solutions',
+        title: 'price',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
@@ -295,7 +295,7 @@ export const compactNavigation: FuseNavigationItem[] = [
             icon: 'text-gray-700 dark:text-gray-200'
         },
         function: () => {
-            const section = document.getElementById('solutions-section');
+            const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
             }
@@ -418,7 +418,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'solutions',
-        title: 'solutions',
+        title: 'price',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
@@ -429,7 +429,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             icon: 'text-gray-700 dark:text-gray-200'
         },
         function: () => {
-            const section = document.getElementById('solutions-section');
+            const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
             }
@@ -550,7 +550,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'solutions',
-        title: 'solutions',
+        title: 'price',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
@@ -561,7 +561,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             icon: 'text-gray-700 dark:text-gray-200'
         },
         function: () => {
-            const section = document.getElementById('solutions-section');
+            const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
             }

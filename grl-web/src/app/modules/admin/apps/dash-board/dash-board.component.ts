@@ -1,4 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactComponent } from 'app/modules/admin/apps/dash-board/contact/contact.component';
 import { DashBoardService } from 'app/shared/services/dash-board.services';
 
 @Component({
@@ -9,9 +11,10 @@ import { DashBoardService } from 'app/shared/services/dash-board.services';
 export class DashBoardComponent implements OnInit{
   data
   @Input() activeLang: string = 'en';
+  showFullDescription: boolean = false;
   constructor(
     private DashBoardServices:DashBoardService,
-
+    private _matDialog: MatDialog
   ){
 
   }
@@ -56,5 +59,13 @@ export class DashBoardComponent implements OnInit{
     if (content) {
       content.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  openContactDialog(): void {
+    this._matDialog.open(ContactComponent, {
+      width: '900px',
+      panelClass: 'contact-form-dialog',
+      data: { isDialog: true }
+    });
   }
 }
