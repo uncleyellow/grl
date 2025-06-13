@@ -64,38 +64,18 @@
                 <div class="bg-green-200 p-6 rounded-3xl">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến</h3>
                     
-                    <!-- Route Selection -->
+                    <!-- New Number of Containers Input -->
                     <div class="mb-4">
                         <div class="relative">
-                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">train</mat-icon>
-                            <select 
-                                formControlName="route"
-                                (change)="onRouteChange()"
-                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none bg-white"
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">grid_on</mat-icon>
+                            <input 
+                                type="number" 
+                                formControlName="numberOfContainers"
+                                placeholder="Nhập số lượng Cont"
+                                (input)="calculateTotal()"
+                                min="1"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             >
-                                <option value="">Chọn chuyến</option>
-                                <option *ngFor="let route of totalsData" [value]="route.chuyen">
-                                    {{route.chuyen}}
-                                </option>
-                            </select>
-                            <mat-icon class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">expand_more</mat-icon>
-                        </div>
-                    </div>
-
-                    <!-- Transport Type Selection -->
-                    <div>
-                        <div class="relative">
-                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">local_shipping</mat-icon>
-                            <select 
-                                formControlName="transportType"
-                                (change)="onTransportTypeChange()"
-                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none bg-white"
-                            >
-                                <option value="both">Cả hai</option>
-                                <option value="road">Đường bộ</option>
-                                <option value="rail">Đường tàu</option>
-                            </select>
-                            <mat-icon class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">expand_more</mat-icon>
                         </div>
                     </div>
                 </div>
@@ -123,19 +103,6 @@
                     <div class="flex justify-between items-center py-2 border-b border-green-300">
                         <span class="text-lg text-gray-700">Khoảng cách trả hàng</span>
                         <span class="font-medium text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
-                    </div>
-
-                    <!-- Price Info -->
-                    <div *ngIf="selectedRoute" class="space-y-2">
-                        <div class="flex justify-between items-center py-2 border-b border-green-300">
-                            <span class="text-lg text-gray-700">Giá đường bộ</span>
-                            <span class="font-medium text-lg">{{selectedRoute.duongBo | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                        </div>
-                        
-                        <div class="flex justify-between items-center py-2 border-b border-green-300">
-                            <span class="text-lg text-gray-700">Giá đường tàu</span>
-                            <span class="font-medium text-lg">{{selectedRoute.duongTau | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                        </div>
                     </div>
 
                     <!-- Total -->

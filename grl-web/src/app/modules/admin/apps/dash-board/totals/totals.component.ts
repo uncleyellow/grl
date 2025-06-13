@@ -28,11 +28,45 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   // Mapbox config
   mapStyle = 'mapbox://styles/mapbox/streets-v11';
   center: [number, number] = [105.8542, 21.0285]; // Hà Nội
+  
   zoom = 6;
   
   // Ga Hà Nội coordinates
-  private hanoiStation = L.latLng(21.024350, 105.841420);
+  private hanoiStation = L.latLng(21.0242579 , 105.8384487);
+
+  // Ga Đông Anh coordinates
+  private dongAnhStation = L.latLng(21.1535125 , 105.8498434);
   
+  // Ga Vinh coordinates
+  private vinhStation = L.latLng(18.6881622 , 105.661454);
+
+  // Ga Da Nang coordinates
+  private daNangStation = L.latLng(16.0716532 , 108.20674);
+
+  // Ga Dieu Tri coordinates
+  private dieuTriStation = L.latLng(13.8071374 , 109.1411505);
+
+  // Ga Trang Bom coordinates
+  private trangBomStation = L.latLng(10.9449467 , 106.9917843);
+
+  // Ga Giap Bat coordinates
+  private giapBatStation = L.latLng(20.9762103 , 105.8381601);
+
+  // Ga Kim Lien coordinates
+  private kimLienStation = L.latLng(16.1327551 , 108.1178667);
+
+  // Array of all stations
+  private stations = [
+    { name: 'Ga Hà Nội', coordinates: this.hanoiStation },
+    { name: 'Ga Đông Anh', coordinates: this.dongAnhStation },
+    { name: 'Ga Vinh', coordinates: this.vinhStation },
+    { name: 'Ga Da Nang', coordinates: this.daNangStation },
+    { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
+    { name: 'Ga Trang Bom', coordinates: this.trangBomStation },
+    { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
+    { name: 'Ga Kim Lien', coordinates: this.kimLienStation }
+  ];
+
   // Điểm lấy hàng
   private pickupPoint: L.LatLng | null = null;
 
@@ -45,20 +79,25 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   private deliveryPoint: L.LatLng | null = null;
   private deliveryMarker: L.Marker;
   private deliveryRouteLine: L.Polyline;
+  private nearestPickupStation: any = null;
+  private nearestDeliveryStation: any = null;
   
   // Thêm biến cho khoảng cách
-  pickupDistance: number = 0;  // Khoảng cách từ điểm lấy hàng đến ga HN
-  deliveryDistance: number = 0; // Khoảng cách từ ga HN đến điểm trả hàng
+  pickupDistance: number = 0;  // Khoảng cách từ điểm lấy hàng đến ga gần nhất
+  deliveryDistance: number = 0; // Khoảng cách từ điểm trả hàng đến ga gần nhất
+
+  // Store original input location names
+  private pickupLocationName: string | null = null;
+  private deliveryLocationName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient
   ) {
     this.totalsForm = this.fb.group({
-      route: ['', Validators.required],
-      transportType: ['both', Validators.required],
       pickupAddress: [''],
-      deliveryAddress: [''] // Thêm control cho địa chỉ trả hàng
+      deliveryAddress: [''],
+      numberOfContainers: [1, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -179,8 +218,26 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     }
   }
 
+  private findNearestStation(point: L.LatLng): any {
+    let nearestStation = null;
+    let minDistance = Infinity;
+
+    for (const station of this.stations) {
+      const distance = point.distanceTo(station.coordinates);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestStation = station;
+      }
+    }
+
+    return nearestStation;
+  }
+
   private calculatePickupDistance(latlng: L.LatLng): void {
-    const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.hanoiStation.lng},${this.hanoiStation.lat}?overview=full&geometries=geojson`;
+    // Find nearest station
+    this.nearestPickupStation = this.findNearestStation(latlng);
+    
+    const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestPickupStation.coordinates.lng},${this.nearestPickupStation.coordinates.lat}?overview=full&geometries=geojson`;
     
     fetch(url)
       .then(response => response.json())
@@ -201,19 +258,33 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
               opacity: 0.8
             }
           ).addTo(this.map);
+
+          // Add marker for nearest station
+          const stationIcon = L.divIcon({
+            html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [16, 16],
+            className: 'custom-marker'
+          });
+
+          L.marker(this.nearestPickupStation.coordinates, { icon: stationIcon })
+            .bindPopup(`Ga gần nhất: ${this.nearestPickupStation.name}`)
+            .addTo(this.map);
           
           this.calculateTotal();
         }
       })
       .catch(error => {
         console.error('Error calculating pickup route:', error);
-        this.pickupDistance = latlng.distanceTo(this.hanoiStation) / 1000;
+        this.pickupDistance = latlng.distanceTo(this.nearestPickupStation.coordinates) / 1000;
         this.calculateTotal();
       });
   }
 
   private calculateDeliveryDistance(latlng: L.LatLng): void {
-    const url = `https://router.project-osrm.org/route/v1/driving/${this.hanoiStation.lng},${this.hanoiStation.lat};${latlng.lng},${latlng.lat}?overview=full&geometries=geojson`;
+    // Find nearest station
+    this.nearestDeliveryStation = this.findNearestStation(latlng);
+    
+    const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestDeliveryStation.coordinates.lng},${this.nearestDeliveryStation.coordinates.lat}?overview=full&geometries=geojson`;
     
     fetch(url)
       .then(response => response.json())
@@ -234,13 +305,24 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
               opacity: 0.8
             }
           ).addTo(this.map);
+
+          // Add marker for nearest station
+          const stationIcon = L.divIcon({
+            html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+            iconSize: [16, 16],
+            className: 'custom-marker'
+          });
+
+          L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon })
+            .bindPopup(`Ga gần nhất: ${this.nearestDeliveryStation.name}`)
+            .addTo(this.map);
           
           this.calculateTotal();
         }
       })
       .catch(error => {
         console.error('Error calculating delivery route:', error);
-        this.deliveryDistance = latlng.distanceTo(this.hanoiStation) / 1000;
+        this.deliveryDistance = latlng.distanceTo(this.nearestDeliveryStation.coordinates) / 1000;
         this.calculateTotal();
       });
   }
@@ -248,6 +330,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   onAddressSearch(): void {
     const address = this.totalsForm.get('pickupAddress')?.value;
     if (!address) return;
+
+    this.pickupLocationName = address; // Store the original input address
 
     // Sử dụng Nominatim API để tìm tọa độ
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=vn&limit=1`)
@@ -289,6 +373,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   onDeliveryAddressSearch(): void {
     const address = this.totalsForm.get('deliveryAddress')?.value;
     if (!address) return;
+
+    this.deliveryLocationName = address; // Store the original input address
 
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=vn&limit=1`)
       .then(response => response.json())
@@ -332,6 +418,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
     this.http.get<any[]>(`${environment.api.url}/totals`,{headers}).subscribe({
       next: (data) => {
+        debugger
         this.totalsData = data;
         this.loading = false;
       },
@@ -340,6 +427,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         this.loading = false;
       }
     });
+
   }
 
   onRouteChange() {
@@ -352,32 +440,73 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.calculateTotal();
   }
 
+  private normalizeString(str: string): string {
+    const normalized = str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    console.log(`normalizeString: Input: '${str}', Output: '${normalized}'`);
+    return normalized;
+  }
+
   calculateTotal() {
-    if (!this.selectedRoute) {
-      this.totalPrice = 0;
-      return;
+    this.totalPrice = 0; // Always reset
+
+    // Ensure all necessary data is loaded before attempting calculations
+    if (!this.totalsData || this.totalsData.length === 0 || !this.pickupPoint || !this.deliveryPoint) {
+      console.log('calculateTotal: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint);
+      return; // Not enough data yet
     }
 
-    const transportType = this.totalsForm.get('transportType')?.value;
-    const roadPricePerKm = Number(this.selectedRoute.duongBo) || 0;
-    const railPrice = Number(this.selectedRoute.duongTau) || 0;
-    
-    switch(transportType) {
-        case 'both':
-            // Cả đường bộ và đường tàu
-            this.totalPrice = (this.pickupDistance + this.deliveryDistance) * roadPricePerKm + railPrice;
-            break;
-        case 'road':
-            // Chỉ đường bộ
-            this.totalPrice = (this.pickupDistance + this.deliveryDistance) * roadPricePerKm;
-            break;
-        case 'rail':
-            // Chỉ đường tàu
-            this.totalPrice = railPrice;
-            break;
-        default:
-            this.totalPrice = 0;
+    console.log('calculateTotal: Full totalsData array from API:', this.totalsData);
+    console.log('calculateTotal: Current Nearest Pickup Station (raw): ', this.nearestPickupStation?.name);
+    console.log('calculateTotal: Current Nearest Delivery Station (raw): ', this.nearestDeliveryStation?.name);
+
+    const numberOfContainers = this.totalsForm.get('numberOfContainers')?.value || 1;
+
+    let basePriceFromData = 0;
+
+    // Find base price from totalsData based on nearest stations
+    if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
+      const matchedRoute = this.totalsData.find(route => {
+        // Normalize station names for robust comparison
+        const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
+        const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+        const normalizedRouteGa = this.normalizeString(route.ga);
+        const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
+
+        console.log('  Comparing with route object:', route);
+        console.log('    normalizedPickupStationName:', normalizedPickupStationName);
+        console.log('    normalizedDeliveryStationName:', normalizedDeliveryStationName);
+        console.log('    normalizedRouteGa:', normalizedRouteGa);
+        console.log('    normalizedRouteViTri:', normalizedRouteViTri);
+
+        // Match: Nearest pickup station name with route.ga AND nearest delivery station name with route.viTriLayNhanHang
+        const forwardMatch = (normalizedRouteGa.includes(normalizedPickupStationName) || normalizedPickupStationName.includes(normalizedRouteGa)) &&
+                             (normalizedRouteViTri.includes(normalizedDeliveryStationName) || normalizedDeliveryStationName.includes(normalizedRouteViTri));
+
+        // Reverse Match: Nearest pickup station name with route.viTriLayNhanHang AND nearest delivery station name with route.ga
+        const reverseMatch = (normalizedRouteViTri.includes(normalizedPickupStationName) || normalizedPickupStationName.includes(normalizedRouteViTri)) &&
+                             (normalizedRouteGa.includes(normalizedDeliveryStationName) || normalizedDeliveryStationName.includes(normalizedRouteGa));
+        
+        console.log('    Forward Match Result:', forwardMatch);
+        console.log('    Reverse Match Result:', reverseMatch);
+        
+        return forwardMatch || reverseMatch;
+      });
+
+      if (matchedRoute) {
+        console.log('calculateTotal: Matched route found:', matchedRoute);
+        // Clean soTien to a number (remove non-numeric characters and convert)
+        const soTienString = matchedRoute.soTien;
+        basePriceFromData = Number(soTienString.replace(/[^0-9]/g, '')) || 0;
+        console.log('calculateTotal: basePriceFromData (from soTien):', basePriceFromData);
+      } else {
+        console.log('calculateTotal: No matched route found.');
+      }
+    } else {
+      console.log('calculateTotal: Conditions for finding base price from totalsData not met (e.g., nearestPickupStation or nearestDeliveryStation not set).');
     }
+
+    this.totalPrice = basePriceFromData * numberOfContainers;
+    console.log('calculateTotal: Final totalPrice:', this.totalPrice);
   }
 
   // Reset map để chọn lại điểm
