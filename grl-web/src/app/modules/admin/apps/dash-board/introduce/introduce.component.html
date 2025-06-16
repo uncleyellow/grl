@@ -45,45 +45,55 @@
     
 
 <!-- Who We Are & Our Mission Combined Section -->
-<section class="relative py-16 px-6 lg:px-12 z-10 -mt-20 top-10">
+<section class="relative py-16 px-6 lg:px-12 z-10">
     <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 ">
         <!-- Card 1: WHO WE ARE -->
-        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg p-8 transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
-            <div class="relative z-20">
-                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">{{ 'who-we-are' | transloco }}</h2>
-                <p class="text-lg text-gray-700 leading-relaxed mb-8 text-center">
-                  {{ 'description-who-we-are' | transloco }}  
-                </p>
-                <div class="flex justify-center mb-8">
-                    <button class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
-                        READ MORE
-                    </button>
-                </div>
-            </div>
-            <div class="relative w-full h-64 rounded-xl overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105">
+        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
+            <div class="relative w-full h-64 rounded-t-3xl overflow-hidden shadow-lg">
                 <img src="../../../../../../assets/green-line/ContainerService/daukeo.bmp" 
                      alt="Warehouse with shelves" 
-                     class="w-full h-full object-cover rounded-xl"/>
+                     class="w-full h-full object-contain rounded-t-3xl"/>
+            </div>
+            <div class="relative z-20 p-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">{{ 'who-we-are' | transloco }}</h2>
+                <p class="text-lg text-gray-700 leading-relaxed mb-4 text-center">
+                  {{ 'description-who-we-are' | transloco }}  
+                </p>
+                <!-- Full Description for Who We Are -->
+                <p *ngIf="showFullDescriptionWhoWeAre" class="text-lg text-gray-700 leading-relaxed text-center mb-8">
+                    <!-- TODO: Replace this with transloco key for full description -->
+                    Đây là mô tả đầy đủ hơn về Green Line. Chúng tôi là một công ty hàng đầu trong ngành vận tải, cung cấp các giải pháp logistics toàn diện và hiệu quả. Sứ mệnh của chúng tôi là kết nối các doanh nghiệp và cá nhân trên toàn cầu, mang lại sự thuận tiện và đáng tin cậy trong mọi khâu vận chuyển. Chúng tôi luôn nỗ lực không ngừng để cải tiến dịch vụ, áp dụng công nghệ tiên tiến và xây dựng đội ngũ chuyên nghiệp, tận tâm. Hãy để Green Line đồng hành cùng sự phát triển của bạn!
+                </p>
+                <div class="flex justify-center mb-8">
+                    <button (click)="toggleWhoWeAreDescription()" class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        {{ showFullDescriptionWhoWeAre ? 'READ LESS' : 'READ MORE' }}
+                    </button>
+                </div>
             </div>
         </mat-card>
 
         <!-- Card 2: OUR MISSION -->
-        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg p-8 transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
-            <div class="relative z-20">
+        <mat-card class="relative rounded-3xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-lg transform transition-transform duration-500 hover:scale-[1.02] hover:shadow-green-500/50">
+            <div class="relative w-full h-64 rounded-t-3xl overflow-hidden shadow-lg">
+                <img src="../../../../../../assets/green-line/Overview/VietnamRailWayRoute.gif" 
+                     alt="Woman working in warehouse" 
+                     class="w-full h-full object-contain rounded-t-3xl"/>
+            </div>
+            <div class="relative z-20 p-8">
                 <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">{{ 'our-mission' | transloco }}</h2>
-                <p class="text-lg text-gray-700 leading-relaxed mb-8 text-center">
+                <p class="text-lg text-gray-700 leading-relaxed mb-4 text-center">
                   {{ 'description-our-mission' | transloco }}
                 </p>
+                <!-- Full Description for Our Mission -->
+                <p *ngIf="showFullDescriptionOurMission" class="text-lg text-gray-700 leading-relaxed text-center mb-8">
+                    <!-- TODO: Replace this with transloco key for full description -->
+                    Sứ mệnh của chúng tôi là mang đến những giải pháp vận chuyển hiệu quả, an toàn và bền vững, góp phần thúc đẩy sự phát triển kinh tế và xã hội. Chúng tôi cam kết cung cấp dịch vụ chất lượng cao, vượt trên mong đợi của khách hàng, đồng thời xây dựng một môi trường làm việc chuyên nghiệp, khuyến khích sự đổi mới và phát triển cá nhân. Green Line luôn đặt lợi ích của khách hàng lên hàng đầu và phấn đấu trở thành đối tác tin cậy trong mọi hành trình.
+                </p>
                 <div class="flex justify-center mb-8">
-                    <button class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
-                        READ MORE
+                    <button (click)="toggleOurMissionDescription()" class="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        {{ showFullDescriptionOurMission ? 'READ LESS' : 'READ MORE' }}
                     </button>
                 </div>
-            </div>
-            <div class="relative w-full h-64 rounded-xl overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105">
-                <img src="../../../../../../assets/green-line/Overview/VietnamRailWayRoute.svg" 
-                     alt="Woman working in warehouse" 
-                     class="w-full h-full object-cover rounded-xl"/>
             </div>
         </mat-card>
     </div>

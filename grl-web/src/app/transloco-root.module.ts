@@ -10,7 +10,7 @@ import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
       provide: TRANSLOCO_CONFIG,
       useValue: {
         availableLangs: ['en', 'tr', 'jb'], // Danh sách ngôn ngữ có sẵn
-        defaultLang: 'en', // Ngôn ngữ mặc định
+        defaultLang: 'tr', // Ngôn ngữ mặc định
         reRenderOnLangChange: true, // Cho phép re-render khi thay đổi ngôn ngữ
         prodMode: false // Để `true` nếu muốn tắt log khi build production
       }

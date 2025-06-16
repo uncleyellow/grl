@@ -2,18 +2,46 @@
     <div class="bg-white rounded-3xl shadow-2xl p-6 mx-auto w-full">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">TÍNH TOÁN CHI PHÍ VẬN CHUYỂN</h1>
 
+        <!-- Toggle for Hàng Chẵn / Hàng Lẻ -->
+        <div class="flex justify-center mb-8">
+            <div class="flex bg-gray-100 rounded-full p-1">
+                <button 
+                    (click)="onGoodsTypeChange('even')"
+                    [ngClass]="{'bg-green-600 text-white': goodsType === 'even', 'text-gray-700 hover:bg-gray-200': goodsType !== 'even'}"
+                    class="px-6 py-2 rounded-full font-semibold transition-colors duration-200"
+                >
+                    Hàng Chẵn
+                </button>
+                <button 
+                    (click)="onGoodsTypeChange('odd')"
+                    [ngClass]="{'bg-green-600 text-white': goodsType === 'odd', 'text-gray-700 hover:bg-gray-200': goodsType !== 'odd'}"
+                    class="px-6 py-2 rounded-full font-semibold transition-colors duration-200"
+                >
+                    Hàng Lẻ
+                </button>
+            </div>
+        </div>
+
         <!-- Loading State -->
         <div *ngIf="loading" class="flex justify-center items-center py-8">
             <mat-spinner diameter="40"></mat-spinner>
         </div>
 
-        <!-- Form -->
-        <form [formGroup]="totalsForm" *ngIf="!loading" class="space-y-6">
+        <!-- Map Section (Shared and always present when not loading) -->
+        <div *ngIf="!loading" class="bg-green-200 p-6 rounded-3xl mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Bản đồ</h3>
+            <div class="h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-white">
+                <div #map id="map" class="w-full h-full z-0"></div>
+            </div>
+        </div>
+
+        <!-- Form for Hàng Chẵn -->
+        <form [formGroup]="totalsForm" *ngIf="!loading && goodsType === 'even'" class="space-y-6">
             <!-- Top Section - Address and Route Info -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Address Search Section -->
                 <div class="bg-green-200 p-6 rounded-3xl">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm lấy và trả hàng</h3>
                     
                     <!-- Pickup Address -->
                     <div class="mb-4">
@@ -60,11 +88,26 @@
                     </div>
                 </div>
 
-                <!-- Route Selection Section -->
+                <!-- Route Selection Section for Hàng Chẵn -->
                 <div class="bg-green-200 p-6 rounded-3xl">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến (Hàng Chẵn)</h3>
                     
-                    <!-- New Number of Containers Input -->
+                    <!-- Container Type Selection -->
+                    <div class="mb-4">
+                        <div class="relative">
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">category</mat-icon>
+                            <select 
+                                formControlName="containerType"
+                                (change)="calculateTotal()"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Chọn loại container</option>
+                                <option *ngFor="let type of containerTypes" [value]="type">{{type}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Number of Containers Input -->
                     <div class="mb-4">
                         <div class="relative">
                             <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">grid_on</mat-icon>
@@ -81,15 +124,7 @@
                 </div>
             </div>
 
-            <!-- Map Section -->
-            <div class="bg-green-200 p-6 rounded-3xl">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Bản đồ</h3>
-                <div class="h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-white">
-                    <div #map class="w-full h-full z-0"></div>
-                </div>
-            </div>
-
-            <!-- Price Details Section -->
+            <!-- Price Details Section (Shared) -->
             <div class="bg-green-200 p-6 rounded-3xl">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm</h3>
                 
@@ -111,6 +146,173 @@
                             <span class="font-bold text-xl">Tổng</span>
                             <span class="font-bold text-xl">{{totalPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
                         </div>
+                    </div>
+
+                    <!-- Note and Contact Button -->
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-600 mb-4">Đây là số tiền tạm tính chứ không phải chi tiết. Nếu muốn chi tiết, vui lòng liên hệ với chúng tôi.</p>
+                        <button 
+                            (click)="openContactDialog()"
+                            class="px-8 py-3 border border-green-600 text-green-600 font-semibold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105"
+                        >
+                            LIÊN HỆ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Form for Hàng Lẻ (placeholder for now) -->
+        <form [formGroup]="totalsForm" *ngIf="!loading && goodsType === 'odd'" class="space-y-6">
+            <!-- Address Search Section (Same as Hàng Chẵn) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-green-200 p-6 rounded-3xl">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm lấy và trả hàng</h3>
+                    
+                    <!-- Pickup Address -->
+                    <div class="mb-4">
+                        <div class="flex gap-2">
+                            <div class="flex-1 relative">
+                                <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">local_shipping</mat-icon>
+                                <input 
+                                    type="text" 
+                                    formControlName="pickupAddress"
+                                    placeholder="Nhập địa chỉ lấy hàng"
+                                    class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                            </div>
+                            <button 
+                                type="button"
+                                (click)="onAddressSearch()"
+                                class="px-4 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors"
+                            >
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="mb-4">
+                        <div class="flex gap-2">
+                            <div class="flex-1 relative">
+                                <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">inventory_2</mat-icon>
+                                <input 
+                                    type="text" 
+                                    formControlName="deliveryAddress"
+                                    placeholder="Nhập địa chỉ trả hàng"
+                                    class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                            </div>
+                            <button 
+                                type="button"
+                                (click)="onDeliveryAddressSearch()"
+                                class="px-4 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors"
+                            >
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Route Selection Section for Hàng Lẻ (New) -->
+                <div class="bg-green-200 p-6 rounded-3xl">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến (Hàng Lẻ)</h3>
+                    
+                    <!-- Loose Cargo Type Selection -->
+                    <div class="mb-4">
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="looseCargoType" value="full_carriage" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
+                                <span class="ml-2 text-gray-700">Nguyên toa</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="looseCargoType" value="kg" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
+                                <span class="ml-2 text-gray-700">Kg</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="looseCargoType" value="m3" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
+                                <span class="ml-2 text-gray-700">Mét khối</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Weight (Kg) Input -->
+                    <div class="mb-4" *ngIf="totalsForm.get('looseCargoType')?.value === 'kg'">
+                        <div class="relative">
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">scale</mat-icon>
+                            <input 
+                                type="number" 
+                                formControlName="weightKg"
+                                placeholder="Nhập số Kg (min 1000kg)"
+                                (input)="calculateTotal()"
+                                min="1000"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                        </div>
+                        <div *ngIf="totalsForm.get('weightKg')?.invalid && totalsForm.get('weightKg')?.touched" 
+                             class="text-xs text-red-500 mt-1">
+                            Số Kg phải lớn hơn hoặc bằng 1000.
+                        </div>
+                    </div>
+
+                    <!-- Volume (m3) Input -->
+                    <div class="mb-4" *ngIf="totalsForm.get('looseCargoType')?.value === 'm3'">
+                        <div class="relative">
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">square_foot</mat-icon>
+                            <input 
+                                type="number" 
+                                formControlName="volumeM3"
+                                placeholder="Nhập số m3 (min 3m3)"
+                                (input)="calculateTotal()"
+                                min="3"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                        </div>
+                        <div *ngIf="totalsForm.get('volumeM3')?.invalid && totalsForm.get('volumeM3')?.touched" 
+                             class="text-xs text-red-500 mt-1">
+                            Số mét khối phải lớn hơn hoặc bằng 3.
+                        </div>
+                    </div>
+
+                    <!-- Note for Loose Cargo -->
+                    <p class="text-sm text-gray-600 mt-2">* Chỉ áp dụng cho đơn hàng từ 1000kg hoặc 3m3.</p>
+
+                </div>
+            </div>
+
+            <!-- Price Details Section (Shared) -->
+            <div class="bg-green-200 p-6 rounded-3xl">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm</h3>
+                
+                <div class="space-y-3">
+                    <!-- Distance Info -->
+                    <div class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Khoảng cách lấy hàng</span>
+                        <span class="font-medium text-lg">{{pickupDistance | number:'1.2-2'}} km</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Khoảng cách trả hàng</span>
+                        <span class="font-medium text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="bg-green-600 text-white px-4 py-3 rounded-xl mt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xl">Tổng</span>
+                            <span class="font-bold text-xl">{{totalPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Note and Contact Button -->
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-600 mb-4">Đây là số tiền tạm tính chứ không phải chi tiết. Nếu muốn chi tiết, vui lòng liên hệ với chúng tôi.</p>
+                        <button 
+                            (click)="openContactDialog()"
+                            class="px-8 py-3 border border-green-600 text-green-600 font-semibold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105"
+                        >
+                            LIÊN HỆ
+                        </button>
                     </div>
                 </div>
             </div>
