@@ -56,7 +56,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   center: [number, number] = [105.8542, 21.0285]; // Hà Nội
   
   zoom = 6;
-  
+  duongBo
   // Ga Hà Nội coordinates
   private hanoiStation = L.latLng(21.0242579 , 105.8384487);
 
@@ -125,6 +125,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   // Add FLC data storage
   flcData: any[] = [];
 
+  // Add property for distance warning
+  showDistanceWarning: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -135,10 +138,14 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       deliveryAddress: [''],
       numberOfContainers: [1, [Validators.required, Validators.min(1)]],
       containerType: ['', Validators.required],
+      transportType: ['both', Validators.required], // New control for transport type
       // New controls for Hàng Lẻ
       looseCargoType: ['full_carriage', Validators.required], // Default to Nguyên toa
       weightKg: [null, [Validators.min(1000)]],
-      volumeM3: [null, [Validators.min(3)]]
+      volumeM3: [null, [Validators.min(3)]],
+      transportTypeLoose: ['warehouse_to_warehouse', Validators.required], // Default for loose cargo
+      pickupStation: [''], // For station-to-station or warehouse-to-station
+      deliveryStation: [''] // For station-to-station or warehouse-to-station
     });
 
     // Subscribe to changes in goodsType to manage validators
@@ -150,6 +157,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   ngOnInit(): void {
     this.fetchTotals();
     this.fetchFLC();
+    this.fetchCuocDuongBo()
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -394,6 +402,12 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
 
   onAddressSearch(): void {
+    const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
+    if (transportTypeLoose !== 'warehouse_to_station' && transportTypeLoose !== 'warehouse_to_warehouse') {
+      // Only perform address search if transport type requires it
+      return;
+    }
+
     const address = this.totalsForm.get('pickupAddress')?.value;
     if (!address) return;
 
@@ -437,6 +451,12 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
 
   onDeliveryAddressSearch(): void {
+    const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
+    if (transportTypeLoose !== 'warehouse_to_warehouse') {
+      // Only perform delivery address search if transport type requires it
+      return;
+    }
+
     const address = this.totalsForm.get('deliveryAddress')?.value;
     if (!address) return;
 
@@ -484,7 +504,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
     this.http.get<any[]>(`${environment.api.url}/totals`,{headers}).subscribe({
       next: (data) => {
-        debugger
+        
         this.totalsData = data;
         // Extract unique container types for the dropdown
         const uniqueContainerTypes = new Set<string>();
@@ -517,6 +537,21 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     });
   }
 
+  
+  fetchCuocDuongBo(){
+    const headers = new HttpHeaders(environment.api.headers);
+    this.http.get<any[]>(`${environment.api.url}/duongBo`,{headers}).subscribe({
+      next: (data) => {
+        // debugger
+        this.duongBo = data;
+        console.log('duongBo Data fetched and assigned to this.duongBo:', this.duongBo);
+      },
+      error: (error) => {
+        console.error('Error fetching FLC totals:', error);
+      }
+    });
+  }
+
   onRouteChange() {
     const selectedRouteName = this.totalsForm.get('route')?.value;
     this.selectedRoute = this.totalsData.find(route => route.chuyen === selectedRouteName);
@@ -537,87 +572,123 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.totalPrice = 0; // Always reset
 
     // Ensure all necessary data is loaded before attempting calculations
-    if (!this.totalsData || this.totalsData.length === 0 || !this.pickupPoint || !this.deliveryPoint) {
-      console.log('[calculateTotal] Early Exit: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint);
+    if (!this.totalsData || this.totalsData.length === 0 || !this.pickupPoint || !this.deliveryPoint || !this.duongBo || this.duongBo.length === 0) {
+      console.log('[calculateTotal] Early Exit: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint, 'duongBo:', this.duongBo);
       return; // Not enough data yet
     }
 
     console.log('--- calculateTotal Start ---');
     console.log('  Current Goods Type:', this.goodsType);
+    console.log('  Current Transport Type:', this.totalsForm.get('transportType')?.value);
     console.log('  Current Nearest Pickup Station (raw): ', this.nearestPickupStation?.name);
     console.log('  Current Nearest Delivery Station (raw): ', this.nearestDeliveryStation?.name);
-    console.log('  Full totalsData array from API:', this.totalsData);
+    console.log('  Full totalsData array from API (Train Cargo):', this.totalsData);
+    console.log('  Full duongBo array from API (Road Cargo):', this.duongBo);
 
-    let basePriceFromData = 0;
+    let trainPrice = 0; // Price for train transport
+    let roadPrice = 0;  // Price for road transport
+    let basePriceFromData = 0; // Price for loose cargo, initialized here
+
+    const numberOfContainers = this.totalsForm.get('numberOfContainers')?.value || 1;
+    const containerType = this.totalsForm.get('containerType')?.value;
+    const selectedContainerTypeNormalized = this.normalizeString(containerType || '');
+    const transportType = this.totalsForm.get('transportType')?.value; // Get selected transport type
+
+    if (!selectedContainerTypeNormalized && this.goodsType === 'even') {
+      console.log('[calculateTotal] Early Exit (Even Cargo): Container type not selected or empty after normalization. selectedContainerTypeNormalized:', selectedContainerTypeNormalized);
+      return;
+    }
 
     if (this.goodsType === 'even') {
-      // Logic for Hàng Chẵn (Container)
-      const numberOfContainers = this.totalsForm.get('numberOfContainers')?.value || 1;
-      const containerType = this.totalsForm.get('containerType')?.value;
-      const selectedContainerTypeNormalized = this.normalizeString(containerType || '');
-
-      if (!selectedContainerTypeNormalized) {
-        console.log('[calculateTotal] Early Exit (Even Cargo): Container type not selected or empty after normalization. selectedContainerTypeNormalized:', selectedContainerTypeNormalized);
-        return;
-      }
-
+      console.log('  Processing Hàng Chẵn (Container) calculations.');
       console.log('  Selected Container Type (raw): ', containerType);
       console.log('  Selected Container Type (normalized): ', selectedContainerTypeNormalized);
       console.log('  Number of Containers:', numberOfContainers);
 
-      // Find base price from totalsData based on nearest stations and container type
-      if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
-        const matchedRoute = this.totalsData.find((route, index) => {
-          console.log(`  [Even Route ${index}] Comparing with route object:`, route);
-
+      // --- Calculate Train Price (from totalsData) ---
+      if ((transportType === 'train' || transportType === 'both') && this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
+        console.log('  Attempting to calculate Train Price...');
+        const matchedTrainRoute = this.totalsData.find((route, index) => {
           const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
           const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
           const normalizedRouteGa = this.normalizeString(route.ga);
           const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
           const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
 
-          console.log('    normalizedPickupStationName:', normalizedPickupStationName);
-          console.log('    normalizedDeliveryStationName:', normalizedDeliveryStationName);
-          console.log('    normalizedRouteGa:', normalizedRouteGa);
-          console.log('    normalizedRouteViTri:', normalizedRouteViTri);
-          console.log('    normalizedRouteContainerType:', normalizedRouteContainerType);
-
           const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
                                (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
 
           const containerTypeMatch = normalizedRouteContainerType === selectedContainerTypeNormalized;
           
-          const finalMatch = stationMatch && containerTypeMatch;
-
-          console.log('    Station Match Result:', stationMatch);
-          console.log('    Container Type Match Result:', containerTypeMatch);
-          console.log('    Final Match Result for this route:', finalMatch);
-          
-          return finalMatch;
+          return stationMatch && containerTypeMatch;
         });
 
-        console.log('  Result of Array.prototype.find for matchedRoute (Even Cargo): ', matchedRoute);
-
-        if (matchedRoute) {
-          console.log('  SUCCESS (Even Cargo): Matched route found:', matchedRoute);
-          const soTienString = matchedRoute.soTien;
-          basePriceFromData = Number(soTienString.replace(/[^0-9]/g, '')) || 0;
-          console.log('  Calculated basePriceFromData (from soTien) for Even Cargo:', basePriceFromData);
+        if (matchedTrainRoute) {
+          console.log('  SUCCESS (Train Cargo): Matched train route found:', matchedTrainRoute);
+          const soTienString = matchedTrainRoute.soTien;
+          trainPrice = Number(soTienString.replace(/[^0-9]/g, '')) || 0;
+          console.log('  Calculated trainPrice per container:', trainPrice);
         } else {
-          console.log('  FAIL (Even Cargo): No matched route found after iterating through all totalsData. (matchedRoute is undefined/null)');
+          console.log('  FAIL (Train Cargo): No matched train route found.');
         }
-      } else {
-        console.log('  Conditions for finding base price for EVEN cargo from totalsData not met.');
+      } else if (transportType === 'train' || transportType === 'both') {
+        console.log('  Conditions for finding train price not met.');
       }
 
-      this.totalPrice = basePriceFromData * numberOfContainers;
+      // --- Calculate Road Price (from duongBo) ---
+      if ((transportType === 'road' || transportType === 'both') && this.nearestPickupStation && this.nearestDeliveryStation && this.duongBo.length > 0) {
+        console.log('  Attempting to calculate Road Price...');
+        const matchedRoadRoute = this.duongBo.find((route, index) => {
+          const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
+          const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+          const normalizedRouteGa = this.normalizeString(route.ga);
+          const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
+          const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
+
+          const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
+                               (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
+
+          const containerTypeMatch = normalizedRouteContainerType === selectedContainerTypeNormalized;
+
+          return stationMatch && containerTypeMatch;
+        });
+
+        if (matchedRoadRoute) {
+          console.log('  SUCCESS (Road Cargo): Matched road route found:', matchedRoadRoute);
+          const donViTinhString = matchedRoadRoute.donViTinh;
+          roadPrice = Number(donViTinhString.replace(/[^0-9]/g, '')) || 0; // Assuming donViTinh is the price
+          console.log('  Calculated roadPrice per container:', roadPrice);
+        } else {
+          console.log('  FAIL (Road Cargo): No matched road route found.');
+        }
+      } else if (transportType === 'road' || transportType === 'both') {
+        console.log('  Conditions for finding road price not met.');
+      }
+
+      // --- Final Total Price for Even Cargo ---
+      if (transportType === 'train') {
+        this.totalPrice = trainPrice * numberOfContainers;
+        console.log('  Final totalPrice (Train only):', this.totalPrice);
+      } else if (transportType === 'road') {
+        this.totalPrice = roadPrice * numberOfContainers;
+        console.log('  Final totalPrice (Road only):', this.totalPrice);
+      } else if (transportType === 'both') {
+        this.totalPrice = (trainPrice + roadPrice) * numberOfContainers;
+        console.log('  Final totalPrice (Train + Road):', this.totalPrice);
+      }
 
     } else { // goodsType === 'odd' (Hàng Lẻ)
       const looseCargoType = this.totalsForm.get('looseCargoType')?.value;
       const weightKg = this.totalsForm.get('weightKg')?.value;
       const volumeM3 = this.totalsForm.get('volumeM3')?.value;
+      const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
+      const pickupStationName = this.totalsForm.get('pickupStation')?.value;
+      const deliveryStationName = this.totalsForm.get('deliveryStation')?.value;
+
+      this.showDistanceWarning = false; // Reset warning
 
       console.log('  Selected Loose Cargo Type:', looseCargoType);
+      console.log('  Selected Loose Transport Type:', transportTypeLoose);
       console.log('  Weight (Kg):', weightKg);
       console.log('  Volume (m3):', volumeM3);
 
@@ -630,38 +701,112 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       }
 
       let quantity = 0;
+      let calculatedPickupStationName: string | null = null;
+      let calculatedDeliveryStationName: string | null = null;
 
-      if (this.nearestPickupStation && this.nearestDeliveryStation && this.flcData.length > 0) { // Use flcData here
-        console.log('  Debug - nearestPickupStation.name:', this.nearestPickupStation.name);
-        console.log('  Debug - nearestDeliveryStation.name:', this.nearestDeliveryStation.name);
-        console.log('  Debug - flcData for search:', this.flcData);
+      // Handle station and distance logic based on transportTypeLoose
+      if (transportTypeLoose === 'station_to_station') {
+          if (!pickupStationName || !deliveryStationName) {
+              console.log('[calculateTotal] Early Exit (Station-to-Station): Pickup or Delivery station not selected.');
+              this.totalPrice = 0;
+              return;
+          }
+          calculatedPickupStationName = pickupStationName;
+          calculatedDeliveryStationName = deliveryStationName;
+          this.pickupDistance = 0; // No road distance for station to station
+          this.deliveryDistance = 0; // No road distance for station to station
+          this.showDistanceWarning = false; // No road distance to warn about
 
-          const matchedLooseRoute = this.flcData.find((route, index) => { // Search in flcData
-              console.log(`  [Loose Route ${index}] Comparing with route object:`, route);
+          // Update nearest stations for display/map if needed
+          this.nearestPickupStation = this.stations.find(s => s.name === pickupStationName);
+          this.nearestDeliveryStation = this.stations.find(s => s.name === deliveryStationName);
 
-              const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
-              const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+          // Clear existing markers/routes and add new ones for stations if map is initialized
+          this.resetLooseCargoMapPoints(); // Reset everything
+          if (this.map && this.nearestPickupStation && this.nearestDeliveryStation) {
+            const stationIcon = L.divIcon({
+                html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                iconSize: [16, 16],
+                className: 'custom-marker'
+            });
+            L.marker(this.nearestPickupStation.coordinates, { icon: stationIcon }).bindPopup(`Ga lấy hàng: ${this.nearestPickupStation.name}`).addTo(this.map);
+            L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon }).bindPopup(`Ga trả hàng: ${this.nearestDeliveryStation.name}`).addTo(this.map);
+          }
+
+
+      } else if (transportTypeLoose === 'warehouse_to_station') {
+          // pickupAddress is handled by onAddressSearch -> calculatePickupDistance
+          // which sets this.nearestPickupStation and this.pickupDistance
+          if (!this.nearestPickupStation || !deliveryStationName) {
+              console.log('[calculateTotal] Early Exit (Warehouse-to-Station): Pickup address not set or delivery station not selected.');
+              this.totalPrice = 0;
+              return;
+          }
+          calculatedPickupStationName = this.nearestPickupStation.name;
+          calculatedDeliveryStationName = deliveryStationName;
+          this.deliveryDistance = 0; // No road distance for delivery to station
+
+          // Check 20km warning for pickup distance
+          if (this.pickupDistance > 20) {
+              this.showDistanceWarning = true;
+              this.totalPrice = 0;
+              return;
+          }
+          // Update nearest delivery station for display/map
+          this.nearestDeliveryStation = this.stations.find(s => s.name === deliveryStationName);
+          if (this.map && this.nearestDeliveryStation) {
+            const stationIcon = L.divIcon({
+                html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                iconSize: [16, 16],
+                className: 'custom-marker'
+            });
+            // Ensure delivery marker from address search is removed if it existed.
+            // Then add station marker.
+            if (this.deliveryMarker) { this.map.removeLayer(this.deliveryMarker); }
+            L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon }).bindPopup(`Ga trả hàng: ${this.nearestDeliveryStation.name}`).addTo(this.map);
+          }
+
+
+      } else if (transportTypeLoose === 'warehouse_to_warehouse') {
+          // pickupAddress and deliveryAddress are handled by their respective search functions
+          // which set this.nearestPickupStation, this.nearestDeliveryStation, pickupDistance, deliveryDistance
+          if (!this.nearestPickupStation || !this.nearestDeliveryStation) {
+              console.log('[calculateTotal] Early Exit (Warehouse-to-Warehouse): Pickup or delivery address not set.');
+              this.totalPrice = 0;
+              return;
+          }
+          calculatedPickupStationName = this.nearestPickupStation.name;
+          calculatedDeliveryStationName = this.nearestDeliveryStation.name;
+
+          // Check 20km warning for both distances
+          if (this.pickupDistance > 20 || this.deliveryDistance > 20) {
+              this.showDistanceWarning = true;
+              this.totalPrice = 0;
+              return;
+          }
+      } else {
+        console.log('[calculateTotal] Early Exit (Odd Cargo): Invalid transport type selected.');
+        this.totalPrice = 0;
+        return;
+      }
+
+      // Proceed with price calculation only if no early exit
+      if (calculatedPickupStationName && calculatedDeliveryStationName && this.flcData.length > 0) {
+          console.log('  Debug - calculatedPickupStationName:', calculatedPickupStationName);
+          console.log('  Debug - calculatedDeliveryStationName:', calculatedDeliveryStationName);
+          console.log('  Debug - flcData for search:', this.flcData);
+
+          const matchedLooseRoute = this.flcData.find((route, index) => {
+              const normalizedPickupStationName = this.normalizeString(calculatedPickupStationName || '');
+              const normalizedDeliveryStationName = this.normalizeString(calculatedDeliveryStationName || '');
               const normalizedRouteGa = this.normalizeString(route.ga);
               const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
 
-              console.log('    normalizedPickupStationName:', normalizedPickupStationName);
-              console.log('    normalizedDeliveryStationName:', normalizedDeliveryStationName);
-              console.log('    normalizedRouteGa:', normalizedRouteGa);
-              console.log('    normalizedRouteViTri:', normalizedRouteViTri);
-
               const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
                                    (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
-              
-              // No direct typeMatch needed here, as we pick the specific rate later
-              const finalLooseMatch = stationMatch;
 
-              console.log('    Station Match Result (Loose): ', stationMatch);
-              console.log('    Final Match Result for this loose route (Station only):', finalLooseMatch);
-
-              return finalLooseMatch;
+              return stationMatch;
           });
-
-          console.log('  Result of Array.prototype.find for matchedLooseRoute:', matchedLooseRoute);
 
           if (matchedLooseRoute) {
               console.log('  SUCCESS (Odd Cargo): Matched loose route found:', matchedLooseRoute);
@@ -675,21 +820,22 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
                   pricePerUnit = Number(this.normalizeString(matchedLooseRoute.dongKg || '').replace(/[^0-9]/g, '')) || 0;
                   quantity = weightKg;
               } else if (looseCargoType === 'm3') {
-                  console.log('Debug - raw matchedLooseRoute.metKhoi for m3:', matchedLooseRoute.metKhoi);
                   pricePerUnit = Number(this.normalizeString(matchedLooseRoute.metKhoi || '').replace(/[^0-9]/g, '')) || 0;
                   quantity = volumeM3;
               }
-
               basePriceFromData = pricePerUnit; // basePriceFromData will be the price per unit
               console.log('  Calculated basePriceFromData (price per unit) for Loose Cargo:', basePriceFromData);
 
           } else {
               console.log('  FAIL (Odd Cargo): No matched loose route found. (matchedLooseRoute is undefined/null)');
+              this.totalPrice = 0; // If no route found, price is 0
+              return;
           }
       } else {
-          console.log('  Conditions for finding base price for ODD cargo from totalsData not met.');
+          console.log('  Conditions for finding base price for ODD cargo from FLC data not met.');
+          this.totalPrice = 0; // If no FLC data or stations, price is 0
+          return;
       }
-
       this.totalPrice = basePriceFromData * quantity;
     }
 
@@ -726,6 +872,72 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.pickupDistance = 0;
     this.deliveryDistance = 0;
     this.calculateTotal();
+  }
+
+  // New: Reset map points specific to loose cargo
+  resetLooseCargoMapPoints(): void {
+    if (this.pickupMarker) { this.map.removeLayer(this.pickupMarker); }
+    if (this.deliveryMarker) { this.map.removeLayer(this.deliveryMarker); }
+    if (this.routeLine) { this.map.removeLayer(this.routeLine); }
+    if (this.deliveryRouteLine) { this.map.removeLayer(this.deliveryRouteLine); }
+    
+    this.pickupPoint = null;
+    this.deliveryPoint = null;
+    this.pickupDistance = 0;
+    this.deliveryDistance = 0;
+    this.nearestPickupStation = null;
+    this.nearestDeliveryStation = null;
+    this.showDistanceWarning = false;
+  }
+
+  // New: Handler for loose cargo transport type change
+  onTransportTypeLooseChange(): void {
+    const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
+    const pickupAddressControl = this.totalsForm.get('pickupAddress');
+    const deliveryAddressControl = this.totalsForm.get('deliveryAddress');
+    const pickupStationControl = this.totalsForm.get('pickupStation');
+    const deliveryStationControl = this.totalsForm.get('deliveryStation');
+
+    // Clear all validators and values related to location for loose cargo
+    pickupAddressControl?.clearValidators();
+    deliveryAddressControl?.clearValidators();
+    pickupStationControl?.clearValidators();
+    deliveryStationControl?.clearValidators();
+
+    pickupAddressControl?.setValue('');
+    deliveryAddressControl?.setValue('');
+    pickupStationControl?.setValue('');
+    deliveryStationControl?.setValue('');
+
+    pickupAddressControl?.updateValueAndValidity();
+    deliveryAddressControl?.updateValueAndValidity();
+    pickupStationControl?.updateValueAndValidity();
+    deliveryStationControl?.updateValueAndValidity();
+
+    this.resetLooseCargoMapPoints(); // Reset map markers and distances
+
+    switch (transportTypeLoose) {
+      case 'station_to_station':
+        pickupStationControl?.setValidators(Validators.required);
+        deliveryStationControl?.setValidators(Validators.required);
+        break;
+      case 'warehouse_to_station':
+        pickupAddressControl?.setValidators(Validators.required);
+        pickupStationControl?.setValidators(Validators.required);
+        deliveryStationControl?.setValidators(Validators.required);
+        break;
+      case 'warehouse_to_warehouse':
+        pickupAddressControl?.setValidators(Validators.required);
+        deliveryAddressControl?.setValidators(Validators.required);
+        break;
+    }
+
+    pickupAddressControl?.updateValueAndValidity();
+    deliveryAddressControl?.updateValueAndValidity();
+    pickupStationControl?.updateValueAndValidity();
+    deliveryStationControl?.updateValueAndValidity();
+
+    this.calculateTotal(); // Recalculate total after changing transport type
   }
 
   onSubmit() {

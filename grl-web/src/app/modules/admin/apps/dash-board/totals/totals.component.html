@@ -92,6 +92,25 @@
                 <div class="bg-green-200 p-6 rounded-3xl">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến (Hàng Chẵn)</h3>
                     
+                    <!-- Transport Type Selection -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-medium text-gray-700 mb-2">Chọn loại hình vận chuyển:</h4>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportType" value="train" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
+                                <span class="ml-2 text-gray-700">Đường tàu</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportType" value="road" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
+                                <span class="ml-2 text-gray-700">Đường bộ</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportType" value="both" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
+                                <span class="ml-2 text-gray-700">Cả hai</span>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <!-- Container Type Selection -->
                     <div class="mb-4">
                         <div class="relative">
@@ -169,8 +188,27 @@
                 <div class="bg-green-200 p-6 rounded-3xl">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin địa điểm lấy và trả hàng</h3>
                     
-                    <!-- Pickup Address -->
-                    <div class="mb-4">
+                    <!-- New: Transport Type Selection for Loose Cargo -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-medium text-gray-700 mb-2">Chọn loại hình vận chuyển:</h4>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportTypeLoose" value="station_to_station" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
+                                <span class="ml-2 text-gray-700">Từ ga đến ga</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportTypeLoose" value="warehouse_to_station" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
+                                <span class="ml-2 text-gray-700">Từ kho đến ga</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" formControlName="transportTypeLoose" value="warehouse_to_warehouse" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
+                                <span class="ml-2 text-gray-700">Từ kho đến kho</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pickup Address (Conditional) -->
+                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_station' || totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_warehouse'">
                         <div class="flex gap-2">
                             <div class="flex-1 relative">
                                 <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">local_shipping</mat-icon>
@@ -191,8 +229,23 @@
                         </div>
                     </div>
 
-                    <!-- Delivery Address -->
-                    <div class="mb-4">
+                    <!-- Pickup Station (Conditional) -->
+                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'station_to_station' || totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_station'">
+                        <div class="relative">
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">train</mat-icon>
+                            <select 
+                                formControlName="pickupStation"
+                                (change)="calculateTotal()"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Chọn ga lấy hàng</option>
+                                <option *ngFor="let station of stations" [value]="station.name">{{station.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address (Conditional) -->
+                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_warehouse'">
                         <div class="flex gap-2">
                             <div class="flex-1 relative">
                                 <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">inventory_2</mat-icon>
@@ -212,9 +265,24 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Delivery Station (Conditional) -->
+                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'station_to_station' || totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_station'">
+                        <div class="relative">
+                            <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">train</mat-icon>
+                            <select 
+                                formControlName="deliveryStation"
+                                (change)="calculateTotal()"
+                                class="w-full pl-10 pr-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="">Chọn ga trả hàng</option>
+                                <option *ngFor="let station of stations" [value]="station.name">{{station.name}}</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Route Selection Section for Hàng Lẻ (New) -->
+                <!-- Route Selection Section for Hàng Lẻ (Original content moved here conditionally) -->
                 <div class="bg-green-200 p-6 rounded-3xl">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Thông tin chuyến (Hàng Lẻ)</h3>
                     
@@ -277,6 +345,10 @@
                     <!-- Note for Loose Cargo -->
                     <p class="text-sm text-gray-600 mt-2">* Chỉ áp dụng cho đơn hàng từ 1000kg hoặc 3m3.</p>
 
+                    <!-- New: Distance Warning for Loose Cargo -->
+                    <p *ngIf="showDistanceWarning" class="text-sm text-red-500 mt-2">
+                        Vui lòng liên hệ với chúng tôi vì khoảng cách đến ga gần nhất lớn hơn 20km.
+                    </p>
                 </div>
             </div>
 
