@@ -207,25 +207,25 @@ export const defaultNavigation: FuseNavigationItem[] = [
             }
         }
     },
-    {
-        id: 'contact',
-        title: 'contact',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board',
-        active: false,
-        classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
-        },
-        function: () => {
-            const section = document.getElementById('contact-section');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    },
+    // {
+    //     id: 'contact',
+    //     title: 'contact',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:chat',
+    //     link: '/apps/dash-board',
+    //     active: false,
+    //     classes: {
+    //         title: 'text-gray-700 dark:text-gray-200',
+    //         icon: 'text-gray-700 dark:text-gray-200'
+    //     },
+    //     function: () => {
+    //         const section = document.getElementById('contact-section');
+    //         if (section) {
+    //             section.scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //     }
+    // },
     // {
     //     id: 'admin',
     //     title: 'admin',
@@ -291,8 +291,9 @@ export const compactNavigation: FuseNavigationItem[] = [
         link: '/apps/dash-board',
         active: false,
         classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
+            title: 'text-green-600 font-bold text-lg',
+            icon: 'text-yellow-400 animate-pulse',
+            wrapper: 'bg-white shadow-lg rounded-lg border-2 border-green-400'
         },
         function: () => {
             const section = document.getElementById('totals-section');
@@ -339,25 +340,25 @@ export const compactNavigation: FuseNavigationItem[] = [
             }
         }
     },
-    {
-        id: 'contact',
-        title: 'contact',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board',
-        active: false,
-        classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
-        },
-        function: () => {
-            const section = document.getElementById('contact-section');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    },
+    // {
+    //     id: 'contact',
+    //     title: 'contact',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:chat',
+    //     link: '/apps/dash-board',
+    //     active: false,
+    //     classes: {
+    //         title: 'text-gray-700 dark:text-gray-200',
+    //         icon: 'text-gray-700 dark:text-gray-200'
+    //     },
+    //     function: () => {
+    //         const section = document.getElementById('contact-section');
+    //         if (section) {
+    //             section.scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //     }
+    // },
     // {
     //     id: 'admin',
     //     title: 'admin',
@@ -425,8 +426,9 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         link: '/apps/dash-board',
         active: false,
         classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
+            title: 'text-green-600 font-bold text-lg',
+            icon: 'text-yellow-400 animate-pulse',
+            wrapper: 'bg-white shadow-lg rounded-lg border-2 border-green-400'
         },
         function: () => {
             const section = document.getElementById('totals-section');
@@ -473,25 +475,25 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             }
         }
     },
-    {
-        id: 'contact',
-        title: 'contact',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board',
-        active: false,
-        classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
-        },
-        function: () => {
-            const section = document.getElementById('contact-section');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    },
+    // {
+    //     id: 'contact',
+    //     title: 'contact',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:chat',
+    //     link: '/apps/dash-board',
+    //     active: false,
+    //     classes: {
+    //         title: 'text-gray-700 dark:text-gray-200',
+    //         icon: 'text-gray-700 dark:text-gray-200'
+    //     },
+    //     function: () => {
+    //         const section = document.getElementById('contact-section');
+    //         if (section) {
+    //             section.scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //     }
+    // },
     // {
     //     id: 'admin',
     //     title: 'admin',
@@ -557,8 +559,9 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         link: '/apps/dash-board',
         active: false,
         classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
+            title: 'text-green-600 font-bold text-lg',
+            icon: 'text-yellow-400 animate-pulse',
+            wrapper: 'bg-white shadow-lg rounded-lg border-2 border-green-400'
         },
         function: () => {
             const section = document.getElementById('totals-section');
@@ -605,25 +608,25 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             }
         }
     },
-    {
-        id: 'contact',
-        title: 'contact',
-        subtitle: '',
-        type: 'basic',
-        icon: 'heroicons_outline:chat',
-        link: '/apps/dash-board',
-        active: false,
-        classes: {
-            title: 'text-gray-700 dark:text-gray-200',
-            icon: 'text-gray-700 dark:text-gray-200'
-        },
-        function: () => {
-            const section = document.getElementById('contact-section');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    },
+    // {
+    //     id: 'contact',
+    //     title: 'contact',
+    //     subtitle: '',
+    //     type: 'basic',
+    //     icon: 'heroicons_outline:chat',
+    //     link: '/apps/dash-board',
+    //     active: false,
+    //     classes: {
+    //         title: 'text-gray-700 dark:text-gray-200',
+    //         icon: 'text-gray-700 dark:text-gray-200'
+    //     },
+    //     function: () => {
+    //         const section = document.getElementById('contact-section');
+    //         if (section) {
+    //             section.scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //     }
+    // },
     // {
     //     id: 'admin',
     //     title: 'admin',

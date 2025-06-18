@@ -128,6 +128,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   // Add property for distance warning
   showDistanceWarning: boolean = false;
 
+  // Add properties for individual price display
+  trainPrice: number = 0;
+  roadPrice: number = 0;
+  basePriceFromData: number = 0;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -145,7 +150,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       volumeM3: [null, [Validators.min(3)]],
       transportTypeLoose: ['warehouse_to_warehouse', Validators.required], // Default for loose cargo
       pickupStation: [''], // For station-to-station or warehouse-to-station
-      deliveryStation: [''] // For station-to-station or warehouse-to-station
+      deliveryStation: ['', Validators.required], // For station-to-station or warehouse-to-station
     });
 
     // Subscribe to changes in goodsType to manage validators
@@ -572,31 +577,38 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.totalPrice = 0; // Always reset
 
     // Ensure all necessary data is loaded before attempting calculations
-    if (!this.totalsData || this.totalsData.length === 0 || !this.pickupPoint || !this.deliveryPoint || !this.duongBo || this.duongBo.length === 0) {
-      console.log('[calculateTotal] Early Exit: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint, 'duongBo:', this.duongBo);
+    // We specifically removed the check for pickupPoint/deliveryPoint here because
+    // for 'station_to_station' they will be null, and we handle those cases inside the odd cargo logic.
+    if (!this.totalsData || this.totalsData.length === 0 || !this.duongBo || this.duongBo.length === 0 || !this.flcData || this.flcData.length === 0) {
+      console.log('[calculateTotal] Early Exit: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint, 'duongBo:', this.duongBo, 'flcData:', this.flcData);
       return; // Not enough data yet
     }
 
     console.log('--- calculateTotal Start ---');
     console.log('  Current Goods Type:', this.goodsType);
-    console.log('  Current Transport Type:', this.totalsForm.get('transportType')?.value);
+    console.log('  Current Transport Type (Even):', this.totalsForm.get('transportType')?.value);
+    console.log('  Current Loose Transport Type (Odd):', this.totalsForm.get('transportTypeLoose')?.value);
     console.log('  Current Nearest Pickup Station (raw): ', this.nearestPickupStation?.name);
     console.log('  Current Nearest Delivery Station (raw): ', this.nearestDeliveryStation?.name);
-    console.log('  Full totalsData array from API (Train Cargo):', this.totalsData);
-    console.log('  Full duongBo array from API (Road Cargo):', this.duongBo);
+    console.log('  Full totalsData array from API (Train Cargo - Even):', this.totalsData);
+    console.log('  Full duongBo array from API (Road Cargo - Even):', this.duongBo);
+    console.log('  Full flcData array from API (Loose Cargo - Odd):', this.flcData);
 
-    let trainPrice = 0; // Price for train transport
-    let roadPrice = 0;  // Price for road transport
-    let basePriceFromData = 0; // Price for loose cargo, initialized here
+
+    this.trainPrice = 0; // Price for train transport (even cargo)
+    this.roadPrice = 0;  // Price for road transport (even cargo)
+    this.basePriceFromData = 0; // Price per unit for loose cargo
 
     const numberOfContainers = this.totalsForm.get('numberOfContainers')?.value || 1;
     const containerType = this.totalsForm.get('containerType')?.value;
     const selectedContainerTypeNormalized = this.normalizeString(containerType || '');
-    const transportType = this.totalsForm.get('transportType')?.value; // Get selected transport type
+    const transportType = this.totalsForm.get('transportType')?.value; // Get selected transport type for even cargo
 
-    if (!selectedContainerTypeNormalized && this.goodsType === 'even') {
-      console.log('[calculateTotal] Early Exit (Even Cargo): Container type not selected or empty after normalization. selectedContainerTypeNormalized:', selectedContainerTypeNormalized);
-      return;
+    // Common checks for Even Cargo
+    if (this.goodsType === 'even' && (!selectedContainerTypeNormalized || !numberOfContainers || numberOfContainers < 1)) {
+        console.log('[calculateTotal] Early Exit (Even Cargo): Container type not selected or invalid number of containers. selectedContainerTypeNormalized:', selectedContainerTypeNormalized, 'numberOfContainers:', numberOfContainers);
+        this.totalPrice = 0;
+        return;
     }
 
     if (this.goodsType === 'even') {
@@ -608,7 +620,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       // --- Calculate Train Price (from totalsData) ---
       if ((transportType === 'train' || transportType === 'both') && this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
         console.log('  Attempting to calculate Train Price...');
-        const matchedTrainRoute = this.totalsData.find((route, index) => {
+        const matchedTrainRoute = this.totalsData.find((route) => {
           const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
           const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
           const normalizedRouteGa = this.normalizeString(route.ga);
@@ -626,19 +638,19 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         if (matchedTrainRoute) {
           console.log('  SUCCESS (Train Cargo): Matched train route found:', matchedTrainRoute);
           const soTienString = matchedTrainRoute.soTien;
-          trainPrice = Number(soTienString.replace(/[^0-9]/g, '')) || 0;
-          console.log('  Calculated trainPrice per container:', trainPrice);
+          this.trainPrice = Number(soTienString.replace(/[^0-9]/g, '')) || 0;
+          console.log('  Calculated trainPrice per container:', this.trainPrice);
         } else {
           console.log('  FAIL (Train Cargo): No matched train route found.');
         }
       } else if (transportType === 'train' || transportType === 'both') {
-        console.log('  Conditions for finding train price not met.');
+        console.log('  Conditions for finding train price not met or not selected.');
       }
 
       // --- Calculate Road Price (from duongBo) ---
       if ((transportType === 'road' || transportType === 'both') && this.nearestPickupStation && this.nearestDeliveryStation && this.duongBo.length > 0) {
         console.log('  Attempting to calculate Road Price...');
-        const matchedRoadRoute = this.duongBo.find((route, index) => {
+        const matchedRoadRoute = this.duongBo.find((route) => {
           const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
           const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
           const normalizedRouteGa = this.normalizeString(route.ga);
@@ -656,24 +668,24 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         if (matchedRoadRoute) {
           console.log('  SUCCESS (Road Cargo): Matched road route found:', matchedRoadRoute);
           const donViTinhString = matchedRoadRoute.donViTinh;
-          roadPrice = Number(donViTinhString.replace(/[^0-9]/g, '')) || 0; // Assuming donViTinh is the price
-          console.log('  Calculated roadPrice per container:', roadPrice);
+          this.roadPrice = Number(donViTinhString.replace(/[^0-9]/g, '')) || 0; // Assuming donViTinh is the price
+          console.log('  Calculated roadPrice per container:', this.roadPrice);
         } else {
           console.log('  FAIL (Road Cargo): No matched road route found.');
         }
       } else if (transportType === 'road' || transportType === 'both') {
-        console.log('  Conditions for finding road price not met.');
+        console.log('  Conditions for finding road price not met or not selected.');
       }
 
       // --- Final Total Price for Even Cargo ---
       if (transportType === 'train') {
-        this.totalPrice = trainPrice * numberOfContainers;
+        this.totalPrice = this.trainPrice * numberOfContainers;
         console.log('  Final totalPrice (Train only):', this.totalPrice);
       } else if (transportType === 'road') {
-        this.totalPrice = roadPrice * numberOfContainers;
+        this.totalPrice = this.roadPrice * numberOfContainers;
         console.log('  Final totalPrice (Road only):', this.totalPrice);
       } else if (transportType === 'both') {
-        this.totalPrice = (trainPrice + roadPrice) * numberOfContainers;
+        this.totalPrice = (this.trainPrice + this.roadPrice) * numberOfContainers;
         console.log('  Final totalPrice (Train + Road):', this.totalPrice);
       }
 
@@ -685,12 +697,15 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       const pickupStationName = this.totalsForm.get('pickupStation')?.value;
       const deliveryStationName = this.totalsForm.get('deliveryStation')?.value;
 
-      this.showDistanceWarning = false; // Reset warning
+      this.showDistanceWarning = false; // Reset warning for loose cargo
 
       console.log('  Selected Loose Cargo Type:', looseCargoType);
       console.log('  Selected Loose Transport Type:', transportTypeLoose);
       console.log('  Weight (Kg):', weightKg);
       console.log('  Volume (m3):', volumeM3);
+      console.log('  Pickup Station (selected):', pickupStationName);
+      console.log('  Delivery Station (selected):', deliveryStationName);
+
 
       if (!looseCargoType || 
           (looseCargoType === 'kg' && (!weightKg || weightKg < 1000)) || 
@@ -796,9 +811,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           console.log('  Debug - calculatedDeliveryStationName:', calculatedDeliveryStationName);
           console.log('  Debug - flcData for search:', this.flcData);
 
-          const matchedLooseRoute = this.flcData.find((route, index) => {
-              const normalizedPickupStationName = this.normalizeString(calculatedPickupStationName || '');
-              const normalizedDeliveryStationName = this.normalizeString(calculatedDeliveryStationName || '');
+          // Define normalized station names once for use in nested find calls
+          const normalizedPickupStationName = this.normalizeString(calculatedPickupStationName || '');
+          const normalizedDeliveryStationName = this.normalizeString(calculatedDeliveryStationName || '');
+
+          const matchedLooseRoute = this.flcData.find((route) => { // Removed index here, as it's not used
               const normalizedRouteGa = this.normalizeString(route.ga);
               const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
 
@@ -814,8 +831,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
               let pricePerUnit = 0;
 
               if (looseCargoType === 'full_carriage') {
+                  // For full carriage, directly use nguyenToa from the matchedLooseRoute
                   pricePerUnit = Number(this.normalizeString(matchedLooseRoute.nguyenToa || '').replace(/[^0-9]/g, '')) || 0;
-                  quantity = 1; // For full carriage, quantity is 1 unit
+                  quantity = 1; // Quantity is always 1 for full carriage (per container)
+
               } else if (looseCargoType === 'kg') {
                   pricePerUnit = Number(this.normalizeString(matchedLooseRoute.dongKg || '').replace(/[^0-9]/g, '')) || 0;
                   quantity = weightKg;
@@ -823,20 +842,16 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
                   pricePerUnit = Number(this.normalizeString(matchedLooseRoute.metKhoi || '').replace(/[^0-9]/g, '')) || 0;
                   quantity = volumeM3;
               }
-              basePriceFromData = pricePerUnit; // basePriceFromData will be the price per unit
-              console.log('  Calculated basePriceFromData (price per unit) for Loose Cargo:', basePriceFromData);
+              this.basePriceFromData = pricePerUnit; // basePriceFromData will be the price per unit
+              console.log('  Calculated basePriceFromData (price per unit) for Loose Cargo:', this.basePriceFromData);
 
           } else {
-              console.log('  FAIL (Odd Cargo): No matched loose route found. (matchedLooseRoute is undefined/null)');
+              console.log('  FAIL (Odd Cargo): No matched loose route found for given stations. (matchedLooseRoute is undefined/null)');
               this.totalPrice = 0; // If no route found, price is 0
               return;
           }
-      } else {
-          console.log('  Conditions for finding base price for ODD cargo from FLC data not met.');
-          this.totalPrice = 0; // If no FLC data or stations, price is 0
-          return;
       }
-      this.totalPrice = basePriceFromData * quantity;
+      this.totalPrice = this.basePriceFromData * quantity;
     }
 
     console.log('  Final totalPrice calculated:', this.totalPrice);
@@ -890,6 +905,32 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.showDistanceWarning = false;
   }
 
+  // Handler for loose cargo type change
+  onLooseCargoTypeChange(selectedType?: string): void {
+    const weightKgControl = this.totalsForm.get('weightKg');
+    const volumeM3Control = this.totalsForm.get('volumeM3');
+
+    // Clear all validators and values initially
+    weightKgControl?.clearValidators();
+    volumeM3Control?.clearValidators();
+
+    weightKgControl?.setValue(null);
+    volumeM3Control?.setValue(null);
+
+    if (selectedType === 'kg') {
+      weightKgControl?.setValidators([Validators.required, Validators.min(1000)]);
+    } else if (selectedType === 'm3') {
+      volumeM3Control?.setValidators([Validators.required, Validators.min(3)]);
+    } else if (selectedType === 'full_carriage') {
+      // containerTypeLooseControl?.setValidators(Validators.required); // REMOVED
+    }
+    
+    weightKgControl?.updateValueAndValidity();
+    volumeM3Control?.updateValueAndValidity();
+    // containerTypeLooseControl?.updateValueAndValidity(); // REMOVED
+    this.calculateTotal();
+  }
+
   // New: Handler for loose cargo transport type change
   onTransportTypeLooseChange(): void {
     const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
@@ -897,22 +938,26 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const deliveryAddressControl = this.totalsForm.get('deliveryAddress');
     const pickupStationControl = this.totalsForm.get('pickupStation');
     const deliveryStationControl = this.totalsForm.get('deliveryStation');
+    // const containerTypeLooseControl = this.totalsForm.get('containerTypeLoose'); // REMOVED
 
     // Clear all validators and values related to location for loose cargo
     pickupAddressControl?.clearValidators();
     deliveryAddressControl?.clearValidators();
     pickupStationControl?.clearValidators();
     deliveryStationControl?.clearValidators();
+    // containerTypeLooseControl?.clearValidators(); // REMOVED
 
     pickupAddressControl?.setValue('');
     deliveryAddressControl?.setValue('');
     pickupStationControl?.setValue('');
     deliveryStationControl?.setValue('');
+    // containerTypeLooseControl?.setValue(''); // REMOVED
 
     pickupAddressControl?.updateValueAndValidity();
     deliveryAddressControl?.updateValueAndValidity();
     pickupStationControl?.updateValueAndValidity();
     deliveryStationControl?.updateValueAndValidity();
+    // containerTypeLooseControl?.updateValueAndValidity(); // REMOVED
 
     this.resetLooseCargoMapPoints(); // Reset map markers and distances
 
@@ -923,7 +968,6 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         break;
       case 'warehouse_to_station':
         pickupAddressControl?.setValidators(Validators.required);
-        pickupStationControl?.setValidators(Validators.required);
         deliveryStationControl?.setValidators(Validators.required);
         break;
       case 'warehouse_to_warehouse':
@@ -936,6 +980,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     deliveryAddressControl?.updateValueAndValidity();
     pickupStationControl?.updateValueAndValidity();
     deliveryStationControl?.updateValueAndValidity();
+    // containerTypeLooseControl?.updateValueAndValidity(); // REMOVED
 
     this.calculateTotal(); // Recalculate total after changing transport type
   }
@@ -952,7 +997,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     };
     const headers = new HttpHeaders(environment.api.headers);
 
-    this.http.post(`${environment.api.url}/contact_customer`,{headers} ,formData).subscribe({
+    this.http.post(`${environment.api.url}/contact_customer`, formData, {headers}).subscribe({
       next: (res) => {
         Swal.fire({
           position: "top-end",
@@ -979,85 +1024,99 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     });
   }
 
-  // Handler for loose cargo type change
-  onLooseCargoTypeChange(selectedType: string): void {
-    const weightKgControl = this.totalsForm.get('weightKg');
-    const volumeM3Control = this.totalsForm.get('volumeM3');
-
-    weightKgControl?.clearValidators();
-    volumeM3Control?.clearValidators();
-    weightKgControl?.updateValueAndValidity();
-    volumeM3Control?.updateValueAndValidity();
-
-    if (selectedType === 'kg') {
-      weightKgControl?.setValidators([Validators.required, Validators.min(1000)]);
-      volumeM3Control?.setValue(null);
-    } else if (selectedType === 'm3') {
-      volumeM3Control?.setValidators([Validators.required, Validators.min(3)]);
-      weightKgControl?.setValue(null);
-    } else if (selectedType === 'full_carriage') {
-      weightKgControl?.setValue(null);
-      volumeM3Control?.setValue(null);
-    }
-    weightKgControl?.updateValueAndValidity();
-    volumeM3Control?.updateValueAndValidity();
-    this.calculateTotal();
-  }
-
-  // Add this new method
+  // Handler for goods type change (Even/Odd)
   onGoodsTypeChange(type: 'even' | 'odd'): void {
     this.goodsType = type;
 
-    // Map destruction and re-initialization is no longer needed here
-    // because the map container is outside the *ngIf forms.
-    // if (this.map) {
-    //     this.map.remove();
-    //     this.map = null; 
-    // }
-
     const containerTypeControl = this.totalsForm.get('containerType');
     const numberOfContainersControl = this.totalsForm.get('numberOfContainers');
+    const transportTypeControl = this.totalsForm.get('transportType'); // For even cargo
+    
     const looseCargoTypeControl = this.totalsForm.get('looseCargoType');
     const weightKgControl = this.totalsForm.get('weightKg');
     const volumeM3Control = this.totalsForm.get('volumeM3');
+    const transportTypeLooseControl = this.totalsForm.get('transportTypeLoose'); // For odd cargo
+    const pickupStationControl = this.totalsForm.get('pickupStation');
+    const deliveryStationControl = this.totalsForm.get('deliveryStation');
+    const pickupAddressControl = this.totalsForm.get('pickupAddress');
+    const deliveryAddressControl = this.totalsForm.get('deliveryAddress');
+
 
     // Clear all validators and values for both cargo types initially
     containerTypeControl?.clearValidators();
     numberOfContainersControl?.clearValidators();
+    transportTypeControl?.clearValidators();
+
     looseCargoTypeControl?.clearValidators();
     weightKgControl?.clearValidators();
     volumeM3Control?.clearValidators();
+    transportTypeLooseControl?.clearValidators();
+    pickupStationControl?.clearValidators();
+    deliveryStationControl?.clearValidators();
+    pickupAddressControl?.clearValidators();
+    deliveryAddressControl?.clearValidators();
 
-    containerTypeControl?.setValue(null);
+
+    containerTypeControl?.setValue('');
     numberOfContainersControl?.setValue(null);
-    looseCargoTypeControl?.setValue(null);
+    transportTypeControl?.setValue('both'); // Reset to default for even cargo
+    
+    looseCargoTypeControl?.setValue('');
     weightKgControl?.setValue(null);
     volumeM3Control?.setValue(null);
+    transportTypeLooseControl?.setValue('warehouse_to_warehouse'); // Reset to default for loose cargo
+    pickupStationControl?.setValue('');
+    deliveryStationControl?.setValue('');
+    pickupAddressControl?.setValue('');
+    deliveryAddressControl?.setValue('');
+
 
     if (this.goodsType === 'even') {
         containerTypeControl?.setValidators(Validators.required);
         numberOfContainersControl?.setValidators([Validators.required, Validators.min(1)]);
         numberOfContainersControl?.setValue(1); // Set default for even cargo
-        looseCargoTypeControl?.setValue(null); // Ensure loose cargo type is cleared
+        transportTypeControl?.setValidators(Validators.required); // Ensure transportType is required for even cargo
+
+        // Clear loose cargo specific validators
+        looseCargoTypeControl?.setValue(null);
+        weightKgControl?.setValue(null);
+        volumeM3Control?.setValue(null);
+        transportTypeLooseControl?.setValue(null);
+        pickupStationControl?.setValue(null);
+        deliveryStationControl?.setValue(null);
+        pickupAddressControl?.setValue(null);
+        deliveryAddressControl?.setValue(null);
+
+
     } else { // goodsType === 'odd'
         looseCargoTypeControl?.setValidators(Validators.required);
         looseCargoTypeControl?.setValue('full_carriage'); // Set default for odd cargo
-        // Call the loose cargo type change handler to set specific validators for kg/m3 if default changes
-        this.onLooseCargoTypeChange('full_carriage');
-        containerTypeControl?.setValue(null); // Ensure container type is cleared
-        numberOfContainersControl?.setValue(null); // Ensure container count is cleared
+        transportTypeLooseControl?.setValidators(Validators.required); // Ensure transportTypeLoose is required
+        transportTypeLooseControl?.setValue('warehouse_to_warehouse'); // Default transport for odd cargo
+        this.onLooseCargoTypeChange('full_carriage'); // Call to set initial validators for loose cargo type
+        this.onTransportTypeLooseChange(); // Call to set initial validators for loose transport type
+
+        // Clear even cargo specific validators
+        containerTypeControl?.setValue(null);
+        numberOfContainersControl?.setValue(null);
+        transportTypeControl?.setValue(null); // Clear transport type for even cargo
     }
 
+    // Update validity for all controls
     containerTypeControl?.updateValueAndValidity();
     numberOfContainersControl?.updateValueAndValidity();
+    transportTypeControl?.updateValueAndValidity();
     looseCargoTypeControl?.updateValueAndValidity();
     weightKgControl?.updateValueAndValidity();
     volumeM3Control?.updateValueAndValidity();
+    transportTypeLooseControl?.updateValueAndValidity();
+    pickupStationControl?.updateValueAndValidity();
+    deliveryStationControl?.updateValueAndValidity();
+    pickupAddressControl?.updateValueAndValidity();
+    deliveryAddressControl?.updateValueAndValidity();
 
-    // No need to re-initialize map here, it's always present in DOM. 
-    // Only reset map markers/routes.
-    this.resetMap(); 
 
+    this.resetMap(); // Reset map markers and distances
     this.calculateTotal(); // Recalculate total after changing goods type
   }
 }

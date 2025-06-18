@@ -1,6 +1,6 @@
 <div class="container mx-auto w-full px-4 py-8">
     <div class="bg-white rounded-3xl shadow-2xl p-6 mx-auto w-full">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">TÍNH TOÁN CHI PHÍ VẬN CHUYỂN</h1>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">BÁO GIÁ CHI PHÍ VẬN CHUYỂN</h1>
 
         <!-- Toggle for Hàng Chẵn / Hàng Lẻ -->
         <div class="flex justify-center mb-8">
@@ -21,20 +21,6 @@
                 </button>
             </div>
         </div>
-
-        <!-- Loading State -->
-        <div *ngIf="loading" class="flex justify-center items-center py-8">
-            <mat-spinner diameter="40"></mat-spinner>
-        </div>
-
-        <!-- Map Section (Shared and always present when not loading) -->
-        <div *ngIf="!loading" class="bg-green-200 p-6 rounded-3xl mb-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Bản đồ</h3>
-            <div class="h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-white">
-                <div #map id="map" class="w-full h-full z-0"></div>
-            </div>
-        </div>
-
         <!-- Form for Hàng Chẵn -->
         <form [formGroup]="totalsForm" *ngIf="!loading && goodsType === 'even'" class="space-y-6">
             <!-- Top Section - Address and Route Info -->
@@ -159,6 +145,27 @@
                         <span class="font-medium text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
                     </div>
 
+                    <!-- Individual Prices for Both Transport Types -->
+                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'train' && trainPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Giá đường tàu</span>
+                        <span class="font-medium text-lg">{{trainPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+                    
+                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'road' && roadPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Giá đường bộ</span>
+                        <span class="font-medium text-lg">{{roadPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+
+                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'both' && trainPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Giá đường tàu</span>
+                        <span class="font-medium text-lg">{{trainPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+                    
+                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'both' && roadPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Giá đường bộ</span>
+                        <span class="font-medium text-lg">{{roadPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+
                     <!-- Total -->
                     <div class="bg-green-600 text-white px-4 py-3 rounded-xl mt-4">
                         <div class="flex justify-between items-center">
@@ -230,7 +237,7 @@
                     </div>
 
                     <!-- Pickup Station (Conditional) -->
-                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'station_to_station' || totalsForm.get('transportTypeLoose')?.value === 'warehouse_to_station'">
+                    <div class="mb-4" *ngIf="totalsForm.get('transportTypeLoose')?.value === 'station_to_station'">
                         <div class="relative">
                             <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">train</mat-icon>
                             <select 
@@ -368,6 +375,12 @@
                         <span class="font-medium text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
                     </div>
 
+                    <!-- Individual Price for Loose Cargo -->
+                    <div *ngIf="goodsType === 'odd' && basePriceFromData > 0" class="flex justify-between items-center py-2 border-b border-green-300">
+                        <span class="text-lg text-gray-700">Giá cơ bản</span>
+                        <span class="font-medium text-lg">{{basePriceFromData | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+
                     <!-- Total -->
                     <div class="bg-green-600 text-white px-4 py-3 rounded-xl mt-4">
                         <div class="flex justify-between items-center">
@@ -389,5 +402,18 @@
                 </div>
             </div>
         </form>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="flex justify-center items-center py-8">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- Map Section (Shared and always present when not loading) -->
+        <div *ngIf="!loading" class="bg-green-200 p-6 rounded-3xl mb-6 relative top-10">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Bản đồ</h3>
+            <div class="h-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-white">
+                <div #map id="map" class="w-full h-full z-0"></div>
+            </div>
+        </div>
     </div>
 </div>

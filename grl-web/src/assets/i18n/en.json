@@ -11,7 +11,7 @@
     "our-advantages-are-endless":"Our Advantages are endless",
     "quality-services-is-our-law":"Quality Services Is Our Law",
     "services-descriptions":"With years of industry experience, we've honed our expertise to offer a comprehensive range of logistics solutions tailored to meet the unique needs of our clients.",
-    "solution":"Solution",
+    "solution":"Price",
     "our-solution":"Our solution",
     "our-solution-descriptions":"With years of industry experience, we've honed our expertise to offer a comprehensive range of logistics solutions tailored to meet the unique needs of our clients.",
     "partner":"Partnerships",
@@ -51,5 +51,8 @@
     "Services": "Services",
     "Partners": "Partners",
     "Terms-and-Conditions": "Terms and Conditions",
-    "Privacy-Policy": "Privacy Policy"
+    "Privacy-Policy": "Privacy Policy",
+    "company-name":"Company name",
+    "select-service":"Select Container type",
+    "number":"Number"
 }

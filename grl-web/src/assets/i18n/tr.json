@@ -11,7 +11,7 @@
     "our-advantages-are-endless": "Lợi thế của chúng tôi là vô tận",
     "quality-services-is-our-law": "Dịch vụ chất lượng là tiêu chí của chúng tôi",
     "services-descriptions": "Với nhiều năm kinh nghiệm trong ngành, chúng tôi đã rèn giũa chuyên môn để cung cấp các giải pháp logistics toàn diện, phù hợp với nhu cầu riêng của khách hàng.",
-    "solution": "Giải pháp",
+    "solution": "Báo giá",
     "our-solution": "Giải pháp của chúng tôi",
     "our-solution-descriptions": "Với nhiều năm kinh nghiệm trong ngành, chúng tôi đã rèn giũa chuyên môn để cung cấp các giải pháp logistics toàn diện, phù hợp với nhu cầu riêng của khách hàng.",
     "partner": "Quan hệ đối tác",
@@ -33,7 +33,7 @@
     "name-erorr": "Họ và tên là bắt buộc.",
     "email": "Email",
     "email-erorr": "Email là bắt buộc.",
-    "note": "Ghi chú",
+    "note": "Nội dung",
     "note-errorr": "Ghi chú là bắt buộc.",
     "send": "Gửi",
     "cancel": "Hủy bỏ",
@@ -41,7 +41,7 @@
         "phone": "Số điện thoại",
         "welcome": "Giới thiệu",
         "services": "Dịch Vụ",
-        "solutions": "Giải pháp",
+        "solutions": "Báo giá",
         "news": "Tin Tức",
         "hire": "Tuyển dụng",
         "contact": "Liên Hệ",
@@ -52,5 +52,8 @@
         "Services": "Dịch vụ",
         "Partners": "Đối tác",
         "Terms-and-Conditions": "Điều khoản và Điều kiện",
-        "Privacy-Policy": "Chính sách bảo mật"
+        "Privacy-Policy": "Chính sách bảo mật",
+        "company-name":"Tên công ty",
+        "select-service":"Chọn loại dịch vụ",
+        "number":"Số lượng"
 }
