@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
     selector   : 'app-root',
@@ -10,7 +11,11 @@ export class AppComponent
     /**
      * Constructor
      */
-    constructor()
+    constructor(
+        private translocoService: TranslocoService
+    )
     {
+        this.translocoService.setDefaultLang('tr');
+        this.translocoService.setActiveLang('tr');
     }
 }

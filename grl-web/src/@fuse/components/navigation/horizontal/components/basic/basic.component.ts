@@ -5,6 +5,7 @@ import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/h
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
     selector       : 'fuse-horizontal-navigation-basic-item',
@@ -26,7 +27,9 @@ export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDes
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseNavigationService: FuseNavigationService,
-        private _fuseUtilsService: FuseUtilsService
+        private _fuseUtilsService: FuseUtilsService,
+        private translocoService: TranslocoService // Thêm dòng này
+
     )
     {
         // Set the equivalent of {exact: false} as default for active match options.
@@ -48,6 +51,9 @@ export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDes
         // Set the "isActiveMatchOptions" either from item's
         // "isActiveMatchOptions" or the equivalent form of
         // item's "exactMatch" option
+        this.translocoService.langChanges$.subscribe(() => {
+            this._changeDetectorRef.markForCheck();
+        });
         this.isActiveMatchOptions =
             this.item.isActiveMatchOptions ?? this.item.exactMatch
                 ? this._fuseUtilsService.exactMatchOptions
