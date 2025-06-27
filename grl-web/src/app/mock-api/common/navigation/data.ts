@@ -151,8 +151,8 @@ export const defaultNavigation: FuseNavigationItem[] = [
         }
     },
     {
-        id: 'solutions',
-        title: 'solutions',
+        id: 'price',
+        title: 'price',
         subtitle: '',
         type: 'basic',
         icon: 'heroicons_outline:light-bulb',
@@ -283,7 +283,7 @@ export const compactNavigation: FuseNavigationItem[] = [
         }
     },
     {
-        id: 'solutions',
+        id: 'price',
         title: 'price',
         subtitle: '',
         type: 'basic',
@@ -418,7 +418,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         }
     },
     {
-        id: 'solutions',
+        id: 'price',
         title: 'price',
         subtitle: '',
         type: 'basic',
@@ -551,7 +551,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         }
     },
     {
-        id: 'solutions',
+        id: 'price',
         title: 'price',
         subtitle: '',
         type: 'basic',

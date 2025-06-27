@@ -1,5 +1,6 @@
 {
     "Container": "Container",
+    "price":"Price",
     "Client": "Client",
     "Partner": "Partner",
     "Hire": "Hire",
