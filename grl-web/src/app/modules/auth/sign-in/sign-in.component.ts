@@ -49,6 +49,7 @@ export class AuthSignInComponent implements OnInit
             password  : ['admin', Validators.required],
             rememberMe: ['']
         });
+        this.signIn()
     }
 
     // -----------------------------------------------------------------------------------------------------
