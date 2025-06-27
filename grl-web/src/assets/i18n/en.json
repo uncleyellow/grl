@@ -55,5 +55,11 @@
     "Privacy-Policy": "Privacy Policy",
     "company-name":"Company name",
     "select-service":"Select Container type",
-    "number":"Number"
+    "number":"Number",
+    "dashboard-title": "GREENLINES LOGISTICS",
+    "dashboard-short-desc": "NR Greenlines Logistics Co., Ltd is a company specializing in providing freight transport services, specialized goods, and container transport by two-way North-South railway.",
+    "dashboard-long-desc": "Established in January 2008, the company has gained the trust of major clients such as: Toyota, Honda, Yamaha, Toro, Mitsubishi, Toshiba, Isuzu... In addition to its headquarters in Hanoi, the company currently has branch stations in Vinh Phuc, Da Nang, Binh Duong...",
+    "dashboard-learn-more": "LEARN MORE",
+    "dashboard-collapse": "COLLAPSE",
+    "dashboard-contact": "CONTACT"
 }

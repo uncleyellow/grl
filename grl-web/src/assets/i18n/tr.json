@@ -56,5 +56,11 @@
         "Privacy-Policy": "Chính sách bảo mật",
         "company-name":"Tên công ty",
         "select-service":"Chọn loại dịch vụ",
-        "number":"Số lượng"
+        "number":"Số lượng",
+    "dashboard-title": "GREENLINES LOGISTICS",
+    "dashboard-short-desc": "Công ty TNHH NR Greenlines Logistics là công ty chuyên cung cấp dịch vụ vận tải hàng hóa, hàng hóa chuyên dụng, hàng container bằng đường sắt 2 chiều Bắc - Nam.",
+    "dashboard-long-desc": "Được thành lập từ tháng 1 năm 2008, hiện công ty đã có được sự tín nhiệm của những khách hàng lớn như: Toyota, Honda, Yamaha, Toro, Mitsubishi, Toshiba, Isuzu...Ngoài trụ sở chính đặt tại Hà nội, công ty hiện có các trạm CN nhánh tại Vĩnh Phúc, Đà Nẵng, Bình Dương...",
+    "dashboard-learn-more": "TÌM HIỂU THÊM",
+    "dashboard-collapse": "THU GỌN",
+    "dashboard-contact": "LIÊN HỆ"
 }
