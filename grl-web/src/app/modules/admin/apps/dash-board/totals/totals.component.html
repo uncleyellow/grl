@@ -86,7 +86,7 @@
                                 <div class="flex items-center space-x-6">
                                     <label class="inline-flex items-center gap-2">
                                         <input type="radio" formControlName="transportType" value="train" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
-                                        <mat-icon>train</mat-icon> <span>Đường tàu</span>
+                                        <mat-icon>train</mat-icon> <span>Đường Sắt</span>
                                     </label>
                                     <label class="inline-flex items-center gap-2">
                                         <input type="radio" formControlName="transportType" value="road" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
@@ -163,17 +163,22 @@
                             </div>
                             <!-- Total -->
                             <div class="bg-green-600 text-white px-6 py-4 rounded-2xl mt-4 flex justify-between items-center shadow-lg">
-                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>Tổng</span>
+                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>Cước vận chuyển( chưa tính VAT )</span>
                                 <span class="font-bold text-2xl">{{totalPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
                             </div>
                             <!-- Note and Contact Button -->
                             <div class="mt-6 text-center">
                                 <p class="text-base text-gray-600 mb-4 flex items-center gap-2 justify-center"><mat-icon>info</mat-icon>Đây là số tiền tạm tính, vui lòng liên hệ để nhận báo giá chi tiết.</p>
-                                <div class="flex items-center justify-center">
+                                <div class="flex items-center justify-center gap-4">
                                     <button 
                                         (click)="openContactDialog()"
                                         class="px-10 py-3 border border-green-600 text-green-600 font-bold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg ">
                                         <mat-icon>call</mat-icon> LIÊN HỆ
+                                    </button>
+                                    <button
+                                        (click)="exportToPDF()"
+                                        class="px-10 py-3 border border-red-600 text-red-600 font-bold rounded-full shadow-lg hover:bg-red-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
+                                        <mat-icon>picture_as_pdf</mat-icon> Xuất PDF
                                     </button>
                                 </div>
                             </div>
@@ -372,6 +377,11 @@
                                     (click)="openContactDialog()"
                                     class="px-10 py-3 border border-green-600 text-green-600 font-bold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
                                     <mat-icon>call</mat-icon> LIÊN HỆ
+                                </button>
+                                <button
+                                    (click)="exportToPDF()"
+                                    class="px-10 py-3 border border-red-600 text-red-600 font-bold rounded-full shadow-lg hover:bg-red-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
+                                    <mat-icon>picture_as_pdf</mat-icon> Xuất PDF
                                 </button>
                             </div>
                         </div>

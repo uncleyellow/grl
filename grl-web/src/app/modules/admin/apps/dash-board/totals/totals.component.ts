@@ -6,6 +6,8 @@ import { environment } from 'environments/environment.prod';
 import * as L from 'leaflet';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from 'app/modules/admin/apps/dash-board/contact/contact.component';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 declare const google: any;
 
@@ -1118,5 +1120,99 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
     this.resetMap(); // Reset map markers and distances
     this.calculateTotal(); // Recalculate total after changing goods type
+  }
+
+  exportToPDF(): void {
+    debugger
+    (pdfMake as any).vfs = (pdfFonts as any).pdfMake?.vfs || (pdfFonts as any).vfs;
+    const formValue = this.totalsForm.value;
+    const isEven = this.goodsType === 'even';
+    const rows: any[] = [];
+    let title = 'BÁO GIÁ CHI PHÍ VẬN CHUYỂN';
+    let subtitle = '';
+
+    if (isEven) {
+      subtitle = 'Hàng Chẵn (Container)';
+      rows.push(['Loại hàng', 'Container']);
+      rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+      rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
+      rows.push(['Loại container', formValue.containerType]);
+      rows.push(['Số lượng container', formValue.numberOfContainers]);
+      rows.push(['Loại hình vận chuyển',
+        formValue.transportType === 'train' ? 'Đường tàu' :
+        formValue.transportType === 'road' ? 'Đường bộ' : 'Cả hai']);
+      rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+      rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
+      if (formValue.transportType === 'train' || formValue.transportType === 'both') {
+        rows.push(['Giá đường tàu', this.trainPrice.toLocaleString() + ' VND']);
+      }
+      if (formValue.transportType === 'road' || formValue.transportType === 'both') {
+        rows.push(['Giá đường bộ', this.roadPrice.toLocaleString() + ' VND']);
+      }
+      rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+    } else {
+      subtitle = 'Hàng Lẻ (Loose Cargo)';
+      rows.push(['Loại hàng', 'Hàng lẻ']);
+      let looseType = '';
+      if (formValue.transportTypeLoose === 'station_to_station') looseType = 'Từ ga đến ga';
+      else if (formValue.transportTypeLoose === 'warehouse_to_station') looseType = 'Từ kho đến ga';
+      else if (formValue.transportTypeLoose === 'warehouse_to_warehouse') looseType = 'Từ kho đến kho';
+      rows.push(['Loại hình vận chuyển', looseType]);
+      if (formValue.transportTypeLoose === 'station_to_station') {
+        rows.push(['Ga lấy hàng', formValue.pickupStation]);
+        rows.push(['Ga trả hàng', formValue.deliveryStation]);
+      } else if (formValue.transportTypeLoose === 'warehouse_to_station') {
+        rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+        rows.push(['Ga trả hàng', formValue.deliveryStation]);
+        rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+      } else if (formValue.transportTypeLoose === 'warehouse_to_warehouse') {
+        rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+        rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
+        rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+        rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
+      }
+      let looseCargoType = '';
+      if (formValue.looseCargoType === 'full_carriage') looseCargoType = 'Nguyên toa';
+      else if (formValue.looseCargoType === 'kg') looseCargoType = 'Kg';
+      else if (formValue.looseCargoType === 'm3') looseCargoType = 'Mét khối';
+      rows.push(['Loại hàng lẻ', looseCargoType]);
+      if (formValue.looseCargoType === 'kg') rows.push(['Số Kg', formValue.weightKg]);
+      if (formValue.looseCargoType === 'm3') rows.push(['Số mét khối', formValue.volumeM3]);
+      if (this.basePriceFromData > 0) rows.push(['Đơn giá', this.basePriceFromData.toLocaleString() + ' VND']);
+      rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+    }
+
+    const docDefinition = {
+      content: [
+        { text: title, style: 'header' },
+        { text: subtitle, style: 'subheader', margin: [0, 0, 0, 10] },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*'],
+            body: [
+              ['Thông tin', 'Giá trị'],
+              ...rows
+            ]
+          },
+          layout: {
+            fillColor: function (rowIndex: number) {
+              return rowIndex === 0 ? '#10b981' : null;
+            },
+            hLineWidth: function () { return 0.5; },
+            vLineWidth: function () { return 0.5; },
+          }
+        }
+      ],
+      styles: {
+        header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
+        subheader: { fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+      },
+      defaultStyle: {
+        font: 'Roboto',
+        fontSize: 12
+      }
+    };
+    pdfMake.createPdf(docDefinition).download('bao-gia-greenlines.pdf');
   }
 }
