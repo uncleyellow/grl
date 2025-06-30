@@ -75,14 +75,15 @@
                 <div class="relative flex justify-between  items-center w-full max-w-360 h-16">
                     <div class="flex items-center">
                         <img
-                            class="w-full h-full"
-                            src="/assets/green-line/logo.svg"
+                            class="h-48 w-96 object-contain"
+                            src="../../../../../assets/green-line/ContainerService/GREENLINES_LOGO-01.png"
                             alt="Logo image">
                     </div>
                     <fuse-horizontal-navigation
                         class="-mx-4"
                         [name]="'mainNavigation'"
-                        [navigation]="navigation.horizontal"></fuse-horizontal-navigation>
+                        [navigation]="navigation.horizontal">
+                    </fuse-horizontal-navigation>
                 </div>
             </div>
         </ng-container>
@@ -99,8 +100,12 @@
 
    <!-- Footer -->
 <div class="relative flex flex-col justify-center w-full bg-gradient-to-br from-green-700 to-green-800 text-white print:hidden">
-    <!-- Main Footer Content -->
-    <div class="container mx-auto px-6 md:px-8 py-16 font-sans">
+  <!-- Main Footer Content -->
+  <div class="container mx-auto px-6 md:px-8 py-16 font-sans">
+      <img
+      class="h-auto w-96 object-contain"
+      src="../../../../../assets/green-line/ContainerService/GREENLINES_LOGO-01.png"
+      alt="Logo image">
         <!-- Locations row -->
         <div class="relative">
           <h4 class="text-2xl font-extrabold mb-8 text-green-100 tracking-wide text-center uppercase">Locations</h4>

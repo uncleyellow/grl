@@ -1123,69 +1123,97 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
 
   exportToPDF(): void {
-    debugger
     (pdfMake as any).vfs = (pdfFonts as any).pdfMake?.vfs || (pdfFonts as any).vfs;
     const formValue = this.totalsForm.value;
     const isEven = this.goodsType === 'even';
     const rows: any[] = [];
-    let title = 'BÁO GIÁ CHI PHÍ VẬN CHUYỂN';
-    let subtitle = '';
-
+  
+    const recipientName = formValue.recipientName || 'Quý khách hàng';
+    const note = formValue.note || 'Đơn giá trên chưa bao gồm VAT 10%. Báo giá có hiệu lực trong vòng 07 ngày.';
+  
+    // Thêm logo, địa chỉ công ty và phần "Kính gửi"
+    const headerSection = [
+      {
+        columns: [
+          {
+            image: 'logo',
+            width: 120,
+            margin: [0, 0, 0, 10]
+          },
+          [
+            { text: 'HANOI HEAD OFFICE', bold: true, fontSize: 10 },
+            { text: 'Số 91 Lê Duẩn, Hoàn Kiếm, Hà Nội', fontSize: 10 },
+            { text: 'TEL: 34-5377251', fontSize: 10 },
+            { text: 'FAX:34-5377352', fontSize: 10 }
+          ]
+        ]
+      },
+      // Thêm ở đầu content
+{ 
+  text: `Hà Nội, ngày ${new Date().toLocaleDateString('vi-VN')}`, 
+  alignment: 'right', 
+  fontSize: 11, 
+  margin: [0, 0, 0, 5] 
+},
+      { text: 'BÁO GIÁ VẬN CHUYỂN', style: 'header', margin: [0, 0, 0, 10] },
+      { text: `Kính gửi: ${recipientName}`, fontSize: 12, italics: true, margin: [0, 10, 0, 5] },
+      { text: 'Công ty TNHH NR Greenlines Logictis xin gửi lời cảm ơn tới Quý Khách hàng vì đã tin tưởng và sử dụng dịch vụ vận tải đường sắt của chúng tôi. Căn cứ nhu cầu vận chuyển hàng hóa của Quý Khách hàng, chúng tôi xin gửi báo giá cước vận chuyển hàng hóa cụ thể như sau:', italics: true, fontSize: 11 },
+    ];
+  
+    // Tạo bảng dữ liệu như cũ...
     if (isEven) {
-      subtitle = 'Hàng Chẵn (Container)';
       rows.push(['Loại hàng', 'Container']);
-      rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
-      rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
-      rows.push(['Loại container', formValue.containerType]);
-      rows.push(['Số lượng container', formValue.numberOfContainers]);
-      rows.push(['Loại hình vận chuyển',
-        formValue.transportType === 'train' ? 'Đường tàu' :
-        formValue.transportType === 'road' ? 'Đường bộ' : 'Cả hai']);
-      rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
-      rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
-      if (formValue.transportType === 'train' || formValue.transportType === 'both') {
-        rows.push(['Giá đường tàu', this.trainPrice.toLocaleString() + ' VND']);
+      if (formValue.pickupAddress) rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+      if (formValue.deliveryAddress) rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
+      if (formValue.containerType) rows.push(['Loại container', formValue.containerType]);
+      if (formValue.numberOfContainers) rows.push(['Số lượng container', formValue.numberOfContainers]);
+      if (formValue.transportType) {
+        let transportTypeText = formValue.transportType === 'train' ? 'Đường tàu' : formValue.transportType === 'road' ? 'Đường bộ' : 'Cả hai';
+        rows.push(['Loại hình vận chuyển', transportTypeText]);
       }
-      if (formValue.transportType === 'road' || formValue.transportType === 'both') {
-        rows.push(['Giá đường bộ', this.roadPrice.toLocaleString() + ' VND']);
-      }
-      rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+      if (this.pickupDistance) rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+      if (this.deliveryDistance) rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
+      // if (formValue.transportType === 'train' || formValue.transportType === 'both') {
+      //   if (this.trainPrice) rows.push(['Giá đường tàu', this.trainPrice.toLocaleString() + ' VND']);
+      // }
+      // if (formValue.transportType === 'road' || formValue.transportType === 'both') {
+      //   if (this.roadPrice) rows.push(['Giá đường bộ', this.roadPrice.toLocaleString() + ' VND']);
+      // }
+      if (this.totalPrice) rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
     } else {
-      subtitle = 'Hàng Lẻ (Loose Cargo)';
       rows.push(['Loại hàng', 'Hàng lẻ']);
       let looseType = '';
       if (formValue.transportTypeLoose === 'station_to_station') looseType = 'Từ ga đến ga';
       else if (formValue.transportTypeLoose === 'warehouse_to_station') looseType = 'Từ kho đến ga';
       else if (formValue.transportTypeLoose === 'warehouse_to_warehouse') looseType = 'Từ kho đến kho';
-      rows.push(['Loại hình vận chuyển', looseType]);
+      if (looseType) rows.push(['Loại hình vận chuyển', looseType]);
       if (formValue.transportTypeLoose === 'station_to_station') {
-        rows.push(['Ga lấy hàng', formValue.pickupStation]);
-        rows.push(['Ga trả hàng', formValue.deliveryStation]);
+        if (formValue.pickupStation) rows.push(['Ga lấy hàng', formValue.pickupStation]);
+        if (formValue.deliveryStation) rows.push(['Ga trả hàng', formValue.deliveryStation]);
       } else if (formValue.transportTypeLoose === 'warehouse_to_station') {
-        rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
-        rows.push(['Ga trả hàng', formValue.deliveryStation]);
-        rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+        if (formValue.pickupAddress) rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+        if (formValue.deliveryStation) rows.push(['Ga trả hàng', formValue.deliveryStation]);
+        if (this.pickupDistance) rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
       } else if (formValue.transportTypeLoose === 'warehouse_to_warehouse') {
-        rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
-        rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
-        rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
-        rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
+        if (formValue.pickupAddress) rows.push(['Địa chỉ lấy hàng', formValue.pickupAddress]);
+        if (formValue.deliveryAddress) rows.push(['Địa chỉ trả hàng', formValue.deliveryAddress]);
+        if (this.pickupDistance) rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
+        if (this.deliveryDistance) rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
       }
       let looseCargoType = '';
       if (formValue.looseCargoType === 'full_carriage') looseCargoType = 'Nguyên toa';
       else if (formValue.looseCargoType === 'kg') looseCargoType = 'Kg';
       else if (formValue.looseCargoType === 'm3') looseCargoType = 'Mét khối';
-      rows.push(['Loại hàng lẻ', looseCargoType]);
-      if (formValue.looseCargoType === 'kg') rows.push(['Số Kg', formValue.weightKg]);
-      if (formValue.looseCargoType === 'm3') rows.push(['Số mét khối', formValue.volumeM3]);
+      if (looseCargoType) rows.push(['Loại hàng lẻ', looseCargoType]);
+      if (formValue.looseCargoType === 'kg' && formValue.weightKg) rows.push(['Số Kg', formValue.weightKg]);
+      if (formValue.looseCargoType === 'm3' && formValue.volumeM3) rows.push(['Số mét khối', formValue.volumeM3]);
       if (this.basePriceFromData > 0) rows.push(['Đơn giá', this.basePriceFromData.toLocaleString() + ' VND']);
-      rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+      if (this.totalPrice) rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
     }
-
+  
     const docDefinition = {
       content: [
-        { text: title, style: 'header' },
-        { text: subtitle, style: 'subheader', margin: [0, 0, 0, 10] },
+        ...headerSection,
         {
           table: {
             headerRows: 1,
@@ -1202,8 +1230,23 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             hLineWidth: function () { return 0.5; },
             vLineWidth: function () { return 0.5; },
           }
-        }
+        },
+        { text: '\nGhi chú:', bold: true, margin: [0, 20, 0, 5] },
+        { text: '1. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '2. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '3. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '4. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '5. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '6. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '7. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: note, italics: true, fontSize: 11 },
+        { text: 'Công ty TNHH NR Greenlines Logictis', italics: true, fontSize: 11 },
+
       ],
+      
+      images: {
+        logo: 'https://png.pngtree.com/png-vector/20211023/ourmid/pngtree-salon-logo-png-image_4004444.png'
+      },
       styles: {
         header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
         subheader: { fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
@@ -1215,4 +1258,5 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     };
     pdfMake.createPdf(docDefinition).download('bao-gia-greenlines.pdf');
   }
+  
 }
