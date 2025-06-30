@@ -27,9 +27,18 @@ fuse-horizontal-navigation {
                     padding: 0 16px;
                     cursor: pointer;
                     user-select: none;
+                    font-size: 18px;
+                    font-weight: 500;
 
                     .fuse-horizontal-navigation-item-icon {
                         margin-right: 12px;
+                        font-size: 22px;
+                    }
+
+                    .fuse-horizontal-navigation-item-title-wrapper {
+                        .fuse-horizontal-navigation-item-subtitle {
+                            font-size: 16px;
+                        }
                     }
                 }
             }
@@ -151,14 +160,14 @@ fuse-horizontal-navigation {
             justify-content: flex-start;
             min-height: 48px;
             width: 100%;
-            font-size: 13px;
+            font-size: 18px;
             font-weight: 500;
             text-decoration: none;
 
             .fuse-horizontal-navigation-item-title-wrapper {
 
                 .fuse-horizontal-navigation-item-subtitle {
-                    font-size: 12px;
+                    font-size: 16px;
                 }
             }
 

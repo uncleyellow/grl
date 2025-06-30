@@ -10,6 +10,7 @@ import { DashBoardService } from 'app/shared/services/dash-board.services';
 })
 export class DashBoardComponent implements OnInit{
   data
+  dataDashBoard
   @Input() activeLang: string = 'en';
   showFullDescription: boolean = false;
   constructor(
@@ -21,6 +22,7 @@ export class DashBoardComponent implements OnInit{
 
   ngOnInit(): void {
     this.fetch()
+    this.fetchDashBoard() 
   }
 
   fetch(){
@@ -28,6 +30,14 @@ export class DashBoardComponent implements OnInit{
       this.data = rs
     })
   }
+
+  fetchDashBoard() {
+    this.DashBoardServices.getSheetData('dashboard').subscribe(rs => {
+      this.dataDashBoard = rs;
+      console.log(this.dataDashBoard)
+    })
+  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['activeLang']) {
