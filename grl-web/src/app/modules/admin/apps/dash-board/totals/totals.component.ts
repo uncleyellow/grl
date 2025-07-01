@@ -60,7 +60,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   zoom = 6;
   duongBo
   // Ga Hà Nội coordinates
-  private hanoiStation = L.latLng(21.0242579 , 105.8384487);
+  // private hanoiStation = L.latLng(21.0242579 , 105.8384487);
 
   // Ga Đông Anh coordinates
   private dongAnhStation = L.latLng(21.1535125 , 105.8498434);
@@ -85,7 +85,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
   // Array of all stations
   private stations = [
-    { name: 'Ga Hà Nội', coordinates: this.hanoiStation },
+    // { name: 'Ga Hà Nội', coordinates: this.hanoiStation },
     { name: 'Ga Đông Anh', coordinates: this.dongAnhStation },
     { name: 'Ga Vinh', coordinates: this.vinhStation },
     { name: 'Ga Da Nang', coordinates: this.daNangStation },
@@ -253,9 +253,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       });
 
       // Thêm marker cho Ga Hà Nội
-      this.hanoiStationMarker = L.marker(this.hanoiStation, { icon: hanoiIcon })
-        .bindPopup('Ga Hà Nội')
-        .addTo(this.map);
+      // this.hanoiStationMarker = L.marker(this.hanoiStation, { icon: hanoiIcon })
+      //   .bindPopup('Ga Hà Nội')
+      //   .addTo(this.map);
 
       // Xử lý sự kiện click trên map
       this.map.on('click', (e: L.LeafletMouseEvent) => {
