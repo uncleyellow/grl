@@ -1,12 +1,13 @@
-<h2 mat-dialog-title class="text-green-600 font-bold flex items-center gap-2">
+<h2 mat-dialog-title class="text-green-700 font-bold flex items-center gap-2 text-2xl justify-center">
     <mat-icon color="primary">contact_mail</mat-icon> {{'contact-us' | transloco}}
 </h2>
 
-<mat-dialog-content class="space-y-4">
-    <form [formGroup]="contactForm">
+<mat-dialog-content class="py-2 px-1 md:px-4">
+    <form [formGroup]="contactForm" class="space-y-5 w-full max-w-md mx-auto">
         <mat-form-field appearance="outline" class="w-full">
             <mat-label>{{'name' | transloco}}</mat-label>
-            <input matInput formControlName="fullName" placeholder="Nhập họ tên của bạn">
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="fullName" [placeholder]="'name' | transloco">
             <mat-error *ngIf="contactForm.get('fullName')?.invalid && contactForm.get('fullName')?.touched">
                 {{'name-erorr' | transloco}}
             </mat-error>
@@ -14,7 +15,8 @@
 
         <mat-form-field appearance="outline" class="w-full">
             <mat-label>{{'email' | transloco}}</mat-label>
-            <input matInput type="email" formControlName="email" placeholder="Nhập email của bạn">
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput type="email" formControlName="email" [placeholder]="'email' | transloco">
             <mat-error *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
                 {{'email-erorr' | transloco}}
             </mat-error>
@@ -22,7 +24,8 @@
 
         <mat-form-field appearance="outline" class="w-full">
             <mat-label>{{'note' | transloco}}</mat-label>
-            <textarea matInput formControlName="message" rows="4" placeholder="Nhập nội dung tin nhắn"></textarea>
+            <mat-icon matPrefix>notes</mat-icon>
+            <textarea matInput formControlName="message" rows="4" [placeholder]="'note' | transloco"></textarea>
             <mat-error *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
                 {{'note-errorr' | transloco}}
             </mat-error>
@@ -30,8 +33,7 @@
     </form>
 </mat-dialog-content>
 
-
-<mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()">{{'cancel'|transloco}}</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()">{{'send'|transloco}}</button>
+<mat-dialog-actions align="center" class="pb-2 pt-1">
+    <button mat-stroked-button color="basic" (click)="onCancel()" class="min-w-[100px]">{{'cancel'|transloco}}</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" class="min-w-[120px] ml-2">{{'send'|transloco}}</button>
 </mat-dialog-actions>

@@ -73,7 +73,7 @@ export class DashBoardComponent implements OnInit{
 
   openContactDialog(): void {
     this._matDialog.open(ContactComponent, {
-      width: '900px',
+      width: '1100px',
       panelClass: 'contact-form-dialog',
       data: { isDialog: true }
     });

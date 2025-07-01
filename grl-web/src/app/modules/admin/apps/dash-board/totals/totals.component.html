@@ -2,38 +2,38 @@
     <div class="bg-white rounded-3xl shadow-2xl p-8 mx-auto w-full max-w-7xl">
         <h1 class="text-4xl font-extrabold text-center text-green-700 mb-10 flex items-center justify-center gap-3">
             <mat-icon class="text-green-600 text-4xl">calculate</mat-icon>
-            BÁO GIÁ CHI PHÍ VẬN CHUYỂN
+            {{'totals-title' | transloco}}
         </h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
             <!-- Left: Form & Price Details -->
             <div>
-        <!-- Toggle for Hàng Chẵn / Hàng Lẻ -->
+        <!-- Toggle for Hàng nguyên công / Hàng Lẻ -->
         <div class="flex justify-center mb-8">
                     <div class="flex bg-gray-100 rounded-full p-1 shadow-inner">
                 <button 
                     (click)="onGoodsTypeChange('even')"
                     [ngClass]="{'bg-green-600 text-white': goodsType === 'even', 'text-gray-700 hover:bg-gray-200': goodsType !== 'even'}"
                             class="px-8 py-2 rounded-full font-semibold transition-colors duration-200 flex items-center gap-2 text-lg">
-                            <mat-icon>widgets</mat-icon> Hàng Chẵn
+                            <mat-icon>widgets</mat-icon> {{'totals-full-container' | transloco}}
                 </button>
                 <button 
                     (click)="onGoodsTypeChange('odd')"
                     [ngClass]="{'bg-green-600 text-white': goodsType === 'odd', 'text-gray-700 hover:bg-gray-200': goodsType !== 'odd'}"
                             class="px-8 py-2 rounded-full font-semibold transition-colors duration-200 flex items-center gap-2 text-lg">
-                            <mat-icon>scatter_plot</mat-icon> Hàng Lẻ
+                            <mat-icon>scatter_plot</mat-icon> {{'totals-loose-cargo' | transloco}}
                 </button>
             </div>
         </div>
 
-        <!-- Form for Hàng Chẵn -->
+        <!-- Form for Hàng nguyên công -->
                 <form [formGroup]="totalsForm" *ngIf="!loading && goodsType === 'even'" class="space-y-8">
             <!-- Top Section - Address and Route Info -->
                     <div class="grid grid-cols-1 gap-8">
                 <!-- Address Search Section -->
                         <div class="bg-green-50 p-6 rounded-2xl shadow flex flex-col gap-6">
                             <h3 class="text-xl font-bold text-green-700 flex items-center gap-2 mb-2">
-                                <mat-icon>place</mat-icon> Địa điểm lấy & trả hàng
+                                <mat-icon>place</mat-icon> {{'totals-pickup-delivery-title' | transloco}}
                             </h3>
                     <!-- Pickup Address -->
                             <div class="flex gap-2 items-center">
@@ -42,7 +42,7 @@
                                 <input 
                                     type="text" 
                                     formControlName="pickupAddress"
-                                    placeholder="Nhập địa chỉ lấy hàng"
+                                    [placeholder]="'totals-pickup-placeholder' | transloco"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                                 >
                             </div>
@@ -50,7 +50,7 @@
                                 type="button"
                                 (click)="onAddressSearch()"
                                     class="px-5 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1 shadow">
-                                    <mat-icon>search</mat-icon> Tìm kiếm
+                                    <mat-icon>search</mat-icon> {{'totals-search' | transloco}}
                             </button>
                         </div>
                     <!-- Delivery Address -->
@@ -60,7 +60,7 @@
                                 <input 
                                     type="text" 
                                     formControlName="deliveryAddress"
-                                    placeholder="Nhập địa chỉ trả hàng"
+                                    [placeholder]="'totals-delivery-placeholder' | transloco"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                                 >
                             </div>
@@ -68,33 +68,33 @@
                                 type="button"
                                 (click)="onDeliveryAddressSearch()"
                                     class="px-5 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1 shadow">
-                                    <mat-icon>search</mat-icon> Tìm kiếm
+                                    <mat-icon>search</mat-icon> {{'totals-search' | transloco}}
                             </button>
                     </div>
                 </div>
 
-                <!-- Route Selection Section for Hàng Chẵn -->
+                <!-- Route Selection Section for Hàng nguyên công -->
                         <div class="bg-green-50 p-6 rounded-2xl shadow flex flex-col gap-6">
                             <h3 class="text-xl font-bold text-green-700 flex items-center gap-2 mb-2">
-                                <mat-icon>directions</mat-icon> Thông tin chuyến (Hàng Chẵn)
+                                <mat-icon>directions</mat-icon> {{'totals-route-info' | transloco}}
                             </h3>
                     <!-- Transport Type Selection -->
                             <div>
                                 <h4 class="text-lg font-medium text-gray-700 mb-2 flex items-center gap-2">
-                                    <mat-icon>commute</mat-icon> Loại hình vận chuyển:
+                                    <mat-icon>commute</mat-icon> {{'totals-transport-type' | transloco}}
                                 </h4>
                                 <div class="flex items-center space-x-6">
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportType" value="train" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
-                                        <mat-icon>train</mat-icon> <span>Đường Sắt</span>
+                                        <mat-icon>train</mat-icon> <span>{{'totals-rail' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportType" value="road" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
-                                        <mat-icon>local_shipping</mat-icon> <span>Đường bộ</span>
+                                        <mat-icon>local_shipping</mat-icon> <span>{{'totals-road' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportType" value="both" class="form-radio text-green-600 w-5 h-5" (change)="calculateTotal()">
-                                        <mat-icon>sync_alt</mat-icon> <span>Cả hai</span>
+                                        <mat-icon>sync_alt</mat-icon> <span>{{'totals-both' | transloco}}</span>
                             </label>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                                 (change)="calculateTotal()"
                                             class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                             >
-                                <option value="">Chọn loại container</option>
+                                <option value="">{{'select-container' | transloco}}</option>
                                 <option *ngFor="let type of containerTypes" [value]="type">{{type}}</option>
                             </select>
                         </div>
@@ -120,7 +120,7 @@
                             <input 
                                 type="number" 
                                 formControlName="numberOfContainers"
-                                placeholder="Nhập số lượng Cont"
+                                [placeholder]="'totals-number-placeholder' | transloco"
                                 (input)="calculateTotal()"
                                 min="1"
                                             class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
@@ -134,53 +134,36 @@
                     <!-- Price Details Section (Shared) -->
                     <div class="bg-green-100 p-8 rounded-2xl shadow-lg mt-8">
                         <h3 class="text-2xl font-bold text-green-700 flex items-center gap-2 mb-6">
-                            <mat-icon>receipt_long</mat-icon> Thông tin báo giá
+                            <mat-icon>receipt_long</mat-icon> {{'totals-price-info' | transloco}}
                         </h3>
                         <div class="space-y-4">
                             <!-- Distance Info -->
                             <div class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>Khoảng cách lấy hàng</span>
+                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>{{'totals-pickup-distance' | transloco}}</span>
                                 <span class="font-semibold text-lg">{{pickupDistance | number:'1.2-2'}} km</span>
                             </div>
                     <div class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>Khoảng cách trả hàng</span>
+                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>{{'totals-delivery-distance' | transloco}}</span>
                                 <span class="font-semibold text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
                     </div>
-                    <!-- Individual Prices for Both Transport Types -->
-                            <!-- <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'train' && trainPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>train</mat-icon>Giá đường tàu</span>
-                                <span class="font-semibold text-lg">{{trainPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                    </div>
-                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'road' && roadPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>local_shipping</mat-icon>Giá đường bộ</span>
-                                <span class="font-semibold text-lg">{{roadPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                    </div>
-                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'both' && trainPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>train</mat-icon>Giá đường tàu</span>
-                                <span class="font-semibold text-lg">{{trainPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                    </div>
-                    <div *ngIf="goodsType === 'even' && totalsForm.get('transportType')?.value === 'both' && roadPrice > 0" class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>local_shipping</mat-icon>Giá đường bộ</span>
-                                <span class="font-semibold text-lg">{{roadPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
-                            </div> -->
                     <!-- Total -->
                             <div class="bg-green-600 text-white px-6 py-4 rounded-2xl mt-4 flex justify-between items-center shadow-lg">
-                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>Cước vận chuyển( chưa tính VAT )</span>
+                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>{{'totals-total-price' | transloco}}</span>
                                 <span class="font-bold text-2xl">{{totalPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
                     </div>
                     <!-- Note and Contact Button -->
                             <div class="mt-6 text-center">
-                                <p class="text-base text-gray-600 mb-4 flex items-center gap-2 justify-center"><mat-icon>info</mat-icon>Đây là số tiền tạm tính, vui lòng liên hệ để nhận báo giá chi tiết.</p>
+                                <p class="text-base text-gray-600 mb-4 flex items-center gap-2 justify-center"><mat-icon>info</mat-icon>{{'totals-note' | transloco}}</p>
                                 <div class="flex items-center justify-center gap-4">
                         <button 
                             (click)="openContactDialog()"
                                         class="px-10 py-3 border border-green-600 text-green-600 font-bold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg ">
-                                        <mat-icon>call</mat-icon> LIÊN HỆ
+                                        <mat-icon>call</mat-icon> {{'contact' | transloco}}
                                     </button>
                                     <button
                                         (click)="exportToPDF()"
                                         class="px-10 py-3 border border-red-600 text-red-600 font-bold rounded-full shadow-lg hover:bg-red-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
-                                        <mat-icon>picture_as_pdf</mat-icon> Xuất PDF
+                                        <mat-icon>picture_as_pdf</mat-icon> {{'totals-export-pdf' | transloco}}
                         </button>
                                 </div>
                     </div>
@@ -190,29 +173,29 @@
 
         <!-- Form for Hàng Lẻ (placeholder for now) -->
                 <form [formGroup]="totalsForm" *ngIf="!loading && goodsType === 'odd'" class="space-y-8">
-            <!-- Address Search Section (Same as Hàng Chẵn) -->
+            <!-- Address Search Section (Same as Hàng nguyên công) -->
                     <div class="grid grid-cols-1 gap-8">
                         <div class="bg-green-50 p-6 rounded-2xl shadow flex flex-col gap-6">
                             <h3 class="text-xl font-bold text-green-700 flex items-center gap-2 mb-2">
-                                <mat-icon>place</mat-icon> Địa điểm lấy & trả hàng
+                                <mat-icon>place</mat-icon> {{'totals-pickup-delivery-title' | transloco}}
                             </h3>
                     <!-- New: Transport Type Selection for Loose Cargo -->
                             <div>
                                 <h4 class="text-lg font-medium text-gray-700 mb-2 flex items-center gap-2">
-                                    <mat-icon>commute</mat-icon> Loại hình vận chuyển:
+                                    <mat-icon>commute</mat-icon> {{'totals-transport-type' | transloco}}
                                 </h4>
                                 <div class="flex items-center space-x-6">
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportTypeLoose" value="station_to_station" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
-                                        <mat-icon>train</mat-icon> <span>Từ ga đến ga</span>
+                                        <mat-icon>train</mat-icon> <span>{{'totals-station-to-station' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportTypeLoose" value="warehouse_to_station" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
-                                        <mat-icon>local_shipping</mat-icon> <span>Từ kho đến ga</span>
+                                        <mat-icon>local_shipping</mat-icon> <span>{{'totals-warehouse-to-station' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="transportTypeLoose" value="warehouse_to_warehouse" class="form-radio text-green-600 w-5 h-5" (change)="onTransportTypeLooseChange()">
-                                        <mat-icon>home_work</mat-icon> <span>Từ kho đến kho</span>
+                                        <mat-icon>home_work</mat-icon> <span>{{'totals-warehouse-to-warehouse' | transloco}}</span>
                             </label>
                         </div>
                     </div>
@@ -223,7 +206,7 @@
                                 <input 
                                     type="text" 
                                     formControlName="pickupAddress"
-                                    placeholder="Nhập địa chỉ lấy hàng"
+                                    [placeholder]="'totals-pickup-placeholder' | transloco"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                                 >
                             </div>
@@ -231,7 +214,7 @@
                                 type="button"
                                 (click)="onAddressSearch()"
                                     class="px-5 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1 shadow">
-                                    <mat-icon>search</mat-icon> Tìm kiếm
+                                    <mat-icon>search</mat-icon> {{'totals-search' | transloco}}
                             </button>
                         </div>
                     <!-- Pickup Station (Conditional) -->
@@ -243,7 +226,7 @@
                                 (change)="calculateTotal()"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                             >
-                                <option value="">Chọn ga lấy hàng</option>
+                                <option value="">{{'totals-select-pickup-station' | transloco}}</option>
                                 <option *ngFor="let station of stations" [value]="station.name">{{station.name}}</option>
                             </select>
                         </div>
@@ -255,7 +238,7 @@
                                 <input 
                                     type="text" 
                                     formControlName="deliveryAddress"
-                                    placeholder="Nhập địa chỉ trả hàng"
+                                    [placeholder]="'totals-delivery-placeholder' | transloco"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                                 >
                             </div>
@@ -263,7 +246,7 @@
                                 type="button"
                                 (click)="onDeliveryAddressSearch()"
                                     class="px-5 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1 shadow">
-                                    <mat-icon>search</mat-icon> Tìm kiếm
+                                    <mat-icon>search</mat-icon> {{'totals-search' | transloco}}
                             </button>
                         </div>
                     <!-- Delivery Station (Conditional) -->
@@ -275,7 +258,7 @@
                                 (change)="calculateTotal()"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
                             >
-                                <option value="">Chọn ga trả hàng</option>
+                                <option value="">{{'totals-select-delivery-station' | transloco}}</option>
                                 <option *ngFor="let station of stations" [value]="station.name">{{station.name}}</option>
                             </select>
                         </div>
@@ -284,22 +267,22 @@
                 <!-- Route Selection Section for Hàng Lẻ (Original content moved here conditionally) -->
                         <div class="bg-green-50 p-6 rounded-2xl shadow flex flex-col gap-6">
                             <h3 class="text-xl font-bold text-green-700 flex items-center gap-2 mb-2">
-                                <mat-icon>directions</mat-icon> Thông tin chuyến (Hàng Lẻ)
+                                <mat-icon>directions</mat-icon> {{'totals-route-info-loose' | transloco}}
                             </h3>
                     <!-- Loose Cargo Type Selection -->
                             <div>
                                 <div class="flex items-center space-x-6">
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="looseCargoType" value="full_carriage" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
-                                        <mat-icon>directions_transit</mat-icon> <span>Nguyên toa</span>
+                                        <mat-icon>directions_transit</mat-icon> <span>{{'totals-full-carriage' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="looseCargoType" value="kg" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
-                                        <mat-icon>scale</mat-icon> <span>Kg</span>
+                                        <mat-icon>scale</mat-icon> <span>{{'totals-kg' | transloco}}</span>
                             </label>
                                     <label class="inline-flex items-center gap-2">
                                 <input type="radio" formControlName="looseCargoType" value="m3" class="form-radio text-green-600 w-5 h-5" (change)="onLooseCargoTypeChange()">
-                                        <mat-icon>square_foot</mat-icon> <span>Mét khối</span>
+                                        <mat-icon>square_foot</mat-icon> <span>{{'totals-m3' | transloco}}</span>
                             </label>
                         </div>
                     </div>
@@ -310,7 +293,7 @@
                             <input 
                                 type="number" 
                                 formControlName="weightKg"
-                                placeholder="Nhập số Kg (min 1000kg)"
+                                [placeholder]="'totals-kg-placeholder' | transloco"
                                 (input)="calculateTotal()"
                                 min="1000"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
@@ -318,7 +301,7 @@
                         </div>
                         <div *ngIf="totalsForm.get('weightKg')?.invalid && totalsForm.get('weightKg')?.touched" 
                              class="text-xs text-red-500 mt-1">
-                            Số Kg phải lớn hơn hoặc bằng 1000.
+                            {{'totals-kg-error' | transloco}}
                         </div>
                     </div>
                     <!-- Volume (m3) Input -->
@@ -328,7 +311,7 @@
                             <input 
                                 type="number" 
                                 formControlName="volumeM3"
-                                placeholder="Nhập số m3 (min 3m3)"
+                                [placeholder]="'totals-m3-placeholder' | transloco"
                                 (input)="calculateTotal()"
                                 min="3"
                                         class="w-full pl-12 pr-3 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
@@ -336,54 +319,54 @@
                         </div>
                         <div *ngIf="totalsForm.get('volumeM3')?.invalid && totalsForm.get('volumeM3')?.touched" 
                              class="text-xs text-red-500 mt-1">
-                            Số mét khối phải lớn hơn hoặc bằng 3.
+                            {{'totals-m3-error' | transloco}}
                         </div>
                     </div>
                     <!-- Note for Loose Cargo -->
-                            <p class="text-sm text-gray-600 mt-2 flex items-center gap-2"><mat-icon>info</mat-icon>* Chỉ áp dụng cho đơn hàng từ 1000kg hoặc 3m3.</p>
+                            <p class="text-sm text-gray-600 mt-2 flex items-center gap-2"><mat-icon>info</mat-icon>{{'totals-loose-note' | transloco}}</p>
                     <!-- New: Distance Warning for Loose Cargo -->
                             <p *ngIf="showDistanceWarning" class="text-sm text-red-500 mt-2 flex items-center gap-2">
-                                <mat-icon>warning</mat-icon>Vui lòng liên hệ với chúng tôi vì khoảng cách đến ga gần nhất lớn hơn 20km.
+                                <mat-icon>warning</mat-icon>{{'totals-distance-warning' | transloco}}
                     </p>
                 </div>
             </div>
             <!-- Price Details Section (Shared) -->
                     <div class="bg-green-100 p-8 rounded-2xl shadow-lg mt-8">
                         <h3 class="text-2xl font-bold text-green-700 flex items-center gap-2 mb-6">
-                            <mat-icon>receipt_long</mat-icon> Thông tin báo giá
+                            <mat-icon>receipt_long</mat-icon> {{'totals-price-info' | transloco}}
                         </h3>
                         <div class="space-y-4">
                     <!-- Distance Info -->
                     <div class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>Khoảng cách lấy hàng</span>
+                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>{{'totals-pickup-distance' | transloco}}</span>
                                 <span class="font-semibold text-lg">{{pickupDistance | number:'1.2-2'}} km</span>
                     </div>
                     <div class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>Khoảng cách trả hàng</span>
+                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>straighten</mat-icon>{{'totals-delivery-distance' | transloco}}</span>
                                 <span class="font-semibold text-lg">{{deliveryDistance | number:'1.2-2'}} km</span>
                     </div>
                     <!-- Individual Price for Loose Cargo -->
                     <div *ngIf="goodsType === 'odd' && basePriceFromData > 0" class="flex justify-between items-center py-2 border-b border-green-300">
-                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>paid</mat-icon>Giá cơ bản</span>
+                                <span class="text-lg text-gray-700 flex items-center gap-2"><mat-icon>paid</mat-icon>{{'totals-base-price' | transloco}}</span>
                                 <span class="font-semibold text-lg">{{basePriceFromData | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
                     </div>
                     <!-- Total -->
                             <div class="bg-green-600 text-white px-6 py-4 rounded-2xl mt-4 flex justify-between items-center shadow-lg">
-                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>Tổng</span>
+                                <span class="font-bold text-2xl flex items-center gap-2"><mat-icon>paid</mat-icon>{{'totals-total-price' | transloco}}</span>
                                 <span class="font-bold text-2xl">{{totalPrice | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
                     </div>
                     <!-- Note and Contact Button -->
                             <div class="mt-6 text-center">
-                                <p class="text-base text-gray-600 mb-4 flex items-center gap-2 justify-center"><mat-icon>info</mat-icon>Đây là số tiền tạm tính, vui lòng liên hệ để nhận báo giá chi tiết.</p>
+                                <p class="text-base text-gray-600 mb-4 flex items-center gap-2 justify-center"><mat-icon>info</mat-icon>{{'totals-note' | transloco}}</p>
                         <button 
                             (click)="openContactDialog()"
                                     class="px-10 py-3 border border-green-600 text-green-600 font-bold rounded-full shadow-lg hover:bg-green-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
-                                    <mat-icon>call</mat-icon> LIÊN HỆ
+                                    <mat-icon>call</mat-icon> {{'contact' | transloco}}
                                 </button>
                                 <button
                                     (click)="exportToPDF()"
                                     class="px-10 py-3 border border-red-600 text-red-600 font-bold rounded-full shadow-lg hover:bg-red-100 transition duration-300 transform hover:scale-105 flex items-center gap-2 text-lg">
-                                    <mat-icon>picture_as_pdf</mat-icon> Xuất PDF
+                                    <mat-icon>picture_as_pdf</mat-icon> {{'totals-export-pdf' | transloco}}
                         </button>
                     </div>
                 </div>
@@ -400,7 +383,7 @@
             <div class="sticky top-8">
                 <div *ngIf="!loading" class="bg-green-50 p-8 rounded-2xl shadow-lg mb-6">
                     <h3 class="text-2xl font-bold text-green-700 flex items-center gap-2 mb-4">
-                        <mat-icon>map</mat-icon> Bản đồ
+                        <mat-icon>map</mat-icon> {{'totals-map' | transloco}}
                     </h3>
                     <div class="h-[420px] w-full rounded-xl overflow-hidden shadow bg-white">
                 <div #map id="map" class="w-full h-full z-0"></div>
