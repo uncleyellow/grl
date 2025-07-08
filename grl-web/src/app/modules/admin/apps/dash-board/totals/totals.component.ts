@@ -92,7 +92,29 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
     { name: 'Ga Trang Bom', coordinates: this.trangBomStation },
     { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
-    { name: 'Ga Kim Lien', coordinates: this.kimLienStation }
+    { name: 'Ga Kim Lien', coordinates: this.kimLienStation },
+    { name: 'Ga Sóng Thần', coordinates:L.latLng(10.8779164,106.7511083) },
+
+    { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
+    { name: 'Lạng Sơn', coordinates:L.latLng(21.855704,106.6644324) },
+    { name: 'Bắc Ninh', coordinates:L.latLng(21.1740801,105.9996102) },
+    { name: 'Hà Nam', coordinates:L.latLng(20.533893,105.8107956) },
+    { name: 'Hà Nội', coordinates:L.latLng(21.0227784,105.8163212) },
+    { name: 'Hòa Bình', coordinates:L.latLng(20.7093913,105.0165149) },
+    { name: 'Hải Dương', coordinates:L.latLng(20.9408946,106.2464026) },
+    { name: 'Hải Phòng', coordinates:L.latLng(20.8468121,106.6574613) },
+    { name: 'Hưng Yên', coordinates:L.latLng(20.6656158,105.9854631) },
+    { name: 'Nam Định', coordinates:L.latLng(20.417757,106.1668969) },
+    { name: 'Phú Thọ', coordinates:L.latLng(21.4157109,105.1881671) },
+    { name: 'Thanh hóa', coordinates:L.latLng(19.8088549,105.7084824) },
+    { name: 'Vĩnh Phúc', coordinates:L.latLng(21.3642123,105.3925375) },
+    { name: 'Thái Nguyên', coordinates:L.latLng(21.5774523,105.7622043) },
+    { name: 'Ninh Bình', coordinates:L.latLng(20.2451952,105.9341661) },
+    { name: 'Quảng Ninh', coordinates:L.latLng(21.1759344,106.9327144) },
+    { name: 'Sơn La', coordinates:L.latLng(21.3447457,103.8328439) },
+    { name: 'Thái Bình', coordinates:L.latLng(20.4530169,106.3033668) },
+    { name: 'Nghệ An', coordinates:L.latLng(19.2732923,104.1800443) },
+    { name: 'Lào Cai', coordinates:L.latLng(22.4185877,103.896914) },
   ];
 
   // Điểm lấy hàng
