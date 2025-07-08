@@ -115,6 +115,13 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Thái Bình', coordinates:L.latLng(20.4530169,106.3033668) },
     { name: 'Nghệ An', coordinates:L.latLng(19.2732923,104.1800443) },
     { name: 'Lào Cai', coordinates:L.latLng(22.4185877,103.896914) },
+    { name: 'Hà Tĩnh', coordinates:L.latLng(18.3543214,105.8605449) },
+    { name: 'Đà Nẵng', coordinates:L.latLng(16.0670082,107.9134761) },
+    { name: 'Quảng Nam', coordinates:L.latLng(15.5096308,107.6444499) },
+    { name: 'Huế', coordinates:L.latLng(16.4534687,107.5358278) },
+    { name: 'Quảng Trị', coordinates:L.latLng(16.7344412,106.6224288) },
+    { name: 'Quảng Bình', coordinates:L.latLng(17.5060448,105.9706928) },
+    { name: 'Gia Lai', coordinates:L.latLng(13.799897,107.5017172) },
   ];
 
   // Điểm lấy hàng
