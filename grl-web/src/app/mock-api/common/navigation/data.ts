@@ -128,6 +128,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('welcome-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -147,6 +151,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('services-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -166,6 +174,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('solutions-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -185,6 +197,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('news-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -204,6 +220,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('hire-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -260,6 +280,10 @@ export const compactNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('welcome-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -279,6 +303,10 @@ export const compactNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('services-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -299,6 +327,10 @@ export const compactNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -318,6 +350,10 @@ export const compactNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('news-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -337,6 +373,10 @@ export const compactNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('hire-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -395,6 +435,10 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('welcome-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -414,6 +458,10 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('services-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -434,6 +482,10 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -453,6 +505,10 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('news-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -472,6 +528,10 @@ export const futuristicNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('hire-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -528,6 +588,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('welcome-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -547,6 +611,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('services-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -567,6 +635,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('totals-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -586,6 +658,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('news-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
@@ -605,6 +681,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             const section = document.getElementById('hire-section');
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+                // Kéo lên trên một chút
+                setTimeout(() => {
+                    window.scrollBy(0, -100);
+                }, 100);
             }
         }
     },
