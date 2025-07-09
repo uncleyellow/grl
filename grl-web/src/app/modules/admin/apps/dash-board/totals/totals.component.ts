@@ -94,7 +94,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
     { name: 'Ga Kim Lien', coordinates: this.kimLienStation },
     { name: 'Ga Sóng Thần', coordinates:L.latLng(10.8779164,106.7511083) },
+  ];
 
+
+  private citys = [
     { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
     { name: 'Lạng Sơn', coordinates:L.latLng(21.855704,106.6644324) },
     { name: 'Bắc Ninh', coordinates:L.latLng(21.1740801,105.9996102) },
@@ -348,11 +351,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       console.error('Error initializing map:', error);
     }
   }
-
+  nearestStation2
   private findNearestStation(point: L.LatLng): any {
     let nearestStation = null;
     let minDistance = Infinity;
-
+    
     for (const station of this.stations) {
       const distance = point.distanceTo(station.coordinates);
       if (distance < minDistance) {
@@ -360,7 +363,13 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         nearestStation = station;
       }
     }
-
+    for (const city of this.citys) {
+      const distance = point.distanceTo(city.coordinates);
+      if (distance < minDistance) {
+        minDistance = distance;
+        this.nearestStation2 = city;
+      }
+    }
     return nearestStation;
   }
 
@@ -410,11 +419,24 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         this.calculateTotal();
       });
   }
-
+  findNearestCity(point: L.LatLng): any{
+    let nearestStation = null;
+    let minDistance = Infinity;
+    
+    for (const station of  this.citys) {
+      const distance = point.distanceTo(station.coordinates);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestStation = station;
+      }
+    }
+    return nearestStation;
+  }
+  nearestCity
   private calculateDeliveryDistance(latlng: L.LatLng): void {
     // Find nearest station
     this.nearestDeliveryStation = this.findNearestStation(latlng);
-    
+    this.nearestCity = this.findNearestCity(latlng);
     const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestDeliveryStation.coordinates.lng},${this.nearestDeliveryStation.coordinates.lat}?overview=full&geometries=geojson`;
     
     fetch(url)
@@ -704,7 +726,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         console.log('  Attempting to calculate Road Price...');
         const matchedRoadRoute = this.duongBo.find((route) => {
           const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
-          const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+          const normalizedDeliveryStationName = this.normalizeString(this.nearestCity.name);
           const normalizedRouteGa = this.normalizeString(route.ga);
           const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
           const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
