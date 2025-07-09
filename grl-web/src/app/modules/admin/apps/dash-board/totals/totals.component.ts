@@ -701,8 +701,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
           const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
 
-          const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
-                               (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
+          const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName);
+                               
 
           const containerTypeMatch = normalizedRouteContainerType === selectedContainerTypeNormalized;
           
@@ -731,14 +731,14 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
           const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
 
-          const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
-                               (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
+          const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName)
+                               
 
           const containerTypeMatch = normalizedRouteContainerType === selectedContainerTypeNormalized;
 
           return stationMatch && containerTypeMatch;
         });
-
+        debugger
         if (matchedRoadRoute) {
           console.log('  SUCCESS (Road Cargo): Matched road route found:', matchedRoadRoute);
           const donViTinhString = matchedRoadRoute.donViTinh;
