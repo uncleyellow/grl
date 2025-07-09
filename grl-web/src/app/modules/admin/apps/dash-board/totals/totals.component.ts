@@ -1194,8 +1194,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.calculateTotal(); // Recalculate total after changing goods type
   }
 
-  exportToPDF(): void {
+  async exportToPDF(): Promise<void> {
     (pdfMake as any).vfs = (pdfFonts as any).pdfMake?.vfs || (pdfFonts as any).vfs;
+    const logoBase64 = await this.getBase64ImageFromUrl('assets/green-line/ContainerService/GREENLINES_LOGO-01.png');
     const formValue = this.totalsForm.value;
     const isEven = this.goodsType === 'even';
     const rows: any[] = [];
@@ -1209,7 +1210,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         columns: [
           {
             image: 'logo',
-            width: 120,
+            width: 300,
+            height: 80, // <-- tăng số này lên
             margin: [0, 0, 0, 10]
           },
           [
@@ -1304,12 +1306,12 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
         },
         { text: '\nGhi chú:', bold: true, margin: [0, 20, 0, 5] },
-        { text: '1. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: '2. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: '3. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: '4. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: '5. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: '6. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
+        { text: '1. Đơn gía chưa bao gồm thuế GTGT và các phụ phí phát sinh (nếu có)', italics: true, fontSize: 11 },
+        { text: '2. Cước vận chuyển sẽ thay đổi theo biến động của giá dầu DO 0,05S (+/- 10%)', italics: true, fontSize: 11 },
+        { text: '3. Gía dầu DO 0,05S hiện tại: 18.380 VND/litre', italics: true, fontSize: 11 },
+        { text: '4. Bảo hiểm hàng hóa được mua bởi chủ hàng', italics: true, fontSize: 11 },
+        { text: '5. Tải trọng hàng xếp: không quá 28 Tons/cont 40HC', italics: true, fontSize: 11 },
+        { text: '6. Người liên hệ:  Ms Giang - 0902161639', italics: true, fontSize: 11 },
         { text: '7. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
         { text: note, italics: true, fontSize: 11 },
         { text: 'Công ty TNHH NR Greenlines Logictis', italics: true, fontSize: 11 },
@@ -1317,7 +1319,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       ],
       
       images: {
-        logo: 'https://png.pngtree.com/png-vector/20211023/ourmid/pngtree-salon-logo-png-image_4004444.png'
+        logo: logoBase64
       },
       styles: {
         header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
@@ -1329,6 +1331,26 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       }
     };
     pdfMake.createPdf(docDefinition).download('bao-gia-greenlines.pdf');
+  }
+
+  getBase64ImageFromUrl(imageUrl: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+      img.onload = () => {
+        let canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        let dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      };
+      img.onerror = error => {
+        reject(error);
+      };
+      img.src = imageUrl;
+    });
   }
   
 }
