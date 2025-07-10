@@ -94,6 +94,55 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
     { name: 'Ga Kim Lien', coordinates: this.kimLienStation },
     { name: 'Ga Sóng Thần', coordinates:L.latLng(10.8779164,106.7511083) },
+
+    { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
+    { name: 'Lạng Sơn', coordinates:L.latLng(21.855704,106.6644324) },
+    { name: 'Bắc Ninh', coordinates:L.latLng(21.1740801,105.9996102) },
+    { name: 'Hà Nam', coordinates:L.latLng(20.533893,105.8107956) },
+    { name: 'Hà Nội', coordinates:L.latLng(21.0227784,105.8163212) },
+    { name: 'Hòa Bình', coordinates:L.latLng(20.7093913,105.0165149) },
+    { name: 'Hải Dương', coordinates:L.latLng(20.9408946,106.2464026) },
+    { name: 'Hải Phòng', coordinates:L.latLng(20.8468121,106.6574613) },
+    { name: 'Hưng Yên', coordinates:L.latLng(20.6656158,105.9854631) },
+    { name: 'Nam Định', coordinates:L.latLng(20.417757,106.1668969) },
+    { name: 'Phú Thọ', coordinates:L.latLng(21.4157109,105.1881671) },
+    { name: 'Thanh hóa', coordinates:L.latLng(19.8088549,105.7084824) },
+    { name: 'Vĩnh Phúc', coordinates:L.latLng(21.3642123,105.3925375) },
+    { name: 'Thái Nguyên', coordinates:L.latLng(21.5774523,105.7622043) },
+    { name: 'Ninh Bình', coordinates:L.latLng(20.2451952,105.9341661) },
+    { name: 'Quảng Ninh', coordinates:L.latLng(21.1759344,106.9327144) },
+    { name: 'Sơn La', coordinates:L.latLng(21.3447457,103.8328439) },
+    { name: 'Thái Bình', coordinates:L.latLng(20.4530169,106.3033668) },
+    { name: 'Nghệ An', coordinates:L.latLng(19.2732923,104.1800443) },
+    { name: 'Lào Cai', coordinates:L.latLng(22.4185877,103.896914) },
+    { name: 'Hà Tĩnh', coordinates:L.latLng(18.3543214,105.8605449) },
+    { name: 'Đà Nẵng', coordinates:L.latLng(16.0670082,107.9134761) },
+    { name: 'Quảng Nam', coordinates:L.latLng(15.5096308,107.6444499) },
+    { name: 'Huế', coordinates:L.latLng(16.4534687,107.5358278) },
+    { name: 'Quảng Trị', coordinates:L.latLng(16.7344412,106.6224288) },
+    { name: 'Quảng Bình', coordinates:L.latLng(17.5060448,105.9706928) },
+    { name: 'Gia Lai', coordinates:L.latLng(13.799897,107.5017172) },
+    { name: 'Bình Định', coordinates:L.latLng(14.1096504,108.6557665) },
+    { name: 'Quảng Ngãi', coordinates:L.latLng(15.153854,108.8010613) },
+    { name: 'Khánh Hòa', coordinates:L.latLng(12.3191983,108.7397957) },
+    { name: 'Bình Dương', coordinates:L.latLng(11.1828232,106.316194) },
+    { name: 'Cần Thơ', coordinates:L.latLng(10.1227451,105.3704601) },
+    { name: 'Đồng Nai', coordinates:L.latLng(11.0526864,106.833893) },
+    { name: 'Bình Thuận', coordinates:L.latLng(11.0198501,107.8514869) },
+    { name: 'Hồ Chí Minh', coordinates:L.latLng(10.7552921,106.3648924) },
+    { name: 'Long An', coordinates:L.latLng(10.714293,105.7932022) },
+    { name: 'Vĩnh Long', coordinates:L.latLng(10.2519714,105.8978079) },
+    { name: 'Tiền Giang', coordinates:L.latLng(10.3892834,105.9858764) },
+    { name: 'Vũng Tàu', coordinates:L.latLng(10.4034969,107.040478) },
+    { name: 'Bến Tre', coordinates:L.latLng(10.2374763,106.3342659) },
+    { name: 'Đồng Tháp', coordinates:L.latLng(10.554273,105.2344053) },
+    { name: 'Kiên Giang', coordinates:L.latLng(9.8976281,103.8373803) },
+    { name: 'An Giang', coordinates:L.latLng(10.573527,104.846507) },
+    { name: 'Cà Mau', coordinates:L.latLng(9.1753645,105.1871716) },
+    { name: 'Bạc Liêu', coordinates:L.latLng(9.2684649,105.7118445) },
+    { name: 'Sóc Trăng', coordinates:L.latLng(9.6097884,105.9365263) },
+    { name: 'Tây Ninh', coordinates:L.latLng(11.3659443,106.0883681) },
+    { name: 'Lâm Đồng', coordinates:L.latLng(11.7667839,107.6685157) },
   ];
 
 
@@ -217,7 +266,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   ngOnInit(): void {
     this.fetchTotals();
     this.fetchFLC();
-    this.fetchCuocDuongBo()
+    this.fetchCuocDuongBo();
+    this.totalsForm.get('transportType')?.setValue('both');
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -1192,6 +1242,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
     this.resetMap(); // Reset map markers and distances
     this.calculateTotal(); // Recalculate total after changing goods type
+    this.totalsForm.get('transportType')?.setValue('both');
   }
 
   async exportToPDF(): Promise<void> {
