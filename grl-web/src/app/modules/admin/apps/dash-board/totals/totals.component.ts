@@ -147,7 +147,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
   private citys = [
     { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
-    { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
+    { name: 'Bac Giang', coordinates:L.latLng(21.291714,106.1694926) },
     { name: 'Lạng Sơn', coordinates:L.latLng(21.855704,106.6644324) },
     { name: 'Bắc Ninh', coordinates:L.latLng(21.1740801,105.9996102) },
     { name: 'Hà Nam', coordinates:L.latLng(20.533893,105.8107956) },
@@ -181,7 +181,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Cần Thơ', coordinates:L.latLng(10.1227451,105.3704601) },
     { name: 'Đồng Nai', coordinates:L.latLng(11.0526864,106.833893) },
     { name: 'Bình Thuận', coordinates:L.latLng(11.0198501,107.8514869) },
-    { name: 'Hồ Chí Minh', coordinates:L.latLng(10.7552921,106.3648924) },
+    { name: 'Ho Chi Minh', coordinates:L.latLng(10.7552921,106.3648924) },
     { name: 'Long An', coordinates:L.latLng(10.714293,105.7932022) },
     { name: 'Vĩnh Long', coordinates:L.latLng(10.2519714,105.8978079) },
     { name: 'Tiền Giang', coordinates:L.latLng(10.3892834,105.9858764) },
