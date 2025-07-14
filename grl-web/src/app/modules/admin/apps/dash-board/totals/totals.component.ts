@@ -20,7 +20,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   @Input() activeLang: string = 'en';
   @ViewChild('originInput') originInput: ElementRef;
   @ViewChild('destinationInput') destinationInput: ElementRef;
-
+  shippingDate
   // Use a setter for mapContainer to ensure it's available when initializeMap is called
   private _mapContainer: ElementRef;
   @ViewChild('map')
@@ -764,6 +764,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
       // 2. Giá đường sắt: ga gần nhất -> ga trả hàng
       let trainPrice = 0;
+      // let shippingDate
       if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
         const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
         const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
@@ -779,6 +780,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         });
         if (matchedTrainRoute) {
           trainPrice = Number(matchedTrainRoute.soTien.replace(/[^0-9]/g, '')) || 0;
+          this.shippingDate = matchedTrainRoute.ngayVanChuyen || 0
         }
       }
 
