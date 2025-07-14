@@ -129,7 +129,7 @@
                             <div class="">
                                 <mat-icon>receipt_long</mat-icon> {{'totals-price-info' | transloco}}
                             </div>
-                            <div class="">
+                            <div class="" *ngIf="shippingDate">
                                 Ngày vận chuyển {{shippingDate}}
                             </div>
                         </h3>
