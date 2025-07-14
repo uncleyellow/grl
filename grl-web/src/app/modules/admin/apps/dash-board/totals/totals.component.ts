@@ -1260,9 +1260,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           },
           [
             { text: 'HANOI HEAD OFFICE', bold: true, fontSize: 10 },
-            { text: 'Số 91 Lê Duẩn, Hoàn Kiếm, Hà Nội', fontSize: 10 },
-            { text: 'TEL: 34-5377251', fontSize: 10 },
-            { text: 'FAX:34-5377352', fontSize: 10 }
+            { text: '95-97 Le Duan, Hoan Kiem, Phường Cửa Nam, Hà Nội', fontSize: 10 },
+            { text: 'TEL.84-4-35772751', fontSize: 10 },
+            { text: 'FAX.84-4-35772752', fontSize: 10 }
           ]
         ]
       },
