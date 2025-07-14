@@ -89,7 +89,6 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Ga Đông Anh', coordinates: this.dongAnhStation },
     { name: 'Ga Vinh', coordinates: this.vinhStation },
     { name: 'Ga Da Nang', coordinates: this.daNangStation },
-    { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
     { name: 'Ga Trang Bom', coordinates: this.trangBomStation },
     { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
     { name: 'Ga Kim Lien', coordinates: this.kimLienStation },
@@ -147,6 +146,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
 
   private citys = [
+    { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
     { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
     { name: 'Lạng Sơn', coordinates:L.latLng(21.855704,106.6644324) },
     { name: 'Bắc Ninh', coordinates:L.latLng(21.1740801,105.9996102) },
