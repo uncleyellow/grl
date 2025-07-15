@@ -806,7 +806,12 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       }
 
       // Tổng tiền = (giá 1 + giá 2 + giá 3) * số lượng container
-      this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers;
+      if(trainPrice == 0){
+        this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers / 2;  
+      }
+      else{
+        this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers;
+      }
       console.log('  Final totalPrice (Train + Road):', this.totalPrice);
     } else { // goodsType === 'odd' (Hàng Lẻ)
       const looseCargoType = this.totalsForm.get('looseCargoType')?.value;
