@@ -243,6 +243,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   roadPrice: number = 0;
   basePriceFromData: number = 0;
 
+  // Thêm biến cho city gần pickup và delivery
+  private nearestPickupCity: any = null;
+  private nearestDeliveryCity: any = null;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -473,8 +477,14 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         this.pickupDistance = latlng.distanceTo(this.nearestPickupStation.coordinates) / 1000;
         this.calculateTotal();
       });
+    // ... giữ nguyên logic nearestPickupStation ...
+    this.nearestPickupCity = this.findNearestCity(latlng);
+    // ... giữ nguyên phần còn lại ...
+    // (không gán this.nearestCity ở đây nữa)
+    // ...
   }
   findNearestCity(point: L.LatLng): any{
+    debugger
     let nearestStation = null;
     let minDistance = Infinity;
     
@@ -533,6 +543,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         this.deliveryDistance = latlng.distanceTo(this.nearestDeliveryStation.coordinates) / 1000;
         this.calculateTotal();
       });
+    // ... giữ nguyên logic nearestDeliveryStation ...
+    this.nearestDeliveryCity = this.findNearestCity(latlng);
+    // ... giữ nguyên phần còn lại ...
+    // (không gán this.nearestCity ở đây nữa)
+    // ...
   }
 
   onAddressSearch(): void {
@@ -774,9 +789,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         console.log('Chỉ tính giá đường sắt:', trainPrice, 'Tổng:', this.totalPrice);
       } else {
         // 1. Giá đường bộ: điểm lấy hàng -> ga gần nhất
-        if (this.nearestPickupStation && this.nearestCity && this.duongBo.length > 0) {
+        if (this.nearestPickupStation && this.nearestPickupCity && this.duongBo.length > 0) {
           const normalizedStation = this.normalizeLocationName(this.nearestPickupStation.name);
-          const normalizedCity = this.normalizeLocationName(this.nearestCity.name);
+          const normalizedCity = this.normalizeLocationName(this.nearestPickupCity.name);
           const matchedPickupRoad = this.duongBo.find((route) => {
             const normalizedRouteGa = this.normalizeLocationName(route.ga);
             const normalizedRouteDelivery = this.normalizeLocationName(route.viTriLayNhanHang);
@@ -813,9 +828,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
         }
         // 3. Giá đường bộ: ga trả hàng -> điểm trả hàng
-        if (this.nearestDeliveryStation && this.nearestCity && this.duongBo.length > 0) {
+        if (this.nearestDeliveryStation && this.nearestDeliveryCity && this.duongBo.length > 0) {
           const normalizedStation = this.normalizeString(this.nearestDeliveryStation.name);
-          const normalizedCity = this.normalizeLocationName(this.nearestCity.name);
+          const normalizedCity = this.normalizeLocationName(this.nearestDeliveryCity.name);
           const matchedDeliveryRoad = this.duongBo.find((route) => {
             const normalizedRouteGa = this.normalizeString(route.ga);
             const normalizedRouteDelivery = this.normalizeLocationName(route.viTriLayNhanHang);
