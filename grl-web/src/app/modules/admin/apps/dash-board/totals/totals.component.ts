@@ -90,8 +90,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Ga Vinh', coordinates: this.vinhStation },
     { name: 'Ga Da Nang', coordinates: this.daNangStation },
     { name: 'Ga Trang Bom', coordinates: this.trangBomStation },
-    { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
+    // { name: 'Ga Giap Bat', coordinates: this.giapBatStation },
     { name: 'Ga Kim Lien', coordinates: this.kimLienStation },
+    { name: 'Ga Dieu Tri', coordinates: L.latLng(13.8072986,109.14122) },
     // { name: 'Ga Sóng Thần', coordinates:L.latLng(10.8779164,106.7511083) },
 
     // { name: 'Bắc Giang', coordinates:L.latLng(21.291714,106.1694926) },
