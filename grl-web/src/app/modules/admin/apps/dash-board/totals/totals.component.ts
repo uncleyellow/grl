@@ -66,7 +66,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   private dongAnhStation = L.latLng(21.1535125 , 105.8498434);
   
   // Ga Vinh coordinates
-  private vinhStation = L.latLng(18.6881622 , 105.661454);
+  private vinhStation = L.latLng(18.687331,105.6596957);
 
   // Ga Da Nang coordinates
   private daNangStation = L.latLng(16.0716532 , 108.20674);
@@ -168,7 +168,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Nghệ An', coordinates:L.latLng(19.2732923,104.1800443) },
     { name: 'Lào Cai', coordinates:L.latLng(22.4185877,103.896914) },
     { name: 'Hà Tĩnh', coordinates:L.latLng(18.3543214,105.8605449) },
-    { name: 'Đà Nẵng', coordinates:L.latLng(16.0670082,107.9134761) },
+    { name: 'Đà Nẵng', coordinates:L.latLng(16.0165913,108.2021645) },
     { name: 'Quảng Nam', coordinates:L.latLng(15.5096308,107.6444499) },
     { name: 'Huế', coordinates:L.latLng(16.4534687,107.5358278) },
     { name: 'Quảng Trị', coordinates:L.latLng(16.7344412,106.6224288) },
@@ -658,7 +658,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.http.get<any[]>(`${environment.api.url}/flc`,{headers}).subscribe({
       next: (data) => {
         this.flcData = data;
-        console.log('FLC Data fetched and assigned to this.flcData:', this.flcData);
+        // console.log('FLC Data fetched and assigned to this.flcData:', this.flcData);
       },
       error: (error) => {
         console.error('Error fetching FLC totals:', error);
@@ -673,7 +673,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       next: (data) => {
         // debugger
         this.duongBo = data;
-        console.log('duongBo Data fetched and assigned to this.duongBo:', this.duongBo);
+        // console.log('duongBo Data fetched and assigned to this.duongBo:', this.duongBo);
       },
       error: (error) => {
         console.error('Error fetching FLC totals:', error);
@@ -693,7 +693,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
   private normalizeString(str: string): string {
     const normalized = str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
-    console.log(`normalizeString: Input: '${str}', Output: '${normalized}'`);
+    // console.log(`normalizeString: Input: '${str}', Output: '${normalized}'`);
     return normalized;
   }
 
@@ -701,23 +701,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     this.totalPrice = 0; // Always reset
 
     // Ensure all necessary data is loaded before attempting calculations
-    // We specifically removed the check for pickupPoint/deliveryPoint here because
-    // for 'station_to_station' they will be null, and we handle those cases inside the odd cargo logic.
     if (!this.totalsData || this.totalsData.length === 0 || !this.duongBo || this.duongBo.length === 0 || !this.flcData || this.flcData.length === 0) {
-      console.log('[calculateTotal] Early Exit: Not enough data yet. totalsData:', this.totalsData, 'pickupPoint:', this.pickupPoint, 'deliveryPoint:', this.deliveryPoint, 'duongBo:', this.duongBo, 'flcData:', this.flcData);
       return; // Not enough data yet
     }
-
-    console.log('--- calculateTotal Start ---');
-    console.log('  Current Goods Type:', this.goodsType);
-    console.log('  Current Transport Type (Even):', this.totalsForm.get('transportType')?.value);
-    console.log('  Current Loose Transport Type (Odd):', this.totalsForm.get('transportTypeLoose')?.value);
-    console.log('  Current Nearest Pickup Station (raw): ', this.nearestPickupStation?.name);
-    console.log('  Current Nearest Delivery Station (raw): ', this.nearestDeliveryStation?.name);
-    console.log('  Full totalsData array from API (Train Cargo - Even):', this.totalsData);
-    console.log('  Full duongBo array from API (Road Cargo - Even):', this.duongBo);
-    console.log('  Full flcData array from API (Loose Cargo - Odd):', this.flcData);
-
 
     this.trainPrice = 0; // Price for train transport (even cargo)
     this.roadPrice = 0;  // Price for road transport (even cargo)
@@ -728,91 +714,122 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const selectedContainerTypeNormalized = this.normalizeString(containerType || '');
     const transportType = this.totalsForm.get('transportType')?.value; // Get selected transport type for even cargo
 
+    // Lấy pickupAddress và deliveryAddress để kiểm tra
+    const pickupAddress = (this.totalsForm.get('pickupAddress')?.value || '').toString().trim().toLowerCase();
+    const deliveryAddress = (this.totalsForm.get('deliveryAddress')?.value || '').toString().trim().toLowerCase();
+    const pickupIsStation = pickupAddress.startsWith('ga');
+    const deliveryIsStation = deliveryAddress.startsWith('ga');
+    const bothIsStation = pickupIsStation && deliveryIsStation;
+
     // Common checks for Even Cargo
     if (this.goodsType === 'even' && (!selectedContainerTypeNormalized || !numberOfContainers || numberOfContainers < 1)) {
-        console.log('[calculateTotal] Early Exit (Even Cargo): Container type not selected or invalid number of containers. selectedContainerTypeNormalized:', selectedContainerTypeNormalized, 'numberOfContainers:', numberOfContainers);
         this.totalPrice = 0;
         return;
     }
 
     if (this.goodsType === 'even') {
-      console.log('  Processing Hàng Chẵn (Container) calculations.');
-      console.log('  Selected Container Type (raw): ', containerType);
-      console.log('  Selected Container Type (normalized): ', selectedContainerTypeNormalized);
-      console.log('  Number of Containers:', numberOfContainers);
-      debugger
-      // 1. Giá đường bộ: điểm lấy hàng -> ga gần nhất
       let pickupToStationRoadPrice = 0;
-      if (this.nearestPickupStation && this.nearestCity && this.duongBo.length > 0) {
-        const normalizedStation = this.normalizeString(this.nearestPickupStation.name);
-        const normalizedCity = this.normalizeString(this.nearestCity.name);
-        const matchedPickupRoad = this.duongBo.find((route) => {
-          const normalizedRouteGa = this.normalizeString(route.ga);
-          const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
-          const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
-          return (
-            normalizedRouteGa === normalizedStation &&
-            normalizedRouteDelivery === normalizedCity &&
-            normalizedRouteContainerType === selectedContainerTypeNormalized
-          );
-        });
-        if (matchedPickupRoad) {
-          pickupToStationRoadPrice = Number(matchedPickupRoad.donViTinh.replace(/[^0-9]/g, '')) || 0;
-        }
-        // Nếu không tìm thấy thì giữ nguyên là 0
-      }
-
-      // 2. Giá đường sắt: ga gần nhất -> ga trả hàng
-      let trainPrice = 0;
-      // let shippingDate
-      if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
-        const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
-        const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
-        const matchedTrainRoute = this.totalsData.find((route) => {
-          const normalizedRouteGa = this.normalizeString(route.ga);
-          const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
-          const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
-          return (
-            normalizedRouteGa === normalizedPickupStationName &&
-            normalizedRouteDelivery === normalizedDeliveryStationName &&
-            normalizedRouteContainerType === selectedContainerTypeNormalized
-          );
-        });
-        if (matchedTrainRoute) {
-          trainPrice = Number(matchedTrainRoute.soTien.replace(/[^0-9]/g, '')) || 0;
-          this.shippingDate = matchedTrainRoute.ngayVanChuyen || 0
-        }
-      }
-
-      // 3. Giá đường bộ: ga trả hàng -> điểm trả hàng
       let stationToDeliveryRoadPrice = 0;
-      if (this.nearestDeliveryStation && this.nearestCity && this.duongBo.length > 0) {
-        const normalizedStation = this.normalizeString(this.nearestDeliveryStation.name);
-        const normalizedCity = this.normalizeString(this.nearestCity.name);
-        const matchedDeliveryRoad = this.duongBo.find((route) => {
-          const normalizedRouteGa = this.normalizeString(route.ga);
-          const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
-          const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
-          return (
-            normalizedRouteGa === normalizedStation &&
-            normalizedRouteDelivery === normalizedCity &&
-            normalizedRouteContainerType === selectedContainerTypeNormalized
-          );
-        });
-        if (matchedDeliveryRoad) {
-          stationToDeliveryRoadPrice = Number(matchedDeliveryRoad.donViTinh.replace(/[^0-9]/g, '')) || 0;
-        }
-        // Nếu không tìm thấy thì giữ nguyên là 0
-      }
+      let trainPrice = 0;
 
-      // Tổng tiền = (giá 1 + giá 2 + giá 3) * số lượng container
-      if(trainPrice == 0){
-        this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers / 2;  
+      // Nếu cả hai đều là ga thì chỉ tính giá đường sắt
+      if (bothIsStation) {
+        // 2. Giá đường sắt: ga gần nhất -> ga trả hàng
+        if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
+          const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
+          const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+          const matchedTrainRoute = this.totalsData.find((route) => {
+            const normalizedRouteGa = this.normalizeString(route.ga);
+            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
+            return (
+              normalizedRouteGa === normalizedPickupStationName &&
+              normalizedRouteDelivery === normalizedDeliveryStationName &&
+              normalizedRouteContainerType === selectedContainerTypeNormalized
+            );
+          });
+          if (matchedTrainRoute) {
+            trainPrice = Number(matchedTrainRoute.soTien.replace(/[^0-9]/g, '')) || 0;
+            this.shippingDate = matchedTrainRoute.ngayVanChuyen || 0
+            console.log('hợp với',matchedTrainRoute)
+          }
+        }
+        // Tổng tiền chỉ là giá đường sắt * số lượng container
+        this.totalPrice = trainPrice * numberOfContainers;
+        console.log('Chỉ tính giá đường sắt:', trainPrice, 'Tổng:', this.totalPrice);
+      } else {
+        // 1. Giá đường bộ: điểm lấy hàng -> ga gần nhất
+        if (this.nearestPickupStation && this.nearestCity && this.duongBo.length > 0) {
+          const normalizedStation = this.normalizeString(this.nearestPickupStation.name);
+          const normalizedCity = this.normalizeString(this.nearestCity.name);
+          const matchedPickupRoad = this.duongBo.find((route) => {
+            const normalizedRouteGa = this.normalizeString(route.ga);
+            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
+            return (
+              normalizedRouteGa === normalizedStation &&
+              normalizedRouteDelivery === normalizedCity &&
+              normalizedRouteContainerType === selectedContainerTypeNormalized
+            );
+          });
+          if (matchedPickupRoad) {
+            pickupToStationRoadPrice = Number(matchedPickupRoad.donViTinh.replace(/[^0-9]/g, '')) || 0;
+            console.log('hợp với',matchedPickupRoad)
+          }
+        }
+        // 2. Giá đường sắt: ga gần nhất -> ga trả hàng
+        if (this.nearestPickupStation && this.nearestDeliveryStation && this.totalsData.length > 0) {
+          const normalizedPickupStationName = this.normalizeString(this.nearestPickupStation.name);
+          const normalizedDeliveryStationName = this.normalizeString(this.nearestDeliveryStation.name);
+          const matchedTrainRoute = this.totalsData.find((route) => {
+            const normalizedRouteGa = this.normalizeString(route.ga);
+            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
+            return (
+              normalizedRouteGa === normalizedPickupStationName &&
+              normalizedRouteDelivery === normalizedDeliveryStationName &&
+              normalizedRouteContainerType === selectedContainerTypeNormalized
+            );
+          });
+          if (matchedTrainRoute) {
+            trainPrice = Number(matchedTrainRoute.soTien.replace(/[^0-9]/g, '')) || 0;
+            this.shippingDate = matchedTrainRoute.ngayVanChuyen || 0
+            console.log('hợp với',matchedTrainRoute)
+          }
+        }
+        // 3. Giá đường bộ: ga trả hàng -> điểm trả hàng
+        if (this.nearestDeliveryStation && this.nearestCity && this.duongBo.length > 0) {
+          const normalizedStation = this.normalizeString(this.nearestDeliveryStation.name);
+          const normalizedCity = this.normalizeString(this.nearestCity.name);
+          const matchedDeliveryRoad = this.duongBo.find((route) => {
+            const normalizedRouteGa = this.normalizeString(route.ga);
+            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
+            return (
+              normalizedRouteGa === normalizedStation &&
+              normalizedRouteDelivery === normalizedCity &&
+              normalizedRouteContainerType === selectedContainerTypeNormalized
+            );
+          });
+          if (matchedDeliveryRoad) {
+            stationToDeliveryRoadPrice = Number(matchedDeliveryRoad.donViTinh.replace(/[^0-9]/g, '')) || 0;
+            console.log('hợp với',matchedDeliveryRoad)
+          }
+        }
+        // Tổng tiền = (giá 1 + giá 2 + giá 3) * số lượng container
+        if(trainPrice == 0){
+          this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers / 2;  
+          console.log('giá 1',pickupToStationRoadPrice)
+          console.log('giá 2',trainPrice)
+          console.log('giá 3',stationToDeliveryRoadPrice)
+        }
+        else{
+          this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers;
+          console.log('giá 1',pickupToStationRoadPrice)
+          console.log('giá 2',trainPrice)
+          console.log('giá 3',stationToDeliveryRoadPrice)
+        }
       }
-      else{
-        this.totalPrice = (pickupToStationRoadPrice + trainPrice + stationToDeliveryRoadPrice) * numberOfContainers;
-      }
-      console.log('  Final totalPrice (Train + Road):', this.totalPrice);
     } else { // goodsType === 'odd' (Hàng Lẻ)
       const looseCargoType = this.totalsForm.get('looseCargoType')?.value;
       const weightKg = this.totalsForm.get('weightKg')?.value;
