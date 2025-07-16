@@ -3,24 +3,24 @@
     <h1 class="text-4xl font-bold text-center mt-2">{{'our-clients'|transloco}}</h1>
     
     <!-- Container chính - Đối tác với bg-white -->
-    <div class="relative flex items-center justify-center w-2/3 left-60 py-6 border border-gray-300 rounded-lg shadow-lg bg-white"
+    <div class="relative flex items-center justify-center w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto py-6 px-2 md:px-6 border border-gray-300 rounded-lg shadow-lg bg-white"
          (mouseenter)="onPartnersHover()"
          (mouseleave)="onPartnersLeave()">
 
         <!-- Danh sách đối tác -->
-        <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
-            <div class="flex gap-8 animate-scroll">
+        <div class="flex gap-4 md:gap-8 overflow-hidden w-full justify-center items-center">
+            <div class="flex gap-4 md:gap-8 animate-scroll">
                 <div *ngFor="let partner of partners" 
-                    class="flex justify-center items-center h-28 w-48 transform hover:scale-110 transition-all">
+                    class="flex justify-center items-center h-20 md:h-28 w-32 md:w-48 transform hover:scale-110 transition-all">
                     <img [src]="partner.image" [alt]="partner.name" 
                         class="bg-white object-contain h-full w-full rounded-lg shadow-lg border border-gray-200"
                         loading="lazy">
                 </div>
             </div>
             <!-- Clone danh sách đối tác để tạo hiệu ứng loop liên tục -->
-            <div class="flex gap-8 animate-scroll">
+            <div class="flex gap-4 md:gap-8 animate-scroll">
                 <div *ngFor="let partner of partners" 
-                    class="flex justify-center items-center h-28 w-48 transform hover:scale-110 transition-all">
+                    class="flex justify-center items-center h-20 md:h-28 w-32 md:w-48 transform hover:scale-110 transition-all">
                     <img [src]="partner.image" [alt]="partner.name" 
                         class="bg-white object-contain h-full w-full rounded-lg shadow-lg border border-gray-200"
                         loading="lazy">
@@ -30,25 +30,25 @@
     </div>
     
     <!-- Phần Feedback với bg-green-300 -->
-    <div class="mt-12 py-8 px-4 bg-green-300 rounded-lg">
+    <div class="mt-12 py-8 px-2 md:px-4 bg-green-300 rounded-lg ">
         <!-- <h2 class="text-green-800 text-xl font-semibold text-center">💬 {{'feed-back'| transloco}}</h2> -->
         <h1 class="text-3xl font-bold mt-2 text-center text-green-900"> {{'feed-back-title'| transloco}}</h1>
     
         <!-- Feedback Carousel -->
-        <div class="relative flex items-center justify-center mt-8 overflow-hidden w-2/3 left-60">
-            <div class="flex gap-8 overflow-hidden w-full justify-center items-center">
-                <div class="flex gap-8 animate-scroll-feedback">
+        <div class="relative flex items-center justify-center mt-8 overflow-hidden w-full max-w-2xl mx-auto max-w-2xl lg:max-w-4xl xl:max-w-5xl">
+            <div class="flex gap-4 md:gap-8 overflow-hidden w-full justify-center items-center">
+                <div class="flex gap-4 md:gap-8 animate-scroll-feedback">
                     <mat-card *ngFor="let feedback of feedbacks" 
-                        class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                        class="p-3 md:p-6 bg-white shadow-lg rounded-xl min-w-[200px] md:min-w-[400px] transform transition-all duration-500">
                         <p class="italic text-gray-700">"{{ feedback.text }}"</p>
                         <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
                         <p class="text-sm text-gray-500">{{ feedback.company }}</p>
                     </mat-card>
                 </div>
                 <!-- Clone danh sách feedback để tạo hiệu ứng loop liên tục -->
-                <div class="flex gap-8 animate-scroll-feedback">
+                <div class="flex gap-4 md:gap-8 animate-scroll-feedback">
                     <mat-card *ngFor="let feedback of feedbacks" 
-                        class="p-6 bg-white shadow-lg rounded-xl min-w-[400px] transform transition-all duration-500">
+                        class="p-3 md:p-6 bg-white shadow-lg rounded-xl min-w-[200px] md:min-w-[400px] transform transition-all duration-500">
                         <p class="italic text-gray-700">"{{ feedback.text }}"</p>
                         <h3 class="font-bold mt-2">{{ feedback.author }}</h3>
                         <p class="text-sm text-gray-500">{{ feedback.company }}</p>
@@ -96,16 +96,16 @@
 <h1 class="text-3xl font-bold mt-2 text-center">{{'latest-news-title'| transloco}}</h1>
 
 <!-- Danh sách tin tức -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-2 md:px-4 max-w-6xl mx-auto">
     <div *ngFor="let news of newsList; let i = index"
          class="relative bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out cursor-pointer hover:shadow-lg">
         
         <!-- Ảnh -->
-        <img class="object-cover w-full h-52" [src]="news.imageUrl" [alt]="news.title">
+        <img class="object-cover w-full h-40 md:h-52" [src]="news.imageUrl" [alt]="news.title">
 
         <!-- Nội dung -->
-        <div class="p-4">
-            <h3 class="text-lg font-semibold text-gray-900">{{ news.title }}</h3>
+        <div class="p-3 md:p-4">
+            <h3 class="text-base md:text-lg font-semibold text-gray-900">{{ news.title }}</h3>
             <p class="mt-2 text-gray-700 line-clamp-3">
                 {{ news.shortContent }}
             </p>
@@ -115,7 +115,7 @@
 
             <!-- Button -->
             <div class="mt-3 flex justify-end">
-                <button (click)="openNewsDialog(news)" class="px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 transition">
+                <button (click)="openNewsDialog(news)" class="px-3 md:px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 transition">
                     Read More
                 </button>
             </div>
