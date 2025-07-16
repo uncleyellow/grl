@@ -145,6 +145,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     // { name: 'Lâm Đồng', coordinates:L.latLng(11.7667839,107.6685157) },
   ];
 
+  // Thêm mảng chỉ chứa 2 ga FLC đặc biệt
+  private allowedFLCStations = [
+    { name: 'Ga Giáp Bát', coordinates: L.latLng(20.9762103, 105.8381601) },
+    { name: 'Ga Sóng Thần', coordinates: L.latLng(10.8779164, 106.7511083) }
+  ];
 
   private citys = [
     { name: 'Ga Dieu Tri', coordinates: this.dieuTriStation },
@@ -425,21 +430,23 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
 
   private calculatePickupDistance(latlng: L.LatLng): void {
-    // Find nearest station
-    this.nearestPickupStation = this.findNearestStation(latlng);
-    
+    // Lấy địa chỉ nhập vào
+    const pickupAddress = (this.totalsForm.get('pickupAddress')?.value || '').toString().toLowerCase();
+    // Nếu địa chỉ có chữ 'vinh' thì ép nearest station là Ga Vinh
+    if (pickupAddress.includes('vinh')) {
+      this.nearestPickupStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
+    } else {
+      this.nearestPickupStation = this.findNearestStation(latlng);
+    }
     const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestPickupStation.coordinates.lng},${this.nearestPickupStation.coordinates.lat}?overview=full&geometries=geojson`;
-    
     fetch(url)
       .then(response => response.json())
       .then(data => {
         if (data.routes && data.routes.length > 0) {
           this.pickupDistance = data.routes[0].distance / 1000;
-          
           if (this.routeLine) {
             this.map.removeLayer(this.routeLine);
           }
-          
           // Tạo polyline với style giống ảnh (màu xanh đậm)
           this.routeLine = L.polyline(
             data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), 
@@ -449,18 +456,15 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
               opacity: 0.8
             }
           ).addTo(this.map);
-
           // Add marker for nearest station
           const stationIcon = L.divIcon({
             html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
             iconSize: [16, 16],
             className: 'custom-marker'
           });
-
           L.marker(this.nearestPickupStation.coordinates, { icon: stationIcon })
             .bindPopup(`Ga gần nhất: ${this.nearestPickupStation.name}`)
             .addTo(this.map);
-          
           this.calculateTotal();
         }
       })
@@ -485,21 +489,24 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   }
   nearestCity
   private calculateDeliveryDistance(latlng: L.LatLng): void {
-    // Find nearest station
-    this.nearestDeliveryStation = this.findNearestStation(latlng);
+    // Lấy địa chỉ nhập vào
+    const deliveryAddress = (this.totalsForm.get('deliveryAddress')?.value || '').toString().toLowerCase();
+    // Nếu địa chỉ có chữ 'vinh' thì ép nearest station là Ga Vinh
+    if (deliveryAddress.includes('vinh')) {
+      this.nearestDeliveryStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
+    } else {
+      this.nearestDeliveryStation = this.findNearestStation(latlng);
+    }
     this.nearestCity = this.findNearestCity(latlng);
     const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestDeliveryStation.coordinates.lng},${this.nearestDeliveryStation.coordinates.lat}?overview=full&geometries=geojson`;
-    
     fetch(url)
       .then(response => response.json())
       .then(data => {
         if (data.routes && data.routes.length > 0) {
           this.deliveryDistance = data.routes[0].distance / 1000;
-          
           if (this.deliveryRouteLine) {
             this.map.removeLayer(this.deliveryRouteLine);
           }
-          
           // Tạo polyline cho delivery route
           this.deliveryRouteLine = L.polyline(
             data.routes[0].geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]), 
@@ -509,18 +516,15 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
               opacity: 0.8
             }
           ).addTo(this.map);
-
           // Add marker for nearest station
           const stationIcon = L.divIcon({
             html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
             iconSize: [16, 16],
             className: 'custom-marker'
           });
-
           L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon })
             .bindPopup(`Ga gần nhất: ${this.nearestDeliveryStation.name}`)
             .addTo(this.map);
-          
           this.calculateTotal();
         }
       })
@@ -698,6 +702,16 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     return normalized;
   }
 
+  private normalizeLocationName(str: string): string {
+    // Loại bỏ các tiền tố phổ biến
+    return this.normalizeString(
+      str
+        .replace(/^(cảng|thành phố|tp\\.?|tỉnh|quận|huyện)\\s+/i, '')
+        .replace(/\\s+/g, ' ')
+        .trim()
+    );
+  }
+
   calculateTotal() {
     this.totalPrice = 0; // Always reset
 
@@ -761,11 +775,11 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       } else {
         // 1. Giá đường bộ: điểm lấy hàng -> ga gần nhất
         if (this.nearestPickupStation && this.nearestCity && this.duongBo.length > 0) {
-          const normalizedStation = this.normalizeString(this.nearestPickupStation.name);
-          const normalizedCity = this.normalizeString(this.nearestCity.name);
+          const normalizedStation = this.normalizeLocationName(this.nearestPickupStation.name);
+          const normalizedCity = this.normalizeLocationName(this.nearestCity.name);
           const matchedPickupRoad = this.duongBo.find((route) => {
-            const normalizedRouteGa = this.normalizeString(route.ga);
-            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteGa = this.normalizeLocationName(route.ga);
+            const normalizedRouteDelivery = this.normalizeLocationName(route.viTriLayNhanHang);
             const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
             return (
               normalizedRouteGa === normalizedStation &&
@@ -801,10 +815,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         // 3. Giá đường bộ: ga trả hàng -> điểm trả hàng
         if (this.nearestDeliveryStation && this.nearestCity && this.duongBo.length > 0) {
           const normalizedStation = this.normalizeString(this.nearestDeliveryStation.name);
-          const normalizedCity = this.normalizeString(this.nearestCity.name);
+          const normalizedCity = this.normalizeLocationName(this.nearestCity.name);
           const matchedDeliveryRoad = this.duongBo.find((route) => {
             const normalizedRouteGa = this.normalizeString(route.ga);
-            const normalizedRouteDelivery = this.normalizeString(route.viTriLayNhanHang);
+            const normalizedRouteDelivery = this.normalizeLocationName(route.viTriLayNhanHang);
             const normalizedRouteContainerType = this.normalizeString(route.loaiCont || '');
             return (
               normalizedRouteGa === normalizedStation &&
@@ -832,168 +846,132 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         }
       }
     } else { // goodsType === 'odd' (Hàng Lẻ)
+      const allowedStations = ['Ga Giáp Bát', 'Ga Sóng Thần'];
       const looseCargoType = this.totalsForm.get('looseCargoType')?.value;
       const weightKg = this.totalsForm.get('weightKg')?.value;
       const volumeM3 = this.totalsForm.get('volumeM3')?.value;
       const transportTypeLoose = this.totalsForm.get('transportTypeLoose')?.value;
-      const pickupStationName = this.totalsForm.get('pickupStation')?.value;
-      const deliveryStationName = this.totalsForm.get('deliveryStation')?.value;
-
-      this.showDistanceWarning = false; // Reset warning for loose cargo
-
-      console.log('  Selected Loose Cargo Type:', looseCargoType);
-      console.log('  Selected Loose Transport Type:', transportTypeLoose);
-      console.log('  Weight (Kg):', weightKg);
-      console.log('  Volume (m3):', volumeM3);
-      console.log('  Pickup Station (selected):', pickupStationName);
-      console.log('  Delivery Station (selected):', deliveryStationName);
-
-
-      if (!looseCargoType || 
-          (looseCargoType === 'kg' && (!weightKg || weightKg < 1000)) || 
-          (looseCargoType === 'm3' && (!volumeM3 || volumeM3 < 3)) ) {
-        console.log('[calculateTotal] Early Exit (Odd Cargo): Loose cargo type not selected or invalid weight/volume.');
-        this.totalPrice = 0;
-        return;
-      }
-
+      let pickupStationName = this.totalsForm.get('pickupStation')?.value;
+      let deliveryStationName = this.totalsForm.get('deliveryStation')?.value;
+      let matchedLooseRoute = null;
       let quantity = 0;
-      let calculatedPickupStationName: string | null = null;
-      let calculatedDeliveryStationName: string | null = null;
+      this.showDistanceWarning = false;
 
-      // Handle station and distance logic based on transportTypeLoose
+      // Chỉ cho phép chọn đúng 2 ga này khi là station_to_station
       if (transportTypeLoose === 'station_to_station') {
-          if (!pickupStationName || !deliveryStationName) {
-              console.log('[calculateTotal] Early Exit (Station-to-Station): Pickup or Delivery station not selected.');
-              this.totalPrice = 0;
-              return;
-          }
-          calculatedPickupStationName = pickupStationName;
-          calculatedDeliveryStationName = deliveryStationName;
-          this.pickupDistance = 0; // No road distance for station to station
-          this.deliveryDistance = 0; // No road distance for station to station
-          this.showDistanceWarning = false; // No road distance to warn about
+        if (!allowedStations.includes(pickupStationName) || !allowedStations.includes(deliveryStationName) || pickupStationName === deliveryStationName) {
+          this.totalPrice = 0;
+          return;
+        }
+        // Tìm đúng chiều, giá mỗi chiều có thể khác nhau
+        matchedLooseRoute = this.flcData.find(route =>
+          this.normalizeString(route.ga) === this.normalizeString(pickupStationName) &&
+          this.normalizeString(route.viTriLayNhanHang) === this.normalizeString(deliveryStationName)
+        );
+        if (!matchedLooseRoute) {
+          this.totalPrice = 0;
+          return;
+        }
+      }
+      // warehouse_to_station: địa chỉ lấy hàng, ga trả hàng là 1 trong 2 ga, tìm giá đúng chiều
+      else if (transportTypeLoose === 'warehouse_to_station') {
+        // Tìm ga gần nhất từ allowedFLCStations cho pickupPoint
+        if (!this.pickupPoint) {
+          this.totalPrice = 0;
+          return;
+        }
+        const pickupNearest = this.allowedFLCStations
+          .map(station => ({
+            ...station,
+            dist: this.pickupPoint.distanceTo(station.coordinates)
+          }))
+          .reduce((prev, curr) => (curr.dist < prev.dist ? curr : prev));
+        pickupStationName = pickupNearest?.name;
+        // Ga trả hàng là ga còn lại
+        deliveryStationName = allowedStations.find(name => name !== pickupStationName);
+        // Gán lại vào form nếu muốn đồng bộ UI
+        this.totalsForm.get('pickupStation')?.setValue(pickupStationName);
+        this.totalsForm.get('deliveryStation')?.setValue(deliveryStationName);
+        // Tìm giá Từ kho -> Ga ...
+        matchedLooseRoute = this.flcData.find(route =>
+          this.normalizeString(route.ga) === this.normalizeString('Từ kho') &&
+          this.normalizeString(route.viTriLayNhanHang) === this.normalizeString(deliveryStationName)
+        );
+        if (!matchedLooseRoute) {
+          this.totalPrice = 0;
+          return;
+        }
+      }
+      // warehouse_to_warehouse: chỉ tính giá từ kho đến ga gần nhất (pickup) và từ ga gần nhất (delivery) đến kho
+      else if (transportTypeLoose === 'warehouse_to_warehouse') {
+        if (!this.pickupPoint || !this.deliveryPoint) {
+          this.totalPrice = 0;
+          return;
+        }
+        // Tìm ga gần nhất cho pickupPoint
+        const pickupNearest = this.allowedFLCStations
+          .map(station => ({
+            ...station,
+            dist: this.pickupPoint.distanceTo(station.coordinates)
+          }))
+          .reduce((prev, curr) => (prev == null || curr.dist < prev.dist ? curr : prev));
+        // Tìm ga gần nhất cho deliveryPoint
+        const deliveryNearest = this.allowedFLCStations
+          .map(station => ({
+            ...station,
+            dist: this.deliveryPoint.distanceTo(station.coordinates)
+          }))
+          .reduce((prev, curr) => (prev == null || curr.dist < prev.dist ? curr : prev));
 
-          // Update nearest stations for display/map if needed
-          this.nearestPickupStation = this.stations.find(s => s.name === pickupStationName);
-          this.nearestDeliveryStation = this.stations.find(s => s.name === deliveryStationName);
+        // Lấy giá từ kho -> ga gần nhất (pickup)
+        const matchedPickupRoute = this.flcData.find(route =>
+          this.normalizeString(route.ga) === this.normalizeString('Từ kho') &&
+          this.normalizeString(route.viTriLayNhanHang) === this.normalizeString(pickupNearest.name)
+        );
+        // Lấy giá từ ga gần nhất (delivery) -> kho
+        const matchedDeliveryRoute = this.flcData.find(route =>
+          this.normalizeString(route.ga) === this.normalizeString(deliveryNearest.name) &&
+          this.normalizeString(route.viTriLayNhanHang) === this.normalizeString('Kho')
+        );
 
-          // Clear existing markers/routes and add new ones for stations if map is initialized
-          this.resetLooseCargoMapPoints(); // Reset everything
-          if (this.map && this.nearestPickupStation && this.nearestDeliveryStation) {
-            const stationIcon = L.divIcon({
-                html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
-                iconSize: [16, 16],
-                className: 'custom-marker'
-            });
-            L.marker(this.nearestPickupStation.coordinates, { icon: stationIcon }).bindPopup(`Ga lấy hàng: ${this.nearestPickupStation.name}`).addTo(this.map);
-            L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon }).bindPopup(`Ga trả hàng: ${this.nearestDeliveryStation.name}`).addTo(this.map);
-          }
+        // Nếu không có route nào thì không tính giá
+        if (!matchedPickupRoute && !matchedDeliveryRoute) {
+          this.totalPrice = 0;
+          return;
+        }
 
+        // Xử lý số lượng
+        if (!looseCargoType || 
+            (looseCargoType === 'kg' && (!weightKg || weightKg < 1000)) || 
+            (looseCargoType === 'm3' && (!volumeM3 || volumeM3 < 3)) ) {
+          this.totalPrice = 0;
+          return;
+        }
 
-      } else if (transportTypeLoose === 'warehouse_to_station') {
-          // pickupAddress is handled by onAddressSearch -> calculatePickupDistance
-          // which sets this.nearestPickupStation and this.pickupDistance
-          if (!this.nearestPickupStation || !deliveryStationName) {
-              console.log('[calculateTotal] Early Exit (Warehouse-to-Station): Pickup address not set or delivery station not selected.');
-              this.totalPrice = 0;
-              return;
-          }
-          calculatedPickupStationName = this.nearestPickupStation.name;
-          calculatedDeliveryStationName = deliveryStationName;
-          this.deliveryDistance = 0; // No road distance for delivery to station
-
-          // Check 20km warning for pickup distance
-          if (this.pickupDistance > 20) {
-              this.showDistanceWarning = true;
-              this.totalPrice = 0;
-              return;
-          }
-          // Update nearest delivery station for display/map
-          this.nearestDeliveryStation = this.stations.find(s => s.name === deliveryStationName);
-          if (this.map && this.nearestDeliveryStation) {
-            const stationIcon = L.divIcon({
-                html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
-                iconSize: [16, 16],
-                className: 'custom-marker'
-            });
-            // Ensure delivery marker from address search is removed if it existed.
-            // Then add station marker.
-            if (this.deliveryMarker) { this.map.removeLayer(this.deliveryMarker); }
-            L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon }).bindPopup(`Ga trả hàng: ${this.nearestDeliveryStation.name}`).addTo(this.map);
-          }
-
-
-      } else if (transportTypeLoose === 'warehouse_to_warehouse') {
-          // pickupAddress and deliveryAddress are handled by their respective search functions
-          // which set this.nearestPickupStation, this.nearestDeliveryStation, pickupDistance, deliveryDistance
-          if (!this.nearestPickupStation || !this.nearestDeliveryStation) {
-              console.log('[calculateTotal] Early Exit (Warehouse-to-Warehouse): Pickup or delivery address not set.');
-              this.totalPrice = 0;
-              return;
-          }
-          calculatedPickupStationName = this.nearestPickupStation.name;
-          calculatedDeliveryStationName = this.nearestDeliveryStation.name;
-
-          // Check 20km warning for both distances
-          if (this.pickupDistance > 20 || this.deliveryDistance > 20) {
-              this.showDistanceWarning = true;
-              this.totalPrice = 0;
-              return;
-          }
+        let pricePerUnitPickup = 0;
+        let pricePerUnitDelivery = 0;
+        let quantity = 0;
+        if (looseCargoType === 'full_carriage') {
+          pricePerUnitPickup = matchedPickupRoute ? Number((matchedPickupRoute.nguyenToa || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          pricePerUnitDelivery = matchedDeliveryRoute ? Number((matchedDeliveryRoute.nguyenToa || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          quantity = 1;
+        } else if (looseCargoType === 'kg') {
+          pricePerUnitPickup = matchedPickupRoute ? Number((matchedPickupRoute.dongKg || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          pricePerUnitDelivery = matchedDeliveryRoute ? Number((matchedDeliveryRoute.dongKg || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          quantity = weightKg;
+        } else if (looseCargoType === 'm3') {
+          pricePerUnitPickup = matchedPickupRoute ? Number((matchedPickupRoute.metKhoi || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          pricePerUnitDelivery = matchedDeliveryRoute ? Number((matchedDeliveryRoute.metKhoi || '').replace(/[^0-9]/g, '')) || 0 : 0;
+          quantity = volumeM3;
+        }
+        // Hiển thị giá cơ bản là giá pickup (nếu có), nếu không thì lấy giá delivery
+        this.basePriceFromData = pricePerUnitPickup > 0 ? pricePerUnitPickup : pricePerUnitDelivery;
+        // Tổng giá là cộng cả 2 chiều (nếu có)
+        this.totalPrice = (pricePerUnitPickup + pricePerUnitDelivery) * quantity;
       } else {
-        console.log('[calculateTotal] Early Exit (Odd Cargo): Invalid transport type selected.');
         this.totalPrice = 0;
         return;
       }
-
-      // Proceed with price calculation only if no early exit
-      if (calculatedPickupStationName && calculatedDeliveryStationName && this.flcData.length > 0) {
-          console.log('  Debug - calculatedPickupStationName:', calculatedPickupStationName);
-          console.log('  Debug - calculatedDeliveryStationName:', calculatedDeliveryStationName);
-          console.log('  Debug - flcData for search:', this.flcData);
-
-          // Define normalized station names once for use in nested find calls
-          const normalizedPickupStationName = this.normalizeString(calculatedPickupStationName || '');
-          const normalizedDeliveryStationName = this.normalizeString(calculatedDeliveryStationName || '');
-
-          const matchedLooseRoute = this.flcData.find((route) => { // Removed index here, as it's not used
-              const normalizedRouteGa = this.normalizeString(route.ga);
-              const normalizedRouteViTri = this.normalizeString(route.viTriLayNhanHang);
-
-              const stationMatch = (normalizedRouteGa === normalizedPickupStationName && normalizedRouteViTri === normalizedDeliveryStationName) ||
-                                   (normalizedRouteViTri === normalizedPickupStationName && normalizedRouteGa === normalizedDeliveryStationName);
-
-              return stationMatch;
-          });
-
-          if (matchedLooseRoute) {
-              console.log('  SUCCESS (Odd Cargo): Matched loose route found:', matchedLooseRoute);
-              
-              let pricePerUnit = 0;
-
-              if (looseCargoType === 'full_carriage') {
-                  // For full carriage, directly use nguyenToa from the matchedLooseRoute
-                  pricePerUnit = Number(this.normalizeString(matchedLooseRoute.nguyenToa || '').replace(/[^0-9]/g, '')) || 0;
-                  quantity = 1; // Quantity is always 1 for full carriage (per container)
-
-              } else if (looseCargoType === 'kg') {
-                  pricePerUnit = Number(this.normalizeString(matchedLooseRoute.dongKg || '').replace(/[^0-9]/g, '')) || 0;
-                  quantity = weightKg;
-              } else if (looseCargoType === 'm3') {
-                  pricePerUnit = Number(this.normalizeString(matchedLooseRoute.metKhoi || '').replace(/[^0-9]/g, '')) || 0;
-                  quantity = volumeM3;
-              }
-              this.basePriceFromData = pricePerUnit; // basePriceFromData will be the price per unit
-              console.log('  Calculated basePriceFromData (price per unit) for Loose Cargo:', this.basePriceFromData);
-
-          } else {
-              console.log('  FAIL (Odd Cargo): No matched loose route found for given stations. (matchedLooseRoute is undefined/null)');
-              this.totalPrice = 0; // If no route found, price is 0
-              return;
-          }
-      }
-      this.totalPrice = this.basePriceFromData * quantity;
     }
 
     console.log('  Final totalPrice calculated:', this.totalPrice);
