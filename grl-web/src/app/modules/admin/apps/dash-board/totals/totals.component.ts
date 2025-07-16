@@ -155,7 +155,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     { name: 'Hà Nội', coordinates:L.latLng(21.0227784,105.8163212) },
     { name: 'Hòa Bình', coordinates:L.latLng(20.7093913,105.0165149) },
     { name: 'Hải Dương', coordinates:L.latLng(20.9408946,106.2464026) },
-    { name: 'Hải Phòng', coordinates:L.latLng(20.8468121,106.6574613) },
+    { name: 'Hai Phong', coordinates:L.latLng(20.8468121,106.6574613) },
     { name: 'Hưng Yên', coordinates:L.latLng(20.6656158,105.9854631) },
     { name: 'Nam Định', coordinates:L.latLng(20.417757,106.1668969) },
     { name: 'Phú Thọ', coordinates:L.latLng(21.4157109,105.1881671) },
