@@ -435,7 +435,47 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
 
   private calculatePickupDistance(latlng: L.LatLng): void {
     // Lấy địa chỉ nhập vào
-    const pickupAddress = (this.totalsForm.get('pickupAddress')?.value || '').toString().toLowerCase();
+    const pickupAddress = (this.totalsForm.get('pickupAddress')?.value || '').toString().toLowerCase().trim();
+
+    // Nếu địa chỉ là đúng "ga vinh" thì set khoảng cách = 0, không fetch route
+    if (pickupAddress === 'ga vinh') {
+      this.nearestPickupStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
+      this.pickupDistance = 0;
+      this.nearestPickupCity = this.findNearestCity(latlng);
+
+      // Xóa route line nếu có
+      if (this.routeLine) {
+        this.map.removeLayer(this.routeLine);
+        this.routeLine = null;
+      }
+      // Xóa marker nếu có, vẽ lại marker tại ga vinh
+      if (this.pickupMarker) {
+        this.map.removeLayer(this.pickupMarker);
+        this.pickupMarker = null;
+      }
+      const pickupIcon = L.divIcon({
+        html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+      this.pickupMarker = L.marker(this.nearestPickupStation.coordinates, { icon: pickupIcon })
+        .bindPopup('Điểm lấy hàng: Ga Vinh')
+        .addTo(this.map);
+
+      // Marker cho ga vinh
+      const stationIcon = L.divIcon({
+        html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+      L.marker(this.nearestPickupStation.coordinates, { icon: stationIcon })
+        .bindPopup(`Ga gần nhất: ${this.nearestPickupStation.name}`)
+        .addTo(this.map);
+
+      this.calculateTotal();
+      return;
+    }
+
     // Nếu địa chỉ có chữ 'vinh' thì ép nearest station là Ga Vinh
     if (pickupAddress.includes('vinh')) {
       this.nearestPickupStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
@@ -500,7 +540,46 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   nearestCity
   private calculateDeliveryDistance(latlng: L.LatLng): void {
     // Lấy địa chỉ nhập vào
-    const deliveryAddress = (this.totalsForm.get('deliveryAddress')?.value || '').toString().toLowerCase();
+    const deliveryAddress = (this.totalsForm.get('deliveryAddress')?.value || '').toString().toLowerCase().trim();
+
+    // Nếu địa chỉ là đúng "ga vinh" thì set khoảng cách = 0, không fetch route
+    if (deliveryAddress === 'ga vinh') {
+      this.nearestDeliveryStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
+      this.deliveryDistance = 0;
+      this.nearestDeliveryCity = this.findNearestCity(latlng);
+      // Xóa route line nếu có
+      if (this.deliveryRouteLine) {
+        this.map.removeLayer(this.deliveryRouteLine);
+        this.deliveryRouteLine = null;
+      }
+      // Xóa marker nếu có, vẽ lại marker tại ga vinh
+      if (this.deliveryMarker) {
+        this.map.removeLayer(this.deliveryMarker);
+        this.deliveryMarker = null;
+      }
+      const deliveryIcon = L.divIcon({
+        html: '<div style="background-color: #ef4444; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+      this.deliveryMarker = L.marker(this.nearestDeliveryStation.coordinates, { icon: deliveryIcon })
+        .bindPopup('Điểm trả hàng: Ga Vinh')
+        .addTo(this.map);
+
+      // Marker cho ga vinh
+      const stationIcon = L.divIcon({
+        html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+        iconSize: [16, 16],
+        className: 'custom-marker'
+      });
+      L.marker(this.nearestDeliveryStation.coordinates, { icon: stationIcon })
+        .bindPopup(`Ga gần nhất: ${this.nearestDeliveryStation.name}`)
+        .addTo(this.map);
+
+      this.calculateTotal();
+      return;
+    }
+
     // Nếu địa chỉ có chữ 'vinh' thì ép nearest station là Ga Vinh
     if (deliveryAddress.includes('vinh')) {
       this.nearestDeliveryStation = this.stations.find(st => this.normalizeString(st.name).includes('vinh'));
@@ -508,6 +587,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       this.nearestDeliveryStation = this.findNearestStation(latlng);
     }
     this.nearestCity = this.findNearestCity(latlng);
+
     const url = `https://router.project-osrm.org/route/v1/driving/${latlng.lng},${latlng.lat};${this.nearestDeliveryStation.coordinates.lng},${this.nearestDeliveryStation.coordinates.lat}?overview=full&geometries=geojson`;
     fetch(url)
       .then(response => response.json())
@@ -543,11 +623,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         this.deliveryDistance = latlng.distanceTo(this.nearestDeliveryStation.coordinates) / 1000;
         this.calculateTotal();
       });
-    // ... giữ nguyên logic nearestDeliveryStation ...
+
     this.nearestDeliveryCity = this.findNearestCity(latlng);
-    // ... giữ nguyên phần còn lại ...
-    // (không gán this.nearestCity ở đây nữa)
-    // ...
   }
 
   onAddressSearch(): void {
