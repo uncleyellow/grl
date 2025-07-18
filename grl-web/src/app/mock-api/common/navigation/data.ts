@@ -127,11 +127,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -150,11 +157,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -171,13 +185,20 @@ export const defaultNavigation: FuseNavigationItem[] = [
             icon: 'text-gray-700 dark:text-gray-200'
         },
         function: () => {
-            const section = document.getElementById('solutions-section');
+            const section = document.getElementById('totals-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -196,11 +217,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -219,11 +247,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -279,11 +314,18 @@ export const compactNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -302,11 +344,18 @@ export const compactNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -326,11 +375,18 @@ export const compactNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('totals-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -349,11 +405,18 @@ export const compactNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -372,11 +435,18 @@ export const compactNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -434,11 +504,18 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -457,11 +534,18 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -481,11 +565,18 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('totals-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -504,11 +595,18 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -527,11 +625,18 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -587,11 +692,18 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('welcome-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -610,11 +722,18 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('services-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -634,11 +753,18 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('totals-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -657,11 +783,18 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('news-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
@@ -680,11 +813,18 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         function: () => {
             const section = document.getElementById('hire-section');
             if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                // Kéo lên trên một chút
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
-                    window.scrollBy(0, -100);
-                }, 100);
+                    const header = document.querySelector('header, .header, #header') as HTMLElement;
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (headerHeight > 0) {
+                        window.scrollTo({
+                            top: sectionTop - headerHeight - 8,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
             }
         }
     },
