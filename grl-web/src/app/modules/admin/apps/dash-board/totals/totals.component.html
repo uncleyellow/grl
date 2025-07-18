@@ -104,7 +104,7 @@
                                 <mat-icon class="text-green-600">receipt_long</mat-icon>
                                 {{'totals-price-info' | transloco}}
                             </span>
-                            <span *ngIf="!shippingDate" class="text-xs sm:text-sm md:text-base text-green-800 font-normal whitespace-nowrap">
+                            <span *ngIf="shippingDate" class="text-xs sm:text-sm md:text-base text-green-800 font-normal whitespace-nowrap">
                                 Thời gian vận chuyển {{shippingDate}}
                             </span>
                         </h3>

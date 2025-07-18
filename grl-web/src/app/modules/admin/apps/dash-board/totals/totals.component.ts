@@ -1341,7 +1341,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const rows: any[] = [];
   
     const recipientName = formValue.recipientName || 'Quý khách hàng';
-    const note = formValue.note || 'Đơn giá trên chưa bao gồm VAT 10%. Báo giá có hiệu lực trong vòng 07 ngày.';
+    const note = formValue.note || '8.Đơn giá trên chưa bao gồm VAT 8%. Báo giá có hiệu lực trong vòng 07 ngày.';
   
     // Thêm logo, địa chỉ công ty và phần "Kính gửi"
     const headerSection = [
@@ -1355,9 +1355,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           },
           [
             { text: 'HANOI HEAD OFFICE', bold: true, fontSize: 10 },
-            { text: '95-97 Le Duan, Hoan Kiem, Phường Cửa Nam, Hà Nội', fontSize: 10 },
-            { text: 'TEL.84-4-35772751', fontSize: 10 },
-            { text: 'FAX.84-4-35772752', fontSize: 10 }
+            { text: '95-97 Lê Duẩn, Phường Cửa Nam, Hà Nội', fontSize: 10 },
+            { text: 'HOTLINE.84-4-35772751', fontSize: 10 },
+            // { text: 'FAX.84-4-35772752', fontSize: 10 }
           ]
         ]
       },
@@ -1369,8 +1369,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   margin: [0, 0, 0, 5] 
 },
       { text: 'BÁO GIÁ VẬN CHUYỂN', style: 'header', margin: [0, 0, 0, 10] },
-      { text: `Kính gửi: ${recipientName}`, fontSize: 12, italics: true, margin: [0, 10, 0, 5] },
-      { text: 'Công ty TNHH NR Greenlines Logictis xin gửi lời cảm ơn tới Quý Khách hàng vì đã tin tưởng và sử dụng dịch vụ vận tải đường sắt của chúng tôi. Căn cứ nhu cầu vận chuyển hàng hóa của Quý Khách hàng, chúng tôi xin gửi báo giá cước vận chuyển hàng hóa cụ thể như sau:', italics: true, fontSize: 11 },
+      { text: `Kính gửi: ${recipientName}`, fontSize: 12, margin: [0, 10, 0, 5] },
+      { text: 'Công ty TNHH NR Greenlines Logisctis xin gửi lời cảm ơn tới Quý Khách hàng vì đã tin tưởng và sử dụng dịch vụ vận tải đường sắt của chúng tôi. Căn cứ nhu cầu vận chuyển hàng hóa của Quý Khách hàng, chúng tôi xin gửi báo giá cước vận chuyển hàng hóa cụ thể như sau:', fontSize: 11 },
     ];
   
     // Tạo bảng dữ liệu như cũ...
@@ -1382,8 +1382,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       if (formValue.numberOfContainers) rows.push(['Số lượng container', formValue.numberOfContainers]);
       if (formValue.transportType) {
         let transportTypeText = formValue.transportType === 'train' ? 'Đường tàu' : formValue.transportType === 'road' ? 'Đường bộ' : 'Cả hai';
-        rows.push(['Loại hình vận chuyển', transportTypeText]);
+        rows.push(['Loại hình vận chuyển', 'Đường sắt kết hợp đường bộ']);
       }
+      if (this.shippingDate) rows.push(['Thời gian vận chuyển', this.shippingDate + ' ngày']);
       if (this.pickupDistance) rows.push(['Khoảng cách lấy hàng', this.pickupDistance.toFixed(2) + ' km']);
       if (this.deliveryDistance) rows.push(['Khoảng cách trả hàng', this.deliveryDistance.toFixed(2) + ' km']);
       // if (formValue.transportType === 'train' || formValue.transportType === 'both') {
@@ -1445,15 +1446,17 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
         },
         { text: '\nGhi chú:', bold: true, margin: [0, 20, 0, 5] },
-        { text: '1. Đơn gía chưa bao gồm thuế GTGT và các phụ phí phát sinh (nếu có)', italics: true, fontSize: 11 },
-        { text: '2. Cước vận chuyển sẽ thay đổi theo biến động của giá dầu DO 0,05S (+/- 10%)', italics: true, fontSize: 11 },
-        { text: '3. Gía dầu DO 0,05S hiện tại: 18.380 VND/litre', italics: true, fontSize: 11 },
-        { text: '4. Bảo hiểm hàng hóa được mua bởi chủ hàng', italics: true, fontSize: 11 },
-        { text: '5. Tải trọng hàng xếp: không quá 28 Tons/cont 40HC', italics: true, fontSize: 11 },
-        { text: '6. Người liên hệ:  Ms Giang - 0902161639', italics: true, fontSize: 11 },
-        { text: '7. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá', italics: true, fontSize: 11 },
-        { text: note, italics: true, fontSize: 11 },
-        { text: 'Công ty TNHH NR Greenlines Logictis', italics: true, fontSize: 11 },
+        { text: '1. Đơn gía chưa bao gồm thuế GTGT và các phụ phí phát sinh (nếu có)', fontSize: 11 },
+        { text: '2. Cước vận chuyển sẽ thay đổi theo biến động của giá dầu DO 0,05S (+/- 10%)', fontSize: 11 },
+        { text: '3. Gía dầu DO 0,05S hiện tại: 18.380 VND/litre', fontSize: 11 },
+        { text: '4. Bảo hiểm hàng hóa được mua bởi chủ hàng', fontSize: 11 },
+        { text: '5. Tải trọng hàng xếp: không quá 28 Tons/cont 40HC',  fontSize: 11 },
+        { text: '6. Người liên hệ:  Ms Giang - 0902161639',  fontSize: 11 },
+        { text: '7. Báo giá có hiệu lực trong vòng 1 tháng kể từ ngày báo giá',  fontSize: 11 },
+        { text: note,  fontSize: 11 },
+        { text: '',  fontSize: 11 },
+        { text: '',  fontSize: 11 },
+        { text: '\nCông ty TNHH NR Greenlines Logisctis', fontSize: 11, alignment: 'right' },
 
       ],
       
