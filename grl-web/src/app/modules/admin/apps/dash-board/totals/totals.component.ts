@@ -1341,7 +1341,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const rows: any[] = [];
   
     const recipientName = formValue.recipientName || 'Quý khách hàng';
-    const note = formValue.note || '8.Đơn giá trên chưa bao gồm VAT 8%.';
+    const note = formValue.note || '8. Đơn giá trên chưa bao gồm VAT 8%.';
   
     // Thêm logo, địa chỉ công ty và phần "Kính gửi"
     const headerSection = [
@@ -1393,7 +1393,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       // if (formValue.transportType === 'road' || formValue.transportType === 'both') {
       //   if (this.roadPrice) rows.push(['Giá đường bộ', this.roadPrice.toLocaleString() + ' VND']);
       // }
-      if (this.totalPrice) rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+      if (this.totalPrice) rows.push([
+        { text: 'Tổng cộng', bold: true, alignment: 'center' },
+        { text: this.totalPrice.toLocaleString() + ' VND', bold: true, alignment: 'center' }
+      ]);
     } else {
       rows.push(['Loại hàng', 'Hàng lẻ']);
       let looseType = '';
@@ -1422,7 +1425,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       if (formValue.looseCargoType === 'kg' && formValue.weightKg) rows.push(['Số Kg', formValue.weightKg]);
       if (formValue.looseCargoType === 'm3' && formValue.volumeM3) rows.push(['Số mét khối', formValue.volumeM3]);
       if (this.basePriceFromData > 0) rows.push(['Đơn giá', this.basePriceFromData.toLocaleString() + ' VND']);
-      if (this.totalPrice) rows.push(['Tổng cộng', this.totalPrice.toLocaleString() + ' VND']);
+      if (this.totalPrice) rows.push([
+        { text: 'Tổng cộng', bold: true },
+        { text: this.totalPrice.toLocaleString() + ' VND', bold: true }
+      ]);
     }
   
     const docDefinition = {
@@ -1433,8 +1439,10 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             headerRows: 1,
             widths: ['*', '*'],
             body: [
-              //Cái này cần in đậm và cho ra giữa
-              ['Thông tin', 'Giá trị' ],
+              [
+                { text: 'Thông tin', style: 'tableHeader' },
+                { text: 'Giá trị', style: 'tableHeader' }
+              ],
               ...rows
             ]
           },
@@ -1447,7 +1455,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
           }
         },
         { text: '\nGhi chú:', bold: true, margin: [0, 20, 0, 5] },
-        { text: '1. Đơn gía chưa bao gồm thuế GTGT và các phụ phí phát sinh (nếu có)', fontSize: 11 },
+        { text: '1. Đơn giá chưa bao gồm thuế GTGT và các phụ phí phát sinh (nếu có)', fontSize: 11 },
         { text: '2. Cước vận chuyển sẽ thay đổi theo biến động của giá dầu DO 0,05S (+/- 10%)', fontSize: 11 },
         { text: '3. Gía dầu DO 0,05S hiện tại: 18.380 VND/litre', fontSize: 11 },
         { text: '4. Bảo hiểm hàng hóa được mua bởi chủ hàng', fontSize: 11 },
@@ -1467,6 +1475,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
       styles: {
         header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
         subheader: { fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+        tableHeader: { bold: true, alignment: 'center', fontSize: 13 }
       },
       defaultStyle: {
         font: 'Roboto',
