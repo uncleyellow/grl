@@ -1341,7 +1341,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
     const rows: any[] = [];
   
     const recipientName = formValue.recipientName || 'Quý khách hàng';
-    const note = formValue.note || '8.Đơn giá trên chưa bao gồm VAT 8%. Báo giá có hiệu lực trong vòng 07 ngày.';
+    const note = formValue.note || '8.Đơn giá trên chưa bao gồm VAT 8%.';
   
     // Thêm logo, địa chỉ công ty và phần "Kính gửi"
     const headerSection = [
@@ -1354,9 +1354,9 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             margin: [0, 0, 0, 10]
           },
           [
-            { text: 'HANOI HEAD OFFICE', bold: true, fontSize: 10 },
-            { text: '95-97 Lê Duẩn, Phường Cửa Nam, Hà Nội', fontSize: 10 },
-            { text: 'HOTLINE.84-4-35772751', fontSize: 10 },
+            // { text: 'HANOI HEAD OFFICE', bold: true, fontSize: 10 },
+            { text: '\n95-97 Lê Duẩn, Phường Cửa Nam, Hà Nội', fontSize: 10 },
+            { text: '\nĐiện thoại:+84902161639     Email:info@nrgreenlines.com.vn', fontSize: 10 },
             // { text: 'FAX.84-4-35772752', fontSize: 10 }
           ]
         ]
@@ -1369,8 +1369,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
   margin: [0, 0, 0, 5] 
 },
       { text: 'BÁO GIÁ VẬN CHUYỂN', style: 'header', margin: [0, 0, 0, 10] },
-      { text: `Kính gửi: ${recipientName}`, fontSize: 12, margin: [0, 10, 0, 5] },
-      { text: 'Công ty TNHH NR Greenlines Logisctis xin gửi lời cảm ơn tới Quý Khách hàng vì đã tin tưởng và sử dụng dịch vụ vận tải đường sắt của chúng tôi. Căn cứ nhu cầu vận chuyển hàng hóa của Quý Khách hàng, chúng tôi xin gửi báo giá cước vận chuyển hàng hóa cụ thể như sau:', fontSize: 11 },
+      { text: `Kính gửi: ${recipientName}`, fontSize: 12, margin: [0, 10, 0, 5],bold: true },
+      { text: 'Công ty TNHH NR Greenlines Logistics xin gửi lời cảm ơn tới Quý Khách hàng vì đã tin tưởng và sử dụng dịch vụ vận tải đường sắt của chúng tôi. Căn cứ nhu cầu vận chuyển hàng hóa của Quý Khách hàng, chúng tôi xin gửi báo giá cước vận chuyển hàng hóa cụ thể như sau:', fontSize: 11 },
     ];
   
     // Tạo bảng dữ liệu như cũ...
@@ -1433,7 +1433,8 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
             headerRows: 1,
             widths: ['*', '*'],
             body: [
-              ['Thông tin', 'Giá trị'],
+              //Cái này cần in đậm và cho ra giữa
+              ['Thông tin', 'Giá trị' ],
               ...rows
             ]
           },
@@ -1456,7 +1457,7 @@ export class TotalsComponent implements OnInit, OnDestroy, OnChanges, AfterViewI
         { text: note,  fontSize: 11 },
         { text: '',  fontSize: 11 },
         { text: '',  fontSize: 11 },
-        { text: '\nCông ty TNHH NR Greenlines Logisctis', fontSize: 11, alignment: 'right' },
+        { text: '\nCông ty TNHH NR Greenlines Logistics', fontSize: 11, alignment: 'right',bold:true },
 
       ],
       
